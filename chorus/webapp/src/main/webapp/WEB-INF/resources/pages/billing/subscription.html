@@ -1,0 +1,178 @@
+<div class="subscription-dialog" modal-dialog>
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <form name="subscriptionForm" novalidate>
+
+                <div class="modal-header">
+                    <a class='close' data-dismiss='modal'>&nbsp;</a>
+                    <h3 id="createProjectLabel">Subscription</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="step-headers">
+                        <div class="steps-line"></div>
+                        <div class="step-holder steps-count-7" ng-class="{active: step == 1}">
+                            <div class="number">1</div>
+                            <div class="title">Select Plan</div>
+                        </div>
+                        <div class="step-holder steps-count-7" ng-class="{active: step == 2}">
+                            <div class="number">2</div>
+                            <div class="title">Confirm</div>
+                        </div>
+                    </div>
+
+                    <div class="dialog-container">
+                        <div ng-show="step==1" style="position:relative;">
+                            <div class="step-description">
+                                <i class="icon details"></i>
+                                <label>
+                                    Select Plan
+                                </label>
+                            </div>
+                                <div>
+                                    <div class="field-row clearfix">
+                                        <div class="field-title">
+                                            <label>Laboratory</label>
+                                        </div>
+                                        <div class="field-value">
+                                            <span ng-bind="details.labName"></span>
+                                        </div>
+                                    </div>
+                                    <div class="field-row clearfix">
+                                        <div class="field-title">
+                                            <label>Plan</label>
+                                        </div>
+                                        <div class="field-value">
+                                            <div class="margin-bottom-20">
+                                                <div class="clearfix">
+                                                    <input ng-disabled="!toFreeAccountCheckResult.canChange" class="radio-value" id="freeAccount" type="radio" name="accountType" value="FREE" ng-checked="details.isFree" ng-model="details.accountType"/>
+                                                    <div class="radio-label">
+                                                        <label ng-show="toFreeAccountCheckResult.canChange" for="freeAccount">Free</label>
+                                                        <label ng-show="!toFreeAccountCheckResult.canChange" for="freeAccount" class="disabled">Free</label>
+                                                        <div ng-show="toFreeAccountCheckResult.canChange"><span ng-bind="getFreeStorageSize() | storageVolumeSize"></span> of free storage space. Archiving is disabled.</div>
+                                                        <div ng-show="!toFreeAccountCheckResult.canChange" class="error">
+                                                            <span class="error-message" ng-show="toFreeAccountCheckResult.allowedAfterTimestamp > 0">Switching to Free is allowed only after {{ toFreeAccountCheckResult.allowedAfterTimestamp | date }}</span>
+                                                            <span class="error-message" ng-show="toFreeAccountCheckResult.storageLimitExceededSize > 0">Data storage exceeds limit for <span ng-bind="toFreeAccountCheckResult.storageLimitExceededSize | storageVolumeSize"></span></span>
+                                                            <span class="error-message" ng-show="toFreeAccountCheckResult.archiveStorageLimitExceededSize > 0">Archive data storage exceeds limit for <span ng-bind="toFreeAccountCheckResult.archiveStorageLimitExceededSize | storageVolumeSize"></span></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="clearfix " ng-cloak>
+                                                    <input class="radio-value" id="enterpriseAccount"
+                                                           type="radio" name="accountType" value="ENTERPRISE" ng-checked="!details.isFree" ng-model="details.accountType"/>
+                                                    <div class="radio-label">
+                                                        <label for="enterpriseAccount">Enterprise</label>
+                                                        <div>Unlimited storage space. Access to archiving.</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <!-- subscription details for FREE account type-->
+                        <div ng-show="details.accountType=='FREE'">
+
+                            <div ng-show="step==2" style="position:relative;">
+                                <div class="step-description">
+                                    <i class="icon details"></i>
+                                    <label>
+                                        Verify plan details.
+                                    </label>
+                                </div>
+                                <table class="table read-only">
+                                    <colgroup>
+                                        <col class="prop-name">
+                                        <col class="prop-value">
+                                    </colgroup>
+                                    <thead>
+                                    <th>Feature</th>
+                                    <th>Value</th>
+                                    <th>Cost (per month)</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Account Type</label>
+                                        </td>
+                                        <td>
+                                            <span ng-bind="details.accountType"></span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Storage</label></td>
+                                        <td><span ng-bind="(getFreeStorageSize() | storageVolumeSize) + ' available'"></span></td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Archive Storage</label></td>
+                                        <td><span>Disabled</span></td>
+                                        <td>-</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- subscription details for ENTERPRISE account type-->
+                        <div ng-show="details.accountType=='ENTERPRISE'">
+
+                            <div ng-show="step==2" style="position:relative;">
+                                <div class="step-description">
+                                    <i class="icon details"></i>
+                                    <label>
+                                        Verify plan details.
+                                    </label>
+                                </div>
+                                <table class="table read-only">
+                                    <colgroup>
+                                        <col class="prop-name">
+                                        <col class="prop-value">
+                                    </colgroup>
+                                    <thead>
+                                    <th>Feature</th>
+                                    <th>Value</th>
+                                    <th>Cost (per month)</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Account Type</label>
+                                        </td>
+                                        <td>
+                                            <span ng-bind="details.accountType"></span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Storage</label></td>
+                                        <td><span>Unlimited</span></td>
+                                        <td ng-bind="'Over ' + (getFreeStorageSize() | storageVolumeSize) + ' &mdash; ' +  (getStorageVolumeCost() | price) + ' per ' + (getStorageVolumeSize() | storageVolumeSize)"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>Archive Storage</label></td>
+                                        <td><span>Unlimited</span></td>
+                                        <td ng-bind="(getArchiveStorageVolumeCost() | price) + ' per ' + (getArchiveStorageVolumeSize() | storageVolumeSize)"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+                    <button class="btn secondary-action back" ng-show="step > 1" ng-click="back()">Back<span class="left-tail"></span></button>
+                    <button class="btn main-action next" ng-show="step < 2" ng-click="next()">Next<span class="right-tail"></span></button>
+                    <button class="btn btn-primary main-action"  ng-show="step == 2" ng-click="save()">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

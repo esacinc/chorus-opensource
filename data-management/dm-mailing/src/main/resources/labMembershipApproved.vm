@@ -1,0 +1,6 @@
+${projectTitle}: Lab Membership Request Approved
+Hello, ${user}!
+
+Your membership in lab ${lab} has been approved.
+
+Thank you for your patience.

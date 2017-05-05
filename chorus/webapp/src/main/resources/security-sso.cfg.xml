@@ -1,0 +1,155 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+                     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <!--<debug/>-->
+
+    <http pattern="/css/**" security="none" />
+    <http pattern="/fonts/**" security="none" />
+    <http pattern="/img/**" security="none" />
+    <http pattern="/lib/**" security="none" />
+    <http pattern="/script/**" security="none" />
+    <http pattern="/img/favicon.ico" security="none" />
+    <http pattern="/analyze/css/**" security="none" />
+    <http pattern="/analyze/images/**" security="none" />
+    <http pattern="/analyze/scripts/**" security="none" />
+    <!--<http pattern="/common-js/**" security="none" />-->
+
+    <http use-expressions="true" entry-point-ref="casEntryPoint" disable-url-rewriting="false">
+        <intercept-url pattern="/paypal/ipn" access="permitAll" />
+        <intercept-url pattern="/rest/**" access="permitAll" />
+        <intercept-url pattern="/skyline/api/**" access="permitAll" />
+        <intercept-url pattern="/security/labMembership/**" access="permitAll" />
+        <intercept-url pattern="/security/**" access="permitAll" />
+        <intercept-url pattern="/statistics/**" access="permitAll" />
+        <intercept-url pattern="/news/**" access="permitAll" />
+        <intercept-url pattern="/features/**" access="permitAll" />
+        <intercept-url pattern="/pages/labMembershipMessage.html/**" access="permitAll" />
+        <intercept-url pattern="/pages/authentication.html" access="isAnonymous()" />
+        <intercept-url pattern="/pages/register.html" access="isAnonymous()" />
+        <intercept-url pattern="/pages/user/form.html" access="permitAll" />
+        <intercept-url pattern="/pages/user/forgot-password.html" access="permitAll" />
+        <intercept-url pattern="/pages/user/email-verification.html" access="permitAll" />
+        <intercept-url pattern="/pages/user/issue-tracker.html" access="permitAll"/>
+        <intercept-url pattern="/pages/unsupported-browser.html" access="permitAll"/>
+        <intercept-url pattern="/pages/component/laboratory-selection.html" access="permitAll" />
+        <intercept-url pattern="/pages/reset-password.html" access="permitAll" />
+        <intercept-url pattern="/pages/laboratory-request.html" access="permitAll" />
+        <intercept-url pattern="/pages/404.html" access="permitAll"/>
+        <intercept-url pattern="/anonymous/**" access="permitAll"/>
+        <intercept-url pattern="/pages/index.html" access="permitAll"/>
+        <intercept-url pattern="/pages/billing.html" access="isAuthenticated()"/>
+        <intercept-url pattern="/pages/about.html" access="permitAll"/>
+        <intercept-url pattern="/pages/privacy-policy.html" access="permitAll"/>
+        <intercept-url pattern="/pages/subscription-agreement.html" access="permitAll"/>
+        <intercept-url pattern="/pages/support.html" access="permitAll"/>
+        <intercept-url pattern="/pages/header.html" access="permitAll"/>
+        <intercept-url pattern="/pages/footer.html" access="permitAll"/>
+        <intercept-url pattern="/pages/support/**" access="permitAll"/>
+        <intercept-url pattern="/pages/news.html" access="permitAll"/>
+        <intercept-url pattern="/pages/admin/**" access="hasRole('ROLE_admin')"/>
+        <intercept-url pattern="/pages/billing.html" access="hasAnyRole('ROLE_labHead', 'ROLE_admin')"/>
+        <intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <form-login login-page="/pages/login.html" default-target-url="/pages/dashboard.html"
+                    authentication-success-handler-ref="authenticationSuccessHandlerImpl"
+                username-parameter="j_username"
+                password-parameter="j_password"
+                login-processing-url="/j_spring_security_check"
+                authentication-failure-url="/pages/login.html?login_error=1"/>
+        <logout success-handler-ref="logoutSuccessHandler" invalidate-session="false"
+                logout-url="/j_spring_security_logout"/>     <!-- session will be invalidated manually by custom logout handler-->
+        <remember-me key="chorus-sharing" user-service-ref="userService"
+                remember-me-parameter="_spring_security_remember_me"
+                remember-me-cookie="SPRING_SECURITY_REMEMBER_ME_COOKIE"/>
+        <csrf disabled="true"/>
+        <session-management>
+            <concurrency-control session-registry-ref="sessionRegistry" max-sessions="1000"/>    <!-- 1000 sessions per user-->
+        </session-management>
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
+        <custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER"/><!--enables single logout request-->
+        <custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>
+        <custom-filter ref="casFilter" position="CAS_FILTER" /> <!--enables CAS authentication-->
+    </http>
+
+    <!--CAS-->
+    <beans:bean id="serviceProperties"
+          class="org.springframework.security.cas.ServiceProperties">
+        <beans:property name="service"
+                  value="https://${cas.service.host}/login/cas"/>
+        <beans:property name="sendRenew" value="false"/> <!--don't ask for credentials every time the service is accessed-->
+    </beans:bean>
+    <beans:bean id="casEntryPoint"
+          class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+        <beans:property name="loginUrl" value="https://${cas.server.host}/login"/> <!--URL to CAS server -->
+        <beans:property name="serviceProperties" ref="serviceProperties"/>
+    </beans:bean>
+    <beans:bean id="casFilter"
+                class="org.springframework.security.cas.web.CasAuthenticationFilter">
+        <beans:property name="authenticationManager" ref="authManager"/>
+    </beans:bean>
+    <!-- This filter handles a Single Logout Request from the CAS Server -->
+    <beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"/>
+    <!-- This filter redirects to the CAS Server to signal Single Logout should be performed -->
+    <beans:bean id="requestSingleLogoutFilter"
+                class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <beans:property name="filterProcessesUrl" value="/j_spring_security_logout"/>
+        <beans:constructor-arg value="https://${cas.server.host}/logout"/>
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+        </beans:constructor-arg>
+    </beans:bean>
+
+
+    <beans:bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <beans:property name="basenames">
+            <beans:list>
+                <beans:value>security-messages</beans:value>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+
+    <authentication-manager alias="authManager">
+        <authentication-provider ref="casAuthProvider" />
+    </authentication-manager>
+
+        <beans:bean id="userService" class="com.infoclinika.mssharing.web.security.SpringUserProvider"/>
+
+    <beans:bean id="pgtStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl"/>
+    <beans:bean id="casAuthProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <beans:property name="serviceProperties" ref="serviceProperties"/>
+        <beans:property name="key" value="casAuthProviderKey"/> <!--todo change it -->
+        <beans:property name="authenticationUserDetailsService">
+            <beans:bean class="com.infoclinika.mssharing.web.security.UserDetailsByCasTokenServiceWrapper">
+                <beans:constructor-arg ref="userService" />
+            </beans:bean>
+        </beans:property>
+        <beans:property name="ticketValidator">
+            <beans:bean class="org.jasig.cas.client.validation.Cas30ServiceTicketValidator">
+                <!--Version 3 is used to support attributes-->
+                <beans:constructor-arg index="0" value="https://${cas.server.host}" />
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <context:component-scan base-package="com.infoclinika.mssharing.web.security" />
+
+    <beans:bean id="casProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <beans:property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <beans:property name="ignoreResourceNotFound" value="true"/>
+        <beans:property name="locations">
+            <beans:list>
+                <beans:value>classpath:/cas.properties</beans:value>
+                <beans:value>file:${user.home}/cas.properties</beans:value>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+
+</beans:beans>   

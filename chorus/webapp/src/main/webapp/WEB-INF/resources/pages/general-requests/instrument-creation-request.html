@@ -1,0 +1,138 @@
+<link rel="stylesheet" href="../css/validation.css">
+<style type="text/css">
+    .peripheral {
+        display: inline;
+    }
+</style>
+
+<div modal-dialog class="create-instrument">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a data-dismiss="modal" class="close">&times;</a>
+
+                <h3>Create Instrument Request</h3>
+            </div>
+
+            <form name="form" novalidate>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#general" data-toggle="tab">General
+                            <span data-ng-class="{'tab-error': form.$error.inputValidator || isNameDuplicated() || isSerialNumberDuplicated() || (generalTab && form.$invalid)}"></span>
+                        </a></li>
+                        <li><a href="#operators"  ng-click="generalTab = true"  data-toggle="tab">Operators</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="general">
+                            <div class="table">
+                                <div class="control-group clearfix">
+                                    <label>Requester</label>
+                                    <p ng-bind="details.requester.email"></p>
+                                </div>
+                                <div class="control-group clearfix">
+                                    <label>Sent</label>
+                                    <p ng-bind="details.sent | date"></p>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.name.$error.inputValidator || isNameDuplicated() || (generalTab && form.name.$invalid)}">
+                                    <label for="name">Name</label>
+                                    <input id="name" class="dialog-text-input dont-hide" name="name" ng-model="instrument.details.name" input-validator/>
+                                    <span class="error-message" ng-show="form.name.$invalid">Field Name is required</span>
+                                    <span class="error-message" ng-show="form.name.$valid">In selected lab instrument with this name already exists</span>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.vendor.$error.uiSelect2Validator || (generalTab && form.vendor.$invalid)}">
+                                    <label for="vendor">Vendor</label>
+                                    <select id="vendor" ui-select2 name="vendor" ng-model="model.vendor" data-placeholder="-- Select One --" class="dialog-select" ui-select2-validator >
+                                        <option></option>
+                                        <option value="{{vendor.id}}" ng-repeat="vendor in vendors" ng-selected="model.vendor==vendor.id">
+                                            {{vendor.name}}
+                                        </option>
+                                    </select>
+                                    <span class="error-message">Field Vendor is required</span>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.model.$error.uiSelect2Validator || (generalTab && form.model.$invalid)}">
+                                    <label for="model">Model</label>
+                                    <select id="model" name="model" ui-select2="instrument.model" ng-model="instrument.model" class="dialog-select" data-placeholder="-- Select One --" ng-disabled="!model.vendor" ui-select2-validator>
+                                        <option></option>
+                                        <option value="{{model.id}}" ng-repeat="model in models" ng-selected="instrument.model==model.id">
+                                            {{model.name}}
+                                        </option>
+                                    </select>
+                                    <span class="error-message">Field Model is required</span>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.lab.$error.uiSelect2Validator || (generalTab && form.lab.$invalid)}">
+                                    <label>Laboratory</label>
+                                    <p ng-bind="instrument.labName"></p>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.serialNumber.$error.inputValidator || isSerialNumberDuplicated() || saveInstrumentError || (generalTab && form.serialNumber.$invalid)}">
+                                    <label for="serialNumber">Serial Number</label>
+                                    <input id="serialNumber" name="serialNumber" class="dialog-text-input dont-hide" ng-model="instrument.details.serialNumber" input-validator/>
+                                    <span class="error-message" ng-show="form.serialNumber.$invalid">Field Serial Number is required</span>
+                                    <span class="error-message" ng-show="form.serialNumber.$valid">Incorrect value - instrument with this serial number already exists</span>
+                                </div>
+
+                                <div class="control-group control-group-optional clearfix">
+                                    <label class="optional-fields" ng-click="optionalOpened = !optionalOpened">
+                                        <i class="icon {{optionalOpened && 'up' || 'down'}}" ng-bind="optionalOpened && 'Close' || 'Open'"></i>
+                                        Optional Fields
+                                        <small class="optional-string">(Lock Masses, HPLC, Peripherals)</small>
+                                    </label>
+                                </div>
+
+                                <section class="optionals" ng-show="optionalOpened">
+
+                                    <div class="control-group clearfix">
+                                        <label for="autoTranslate" class="optional">Auto Translate
+                                        </label>
+                                        <input id="autoTranslate" class="on-check-lock-mass" ng-model="instrument.details.autoTranslate" type="checkbox"/>
+                                    </div>
+
+                                    <div class="clearfix">
+                                        <label class="optional">Lock Masses
+                                        </label>
+                                        <div class="lock-masses-group">
+                                            <div class="on-check-lock-mass" ng-repeat="lm in defaultLockMasses">
+                                                <input id="{{'defaultLockMass_' + $index}}" ng-model="lm.checked" ng-click="onCheckLockMass(lm)" type="checkbox"/>
+                                                <label for="{{'defaultLockMass_' + $index}}">
+                                                    {{lm.value.lockMass}} {{lm.value.charge | chargeFormatted}}
+                                                </label>
+                                            </div>
+
+                                            <lock-masses-selector values="lockMasses"></lock-masses-selector>
+                                        </div>
+                                    </div>
+                                    <div class="control-group clearfix">
+                                        <label for="hplc" class="optional">HPLC
+                                        </label>
+                                        <input id="hplc" class="dialog-text-input dont-hide" ng-model="instrument.details.hplc"/>
+                                    </div>
+                                    <div class="control-group clearfix">
+                                        <label for="peripherals" class="optional">Peripherals
+                                        </label>
+                                        <input id="peripherals" class="dialog-text-input dont-hide" ng-model="instrument.details.peripherals"/>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade sharing" id="operators">
+                            <div>
+                                <operator-selector users="users" invite-handler="inviteHandler"
+                                                   selected-users="instrument.operators" exclude-emails="excludeEmails"></operator-selector>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn secondary-action" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary main-action" type="submit" ng-disabled="form.$invalid" ng-click="refuse()">
+                        Refuse
+                    </button>
+                    <button class="btn btn-primary main-action" type="submit" ng-click="updateAndApprove(details)"
+                            ng-disabled="form.$invalid || isNameDuplicated() || isSerialNumberDuplicated()">
+                        Approve
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

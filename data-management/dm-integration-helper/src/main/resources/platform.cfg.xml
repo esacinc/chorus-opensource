@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd ">
+
+    <context:annotation-config/>
+    <context:component-scan
+            base-package="com.infoclinika.mssharing.platform.entity,
+                            com.infoclinika.mssharing.platform.model,
+                            com.infoclinika.mssharing.platform.fileserver,
+                            com.infoclinika.mssharing.platform.repository,
+                            com.infoclinika.mssharing.platform.security"/>
+
+    <bean id="encoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+    <bean id="projectAccessChangedEventListener"
+          class="com.infoclinika.mssharing.platform.model.impl.write.sharing.ProjectAccessChangedEventListener"/>
+    <bean id="detailsTransformers"
+          class="com.infoclinika.mssharing.platform.model.helper.read.details.DetailsTransformers"/>
+    <bean id="transformers" class="com.infoclinika.mssharing.platform.model.DefaultTransformers"/>
+    <bean id="current" class="java.util.Date" scope="prototype"/>
+
+    <bean id="storedObjectPaths" class="com.infoclinika.mssharing.platform.fileserver.StoredObjectPathsTemplate">
+        <property name="experimentsAttachmentsPrefix" value="experiments"/>
+        <property name="projectAttachmentsPrefix" value="projects"/>
+        <property name="rawFilesPrefix" value="rawfiles"/>
+    </bean>
+
+    <bean id="applicationEventMulticaster"
+          class="org.springframework.context.event.SimpleApplicationEventMulticaster">
+        <property name="taskExecutor">
+            <bean class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+            </bean>
+        </property>
+    </bean>
+</beans>

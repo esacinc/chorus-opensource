@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html ng-app="dashboard" ng-controller="main-controller">
+<head>
+    <meta charset="utf-8"/>
+    <title ng-bind="'Chorus&nbsp;&ndash;&nbsp;'+page.title"></title>
+    <!-- FavIcon -->
+    <link rel="icon" href="../img/favicon.ico" type="image/x-icon"/>
+
+    <script type="text/javascript" src="../script/util/logging.js"></script>
+
+    <!-- JQuery + Plugins and JQuery UI -->
+    <script src="../lib/jquery/jquery-1.8.2.min.js"></script>
+    <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../lib/jquery/jquery.filedownload.js"></script>
+    <script src="../lib/jquery/jquery.dotdotdot-1.5.2.js"></script>
+    <script src="../lib/jquery/jquery.highlight-4.js"></script>
+    <script src="../lib/jquery/jquery.caret.1.02.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery.browser.min.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery.cookie.js"></script>
+    <script src="../lib/zip/zip.js"></script>
+    <link rel="stylesheet" href="../lib/jquery-ui/jquery-ui.css"/>
+
+    <script type="text/javascript" src="../lib/detect-js/detect.js"></script>
+
+    <!-- Twitter Bootstrap -->
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <script src="../lib/moment-js/moment.min.js"></script>
+
+    <!-- AngularJS and Angular UI -->
+    <script type="text/javascript" src="../lib/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../lib/angularjs/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../lib/angularjs/watch-fighters.js"></script>
+    <script type="text/javascript" src="../lib/angular-ui/angular-ui.js"></script>
+    <script type="text/javascript" src="../lib/angular-ui/ui-bootstrap-tpls-0.5.0.min.js"></script>
+    <link rel="stylesheet" href="../lib/angular-ui/angular-ui.css">
+
+    <script type="text/javascript" src="../script/error-catcher.js"></script>
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../lib/select2-3.2.0/select2.css">
+    <script type="text/javascript" src="../lib/select2-3.2.0/select2.js"></script>
+
+    <script type="text/javascript" src="../script/enums.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/util/url-util.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/dashboard.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/util/common-util.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/formatters.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/ajax.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/front-end.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/mixins/mixins.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/selection.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/service/js-upload.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/util/download-util.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/util/drag-n-drop-util.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/util/table-operations-util.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/util/attachments-util.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/util/popup-util.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/message.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/service/anonymous-download.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/projects-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/experiments-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/mixins/modal/server-validation-error-support.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/experiments-front.js?_version=${static.resources.version}"></script>
+
+
+    <script type="text/javascript" src="../script/processing-run-wizard/shared-plugin-configuration.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/experiment-wizard-analysis-step.directive.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/experiment-wizard-file-to-prep-assignment-step.directive.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/experiment-wizard-sample-assignment-step.directive.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/experiment-wizard-sample-to-factors-step.directive.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/instruments-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/instrument-models-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/instruments-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/users.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/security-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/features-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/request-details-back.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript"
+            src="../script/service/billing-back.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/service/ad-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/ad-front.js?_version=${static.resources.version}"></script>
+
+
+    <script type="text/javascript" src="../script/service/news-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/news-front.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/dashboard-common-directives.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/controller/projects-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/security-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/groups-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/groups-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/upload-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/upload-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/laboratories-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/laboratories-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/files-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/files-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/search-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/administration-tools/instrument-models/instrument-models.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/administration-tools/instrument-models/list.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/administration-tools/instrument-models/validation.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/administration-tools/instrument-models/create-edit.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/service/search-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/breadcrumbs.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/issues-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/lab-head-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/lab-head-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/general-requests-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/general-requests-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/translations-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/translations-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/protein-search-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/trash-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/trash-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/admin-tools-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/admin-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/file-access-log-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/file-access-log-back.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/modals.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/validators.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/upload/file-hash.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/upload/background-upload.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/usupported-browser.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/controller/preferences-front.js"></script>
+    <script type="text/javascript" src="../script/service/preferences-back.js"></script>
+
+    <script type="text/javascript" src="../script/controller/client-token-front.js"></script>
+    <script type="text/javascript" src="../script/service/client-token-back.js"></script>
+
+    <script type="text/javascript" src="../script/components/current-year.directive.js"></script>
+
+    <script type="text/javascript" src="../script/appearance/appearance.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.service.js"></script>
+    <script type="text/javascript" src="../script/header/header.js"></script>
+    <script type="text/javascript" src="../script/header/header.controller.js"></script>
+
+
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="../fonts/fonts.css?_version=${static.resources.version}">
+
+    <!-- Our Styles -->
+    <!--[if gte IE 9] its for gradients in select tags>
+      <style type="text/css">
+        .gradient {
+           filter: none;
+        }
+      </style>
+    <![endif]-->
+    <link rel="stylesheet" href="../css/style.css?_version=${static.resources.version}">
+    <link rel="stylesheet" href="../css/dialogs.css?_version=${static.resources.version}">
+    <link rel="stylesheet" href="../css/media.css?_version=${static.resources.version}" media="screen">
+
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-41329240-1', 'chorusproject.org');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+<body>
+<div class="hor-scroll">
+<div class="fixed-area">
+    <div ng-init="activePage = 'dashboard'; isDashboard = true;" class="ng-include: 'header.html'"></div>
+
+    <div class="main-toolbar-holder clearfix">
+        <div class="center-frame relative">
+            <div class="btn-toolbar">
+                <div class="btn-group main-btn-holder">
+                    <a class="create btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="icon icon-plus"></i>
+                        <span class="text">&nbsp;Create</span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click='open("/projects/new")'>Project</a></li>
+                        <li><a ng-click='open("/experiments/my/new")'>Experiment</a></li>
+                        <li ng-hide="loggedInUser.labs.length == 0"><a ng-click='open("/instruments/new")'>Instrument</a></li>
+                        <li ng-show="isAdmin()"><a ng-click='open("/instrument-models/new")'>Instrument Model</a></li>
+                        <li><a ng-click="open('/groups/new')">Sharing Group</a></li>
+                        <li ng-show="isFeatureAvailable(LabFeatures.PROTEIN_ID_SEARCH)"><a ng-click="open('/fastadb/new')">Search Database</a></li>
+                        <li ng-show="isAdmin()"><a ng-click="open('/laboratories/new')">Laboratory</a></li>
+                        <li ng-show="isAdmin()"><a ng-click="open('/news/new')">News</a></li>
+                        <li ng-show="isAdmin()"><a ng-click="open('/admin/tools/notification/new')">Notification</a></li>
+                        <li ng-show="isAdmin()"><a ng-click="open('/ad/new')">Advertisement</a></li>
+                    </ul>
+                </div>
+                <div ng-controller="new-upload-button" ng-switch="isUploadInProgress()" class="main-btn-holder">
+                    <div ng-switch-when="false">
+                        <a class="btn upload main-action dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="text">&nbsp;Upload Files</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="isUploadAvailable() && open('/upload/new')">Direct Upload</a></li>
+                        </ul>
+                    </div>
+                    <div ng-switch-when="true">
+                        <button class="btn upload main-action in-progress" ng-click="open(getUploadDialogUrl())">
+                            <span class="icon upload-icon"></span>
+                            <span class="text">&nbsp;In Progress</span>
+                            <span class="percent" ng-bind="stats.uploadProgressFormatted() && (stats.uploadProgressFormatted()+'%') || '0%'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="operations" ng-show="operationButtonFactory.display()">
+                <div class="selection-summary" ng-show="operationButtonFactory.origin == 'files'">
+                        <span class="items-number">
+                            <ng-pluralize count="operationButtonFactory.count"
+                                          when="{'0': 'No files', 'one': '1 file', 'other': '{} files'}"></ng-pluralize>
+                        </span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <span class="total" ng-bind="operationButtonFactory.filesTotalSize | fileSize"></span>
+                </div>
+                <div class="selection-summary" ng-show="operationButtonFactory.origin == 'trash'">
+                        <span class="items-number">
+                            <ng-pluralize count="operationButtonFactory.count"
+                                          when="{'0': 'No items', 'one': '1 item', 'other': '{} items'}">
+                            </ng-pluralize>
+                        </span>
+                </div>
+                <div class="selection-summary" ng-show="operationButtonFactory.origin == 'translation'">
+                         <span class="items-number">
+                            <ng-pluralize count="operationButtonFactory.count"
+                                          when="{'0': 'No experiments', 'one': '1 experiment', 'other': '{} experiments'}"></ng-pluralize>
+                        </span>
+                </div>
+                <div class="selection-summary" ng-show="operationButtonFactory.origin == 'translationPerFile'">
+                         <span class="items-number">
+                            <ng-pluralize count="operationButtonFactory.count"
+                                          when="{'0': 'No files', 'one': '1 file', 'other': '{} files'}"></ng-pluralize>
+                        </span>
+                </div>
+                <div class="selection-summary" ng-show="operationButtonFactory.origin == 'researches'">
+                         <span class="items-number">
+                            <ng-pluralize count="operationButtonFactory.count"
+                                          when="{'0': 'No processing runs', 'one': '1 processing run', 'other': '{} processing runs'}"></ng-pluralize>
+                        </span>
+                </div>
+                <!-- TODO: Move operations button to directive -->
+                <div class="buttons-holder">
+                    <button ng-repeat="(key, operationButton) in operationButtonFactory.buttons" class="btn"
+                            ng-show="operationButton.display"
+                            ng-click="operationButtonFactory.popupOptions = operationButton._clicked();" title="{{operationButton.title}}">
+                        <i ng-show="operationButton.showIcon" class="icon {{operationButton.style}}"></i>
+                        <span ng-show="!operationButton.showIcon">{{operationButton.text}}</span>
+                        <i class="icon warning" ng-show="operationButton._disabled()"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="page-title" data-ng-class="page.titleClassName">
+                <ul class="breadcrumbs" ng-controller="breadcrumbs">
+                    <li ng-repeat="crumb in breadcrumbs">
+                            <span class="ellipsize">
+                                <a ng-href="{{crumb.url}}" ng-bind="crumb.label" title="{{crumb.label}}"></a>
+                            </span>
+                        <span class="icon breadcrumbs-sep"></span>
+                    </li>
+                </ul>
+                <h3 ng-include="page.subHeaderUrl" class="subHeaderURL" ng-class="{'short': isFeatureAvailable(LabFeatures.EDITABLE_COLUMNS) && page.changeableColumns }"></h3>
+                <div class="global-operations">
+                    <button ng-repeat="(key, operationButton) in globalOperationButtonFactory.buttons" class="btn {{operationButton.btnClass}}"
+                            ng-show="operationButton.display"
+                            ng-click="globalOperationButtonFactory.popupOptions = operationButton._clicked();" title="{{operationButton.title}}">
+                        <span ng-show="!operationButton.showIcon">{{operationButton.text}}</span>
+                        <i ng-show="operationButton.showIcon" class="icon {{operationButton.style}}"></i>
+                        <i class="icon warning" ng-show="operationButton._disabled()"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div ng-switch="page.showFilter" ng-class="{ 'editableColumnsEnabled' : isFeatureAvailable(LabFeatures.EDITABLE_COLUMNS) && (page.changeableColumns || page.changeableProjectsColumns || page.changeableExperimentsColumns)}">
+                <div ng-switch-when="true" ng-show="page.showFilter" class="filter-container pull-right">
+                    <i class="icon filter-big"></i>
+                    <input id="filterList" class="filter-table" type="text" placeholder="Filter list" ng-model="page.tempFilter" on-enter="page.filter = page.tempFilter;"/>
+                </div>
+                <div ng-switch-default ng-show="page.showPageableFilter"><pagination-filter filter-scope="page.filterScope"></pagination-filter></div>
+                <div class="advancedFilteringHolder" ng-show="page.advancedFilter">
+                    <advanced-filtering configuration="page.advancedFilter.configuration"
+                                        composed-filter="page.advancedFilter.composedFilter"
+                            />
+                </div>
+            </div>
+            <ng-switch on="page.changeableColumns" ng-show="isFeatureAvailable(LabFeatures.EDITABLE_COLUMNS)">
+                <div class="change-column-button-holder" ng-switch-when="true">
+                    <button class="btn btn-columns" ng-click="open('/change-columns/files')" title="Columns"><i class="icon edit-columns"></i></button>
+                </div>
+            </ng-switch>
+            <ng-switch on="page.changeableProjectsColumns" ng-show="isFeatureAvailable(LabFeatures.EDITABLE_COLUMNS)">
+                <div class="change-column-button-holder" ng-switch-when="true">
+                    <button class="btn btn-columns" ng-click="open('/change-columns/projects')" title="Columns"><i class="icon edit-columns"></i></button>
+                </div>
+            </ng-switch>
+            <ng-switch on="page.changeableExperimentsColumns" ng-show="isFeatureAvailable(LabFeatures.EDITABLE_COLUMNS)">
+                <div class="change-column-button-holder" ng-switch-when="true">
+                    <button class="btn btn-columns" ng-click="open('/change-columns/experiments')" title="Columns"><i class="icon edit-columns"></i></button>
+                </div>
+            </ng-switch>
+        </div>
+    </div>
+</div>
+<div class="scroll-area" id="scroll-area">
+    <div class="center-frame table-shadow clearfix" style="margin-right: 0; float: left">
+        <div class="main-holder">
+            <div class="sidebar" ng-controller="sidebar">
+                <div class="sidebar-menu" data-ng-class="{'sidebar-expanded': !globalRepositoryClosed, 'sidebar-collapsed': globalRepositoryClosed}">
+                    <h4 ng-click="globalRepositoryClosed = !globalRepositoryClosed">
+                        <div class="expand-switcher"></div>
+                        Global Repository
+                    </h4>
+                    <ul class="nav nav-list">
+                        <li ng-class="getClass('/projects/all')"><a href="#/projects/all" class="bold">All Projects</a>
+                            <ul class="nav nav-list">
+                                <li ng-class="getClass('/projects/my')">
+                                    <a href="#/projects/my"><i class="bullet"></i>My Projects</a>
+                                </li>
+                                <li ng-class="getClass('/projects/shared')">
+                                    <a href="#/projects/shared"><i class="bullet"></i>Shared with Me</a>
+                                </li>
+                                <li ng-class="getClass('/projects/public')">
+                                    <a href="#/projects/public"><i class="bullet"></i>Public Projects</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li ng-class="getClass('/experiments/all')">
+                            <a href="#/experiments/all" class="bold">All Experiments</a>
+                            <ul class="nav nav-list">
+                                <li ng-class="getClass('/experiments/my')">
+                                    <a href="#/experiments/my"><i class="bullet"></i>My Experiments</a>
+                                </li>
+                                <li ng-class="getClass('/experiments/shared')">
+                                    <a href="#/experiments/shared"><i class="bullet"></i>Shared with Me</a>
+                                </li>
+                                <li ng-class="getClass('/experiments/public')">
+                                    <a href="#/experiments/public"><i class="bullet"></i>Public Experiments</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li ng-class="getClass('/files/all')">
+                            <a href="#/files/all" class="bold">All Files</a>
+                            <ul class="nav nav-list">
+                                <li ng-class="getClassOnlyThis('/files/my')">
+                                    <a href="#/files/my"><i class="bullet"></i>My Files</a>
+                                </li>
+                                <li ng-class="getClass('/files/shared')">
+                                    <a href="#/files/shared"><i class="bullet"></i>Shared with Me</a>
+                                </li>
+                                <li ng-class="getClass('/files/public')">
+                                    <a href="#/files/public"><i class="bullet"></i>Public Files</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li ng-show="isFeatureAvailable(LabFeatures.PROTEIN_ID_SEARCH)" ng-class="getClass('/protein-search/databases/all')">
+                            <a href="#/protein-search/databases/all" class="bold">All Search Databases</a>
+                            <ul class="nav nav-list">
+                                <li ng-class="getClassOnlyThis('/protein-search/databases/my')">
+                                    <a href="#/protein-search/databases/my"><i class="bullet"></i>My Search Databases</a>
+                                </li>
+                                <li ng-class="getClass('/protein-search/databases/public')">
+                                    <a href="#/protein-search/databases/public"><i class="bullet"></i>Public Search Databases</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li ng-class="getClass('/trash')">
+                            <a href="#/trash" class="semibold">Trash</a>
+
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-menu" ng-hide="loggedInUser.labs.length == 0" data-ng-class="{'sidebar-expanded': !myLabClosed, 'sidebar-collapsed': myLabClosed}">
+                    <h4 ng-click="myLabClosed = !myLabClosed">
+                        <div class="expand-switcher"></div>
+                        My Lab<span ng-show="loggedInUser.labs.length != 1">s</span>
+                    </h4>
+                    <ul class="nav nav-list">
+                        <li ng-repeat="laboratory in laboratories">
+                            <div ng-show="laboratories.length > 1" set-title="laboratory.name">
+                                <div class="ellipsize" ng-bind="laboratory.name"></div>
+                            </div>
+                            <ul class="nav nav-list">
+                                <li ng-controller="sidebar" ng-class="getClassOnlyThis('/lab/' + laboratory.id + '/files')">
+                                    <a href="#/lab/{{laboratory.id}}/files" class="semibold">Files</a>
+                                    <ul class="nav nav-list">
+                                        <li ng-repeat="instrument in laboratory.instruments" ng-class="getClassOnlyThis('/files/my/instrument/' + instrument.id)" set-title="instrument.name">
+                                            <a href="#/files/my/instrument/{{instrument.id}}" class="ellipsize">
+                                                <i class="bullet"></i><span ng-bind="instrument.name"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li ng-controller="sidebar" ng-show="isLabHead(laboratory.labHead)" ng-class="getClassOnlyThis('/lab/' + laboratory.id + '/experiments')">
+                                    <a  href="#/lab/{{laboratory.id}}/experiments" class="muted semibold">Experiments</a>
+                                </li>
+                                <li ng-controller="sidebar" ng-show="isLabHead(laboratory.labHead)" ng-class="getClassOnlyThis('/lab/' + laboratory.id + '/projects')">
+                                    <a  href="#/lab/{{laboratory.id}}/projects" class="muted semibold">Projects</a>
+                                </li>
+                                <li ng-controller="sidebar" ng-class="getClassOnlyThis('/lab/' + laboratory.id + '/instruments')">
+                                    <a  href="#/lab/{{laboratory.id}}/instruments" class="muted semibold">Instruments</a>
+                                </li>
+                                <li ng-controller="sidebar" ng-show='laboratory.labHead == loggedInUser.id' ng-class="getClassOnlyThis('/laboratories/' + laboratory.id + '/users')">
+                                    <a href="#/laboratories/{{laboratory.id}}/users" class="muted semibold">Users</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-menu" data-ng-class="{'sidebar-expanded': !myGroupsClosed, 'sidebar-collapsed': myGroupsClosed}">
+                    <h4 ng-click="myGroupsClosed = !myGroupsClosed">
+                        <div class="expand-switcher"></div>
+                        My Groups
+                    </h4>
+                    <ul class="nav nav-list">
+                        <li ng-controller="sidebar" ng-class="getClassOnlyThis('/groups')">
+                            <a href="#/groups" class="semibold">Sharing Groups</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-menu" ng-show="isAdmin()" data-ng-class="{'sidebar-expanded': !adminToolsClosed, 'sidebar-collapsed': adminToolsClosed}">
+                    <h4 ng-click="adminToolsClosed = !adminToolsClosed">
+                        <div class="expand-switcher"></div>
+                        Administration Tools
+                    </h4>
+                    <ul class="nav nav-list">
+                        <li ng-controller="sidebar" ng-class="getClassOnlyThis('/laboratories/all')">
+                            <a href="#/laboratories/all" class="semibold">Laboratories</a>
+                        </li>
+                        <li ng-controller="sidebar" ng-show="isAdmin()" ng-class="getClassOnlyThis('/instrument-models')">
+                            <a href="#/instrument-models" class="semibold">Instrument Models</a>
+                        </li>
+                        <li ng-controller="sidebar" ng-class="getClassOnlyThis('/news')">
+                            <a href="#/news" class="semibold">News</a>
+                        </li>
+                        <li ng-controller="sidebar" ng-class="getClassOnlyThis('/advertisement')">
+                            <a href="#/ad" class="semibold">Advertisement</a>
+                        </li>
+                        <li ng-controller="sidebar" ng-class="getClassOnlyThis('/file-access-log')">
+                            <a href="#/file-access-log" class="semibold">File Access Log</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="sidebar-menu" ng-controller="generalRequestCounter" data-ng-class="{'sidebar-expanded': !requestsClosed, 'sidebar-collapsed': requestsClosed}">
+                    <h4 ng-click="requestsClosed = !requestsClosed">
+                        <div class="expand-switcher"></div>
+                        Requests
+                    </h4>
+                    <ul class="nav nav-list">
+                        <li ng-controller="sidebar" ng-class="getClassOnlyThis('/requests/inbox/all')">
+                            <a href="#/requests/inbox/all" class="muted semibold"><i class="icon inbox"></i>Inbox<span ng-show="requestsInboxCount.number != 0">&nbsp;(<span ng-bind="requestsInboxCount.number"></span>)</span></a>
+                        </li>
+                        <li ng-controller="sidebar" ng-class="getClassOnlyThis('/requests/outbox/all')">
+                            <a href="#/requests/outbox/all" class="muted semibold"><i class="icon outbox"></i>Outbox<span ng-show="requestsOutboxCount.number != 0">&nbsp;(<span ng-bind="requestsOutboxCount.number"></span>)</span></a>
+                        </li>
+                        <li>&#160;</li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="main-view" ng-view></div>
+        </div>
+    </div>
+    <advertisement></advertisement>
+
+    <div class="hidden">
+        <div id="file-download-message" class="server-message-popup" title="File Download Error">
+            <p>A file download error has occured, please try again.</p>
+        </div>
+
+        <div id="server-error-message" class="server-message-popup" title="Error">
+            <p>Something went wrong on the server. Please contact the application administrator.</p>
+        </div>
+        <div id="session-timeout-message" class="server-message-popup" title="">
+            <p>The session has expired. Please sign in again.</p>
+        </div>
+        <div id="userChangedDialog" title="" class="hidden"> </div>
+        <div id="fileDownloadConfirm" title="" class="hidden"> </div>
+        <div id="backgroundUploadReload" title class="hidden">Some files are uploading in background. Do you really want to reload the page?</div>
+        <div id="upload-limit-error-message" class="server-message-popup">
+            <p>The file upload quota has been exceed. Please contact the Chorus support at support@chorusproject.org.</p>
+        </div>
+        <div id="instrument-creation-request-message">
+            <p>You will be notified upon request approval or rejection.</p>
+        </div>
+    </div>
+</div>
+</div>
+<div class="ng-include: 'footer.html'"></div>
+
+<div id="download-file-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Download Files</h3>
+            </div>
+            <div class="modal-body">
+                <p>Preparing job for downloading files was started.
+                    You will receive notification, when all files will be ready.
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                        ng-click="downloadNotification.hidePopup()">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="btn btn-primary main-action" ng-click="downloadNotification.download()">OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="upload-unavailable-dialog" tabindex="-1" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3><i class="icon warning-dialog-header"></i> Browser not Supported</h3>
+            </div>
+            <div class="modal-body">
+                <p>We&nbsp;have detected that your browser does not fully support a&nbsp;technical ability to&nbsp;upload huge data files. Please use <strong>Google Chrome</strong> for upload as&nbsp;it&nbsp;is&nbsp;known as&nbsp;most modern and stable solution.</p>
+                <p>We&nbsp;are currently working on&nbsp;improvements in&nbsp;data file upload to&nbsp;provide better experience for you.</p>
+                <p>Sorry for the inconvenience.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">
+                    Cancel
+                </button>
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true" ng-click="open('/upload/new')">
+                    Proceed Anyway
+                </button>
+                <a target="blank" href="https://www.google.com/intl/en/chrome/browser/" class="btn btn-primary main-action">
+                    Download Chrome
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="no-lab-dialog" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3><i class="icon warning-dialog-header"></i> Upload is Unavailable</h3>
+            </div>
+            <div class="modal-body">
+                <p>To upload files you should be a lab member.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">
+                    Cancel
+                </button>
+                <a ng-click="openModal('/profile')" class="btn btn-primary main-action">
+                    Open Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="no-instrument-dialog" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3><i class="icon warning-dialog-header"></i> Upload is Unavailable</h3>
+            </div>
+            <div class="modal-body">
+                <p>To upload files you should be an operator of instrument.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">
+                    Cancel
+                </button>
+                <a ng-click="openModal('/instruments/new')" class="btn btn-primary main-action">
+                    Create Instrument
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="lab-account-not-payed-dialog" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' href="#/" data-dismiss='modal'>&nbsp;</a>
+                <h3><i class="icon warning-dialog-header"></i> Your Account Has a Debt</h3>
+            </div>
+            <div class="modal-body">
+                <p>Yor laboratory '{{notPayedPopup.labName}}' has a debt {{notPayedPopup.debt/100}}$.
+                    You must top up balance of this lab account or all features will be blocked for this lab account.</p>
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn  secondary-action" href="/pages/dashboard.html">
+                    Back To Dashboard
+                </a>
+                <a target="blank" href="/pages/billing.html#/history/{{notPayedPopup.lab}}" class="btn btn-primary main-action">
+                    Open Billing
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<operation-popup options="operationButtonFactory.popupOptions"></operation-popup>
+
+<div id="billing-login-notification" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3><i class="icon warning-dialog-header"></i> Chorus News: Fee-Based Services</h3>
+            </div>
+            <div class="modal-body" style="max-height: 400px;">
+                <p>
+                    <b>The transition to a freemium-based model establishes CHORUS as a sustainable data analysis solution for mass spectrometry community.</b>
+                </p>
+                <p>At Stratus Biosciences, advancing the mass spectrometry field means everything to us. That's why we
+                    launched CHORUS, a non-profit cloud-based data analysis solution developed by scientists for scientists.
+                    The beta version of CHORUS was launched on June 6th 2013 at the 65th ASMS Conference in
+                    Minneapolis.  This free release enabled new users to experience cloud based mass spectrometry data
+                    analysis at no cost so they could decide if the tools and services met their needs.  New tools and services
+                    continue to be added and usage has grown rapidly to include 860 members uploading data from over
+                    150 mass spectrometry laboratories around the world.</p>
+                <p>
+                    <b>What’s changing?</b>
+                    To ensure the long-term sustainability of CHORUS, our next release will include
+                    new features that enable Stratus Biosciences to bill users for premium services that they use.  While
+                    users will be able to monitor the costs of the services they are using, no fees will be charged until March
+                    1st 2015. In this way, each user and laboratory can be become familiar with the user fees that would be
+                    charged.  Each lab will receive a onetime credit of $100 to be used towards the storage and processing
+                    of their data.  After March 1st, each lab’s account balance will be reset to zero and labs will be required
+                    to provide a method of payment to cover charges once they have exceeded the $100 credit.  Even with
+                    the increasing volume of data stored within CHORUS, most labs will take a while to exceed their $100
+                    credit. Labs and users are welcome to retrieve their data and/or cancel their account at any time at no
+                    cost.
+                </p>
+
+                <p>
+                    <b>Why is it necessary to bill users for services?</b>
+                    Preserving scientific data is fundamental to Stratus
+                    Biosciences and we believe it is a critical need to advance our field.  Establishing a sustainable operating
+                    model for CHORUS is essential for achieving data permanence and the development of new data
+                    analysis tools.  Implementing a method that lets users pay for the services they used also provides the
+                    incentive for software engineers to develop and maintain professional quality software tools.  To
+                    achieve these goals, CHORUS is now transitioning from the free service to a freemium solution that
+                    charges user fees to cover the operational and support costs for those labs that are heavy users.
+                </p>
+
+                <p>
+                    <b>What new tools and service are being added?</b>
+                    The next release also includes a number of new
+                    tools and services.  We will offer two different storage environments.  Both Active and Archive
+                    storage environments have been implemented that enable users to efficiently move older data
+                    from high speed storage to low cost long term storage.  In addition, account management tools
+                    have been added that allow laboratory heads to track CHORUS usage.
+                </p>
+
+                <p>
+                    <b>What to expect in the future?</b>
+                    An application programming interface has been implemented
+                    that allows software developers to connect professionally developed tools to CHORUS.
+                    Examples application include three protein database search tools; COMET (an open-source
+                    version of SEQUEST), Mascot (by Matrix Science), and Byonic (by Protein Metrics).  In addition,
+                    an interface between CHORUS and Skyline (by University of Washington) has been developed
+                    to support data analysis of data stored in CHORUS using Skyline without having to download
+                    data.  Support for label free quantitation is new with the addition of the Differential Mass
+                    Spectrometry tools (by Infoclinika and the University of Pittsburgh).   All of these tools will be
+                    coming soon and provide users with a variety of professionally developed tools that can be
+                    accessed without the need to purchase software licenses or computer hardware and infrastructure.
+                </p>
+
+                <p>
+                    <b>About CHORUS:</b>
+                    The CHORUS software makes it easy for researchers to securely organize,
+                    share, and analyze large volumes of mass spectrometry data on the cloud so that it can be
+                    shared with others and made available for re-analysis as technology changes and advances.
+                    And we continue to make improvements. New services, including scalable data analysis tools
+                    for database searching, targeted quantification, and label free high resolution differential mass
+                    spectrometry are being implemented by the groups you know at Matrix Science, Protein
+                    Metrics, InfoClinika, the MacCoss Lab at the University of Washington, and the Yates lab at the
+                    University of Pittsburgh.  By bringing data storage and analysis together on the cloud, we
+                    envision CHORUS becoming a critical resource for mass spectrometry labs that provides access
+                    to high value services.
+                </p>
+
+                <p>
+                    Our business model is very straightforward: We sell great services that enable scientists to
+                    manage mass spectrometry data and access high quality data analysis tools.   You own your
+                    data and you control the decision to keep it private, share it with collaborators, or make it
+                    available to the public.  We don't mine your data without your permission to do so.  We also do
+                    not build a profile based on your data or usage habits to sell to advertisers. We don't
+                    "monetize" your data or analyze your data to get information to market to you. Our software
+                    and services are designed to make your user experience better and advance the value and use
+                    of mass spectrometry.
+                </p>
+
+                <p>
+                    Our commitment to protecting your data comes from a deep respect for our customers and the
+                    importance of preserving scientific data. We know that your trust doesn't come easy. That's
+                    why we have and always will work as hard as we can to earn and keep it.
+                </p>
+
+                <p>
+                    <b>What are the fees for using CHORUS?</b>
+                    Users are charged only for the services they use beyond the $100
+                    per month lab credit.  Initially, two fee-based services will be offered, Active Storage and Archive
+                    Storage.  Active Storage provides high-speed access to data that is needed for viewers and other tools
+                    that perform real time data analysis or visualization.  Active Storage is designed for data that is being
+                    used or analyzed and needs to be available on-demand.  The cost for Active Storage is $90/TB/month.
+                    Archive Storage provides a low cost option for storing data that does not require fast on-demand access.
+                    Data stored with the Archive Storage service can take several hours to access compared to Active
+                    Storage that is near instantaneous. Archive Storage is charged at $30/TB/month.
+                </p>
+
+                <p>
+                    It is important to note that we offer an extremely cost effective cloud storage solution. Most
+                    laboratories currently using CHORUS will take a long time to use up their $100 credit. If 100% of a lab’s
+                    data is stored in the Archive Storage, they can maintain up to 200 GB of data in CHORUS for >16 months
+                    using their onetime $100 credit.
+                </p>
+
+                <p>
+                    <b>How will my account be billed?</b>
+                    The head of each CHORUS account will be required to establish a form
+                    of payment for their laboratory.  Initially we will use the PayPal Internet payment service that is linked
+                    to a Credit Card or Purchase Order.  Stratus Biosciences will invoice CHORUS lab head accounts on a
+                    monthly basis for the services provided to CHORUS lab.
+                </p>
+
+                <p>
+                    <b>How can I monitor the cost of my CHORUS account?</b>
+                    Each laboratory head can view real-time billing
+                    updates using the accounting tools in CHORUS.  The cost of services is broken down by day, type of
+                    services, and the user that uploaded the data.
+                </p>
+
+                <div>
+                    <div>
+                        <span class="center-text bold">Lab Account List</span>
+                        <a href="../img/billing/labs-list.png" target="_blank">
+                            <img src="../img/billing/labs-list.png"/>
+                        </a>
+                    </div>
+                    <div>
+                        <span class="center-text bold">History List</span>
+                        <a href="../img/billing/history-list.png" target="_blank">
+                            <img src="../img/billing/history-list.png"/>
+                        </a>
+                    </div>
+                    <div>
+                        <span class="center-text bold">Daily History Details</span>
+                        <a href="../img/billing/history-details.png" target="_blank">
+                            <img src="../img/billing/history-details.png"/>
+                        </a>
+                    </div>
+                </div>
+                <br/>
+
+                <p>
+                    <b>Is there a free, no cost trial period?</b>
+                    Yes!  We want to make sure that users have time to test the fee-
+                    based services before they charges are accessed.  We will upgrade the system starting December 1st but
+                    no fees will be charged until after March 1st 2015.  However, users can monitor their CHORUS use to see
+                    what the actual charges would be for their lab.  At the end of the three month trial period, a credit will
+                    be issued to cover all user fees incurred.
+                </p>
+
+                <p>
+                    <b>What if I want to cancel my CHORUS account?</b>
+                    You can cancel your CHORUS account at any time
+                    without charge or restrictions.  The process is simple, simply contact support@chorusproject.org and
+                    indicate that you would like to cancel your account.  If you need time to restore data from CHORUS will
+                    be glad to provide time to do that at no cost to you.
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <div class="billingLoginNotification" style="display: inline-block">
+                    <input id="billing-login-notification-hide" class="" ng-model="billingLoginNotification.doNotShowAgain" type="checkbox">
+                    <label for="billing-login-notification-hide" class="" style="display: inline-block">Don't show me again</label>
+
+                </div>
+                <a ng-click="billingLoginNotification.ok()" class="btn btn-primary main-action">
+                    OK
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="clean-browser-cache-warning" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Zipping process failed</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix">
+                    <div class="dialog-container">
+                        <p>Upload file(s) failed because zipping was unsuccessful. <br/> One of the most probable reasons
+                            is
+                            that
+                            Chrome storage space is exceeded. Chrome storage folder shouldn't exceed 10% of free space on drive.<br/><br/>
+                            This storage sometimes is not cleaning up by Chrome, so if you see this popup, please clean it manually.</p>
+
+                        <p>To clean storage space, please remove the content from
+                            directory:
+                        <ul>
+                            <li>Windows 7 and higher - <i>{c:\Users\user-name\AppData\Local\Google\Chrome\User
+                                Data\Default\File
+                                System}</i>
+                            </li>
+                            <li>Windows XP - <i>c:\Documents and Settings\user-name\Local Settings\Application
+                                Data\Google\Chrome\User Data\Default\File System</i>
+                            </li>
+                            <li>OS X - <i>/Users/USERNAME/Library/Application Support/Google/Chrome/Default/File
+                                System</i>
+                            </li>
+                            <li>Linux - <i>~/.config/google-chrome/Default/File System</i></li>
+                        </ul>
+                        </p>
+                        <p>Please contact <a href="$url/pages/support.html"
+                                             style="color:#222222; text-decoration: underline; white-space: nowrap">Support</a>
+                            if this didn't help.</p>
+
+                        <p>Please note, that all files you've selected to upload should be re-uploaded again.</p>
+
+                        <p>Error message(for developers): <i ng-bind="cleanBrowserCachWarning.getName()"></i></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn main-action" data-dismiss="modal" aria-hidden="true"
+                        ng-click="confirmation.hidePopup()">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

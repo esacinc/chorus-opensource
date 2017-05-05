@@ -1,0 +1,28 @@
+body.registerBody{
+    overflow-y:auto;
+}
+.center-text{
+	text-align:center;
+}
+
+.right-align{
+	display:block;
+	text-align:right;
+	float:right;
+}
+select{
+	margin-bottom:0;
+}
+label{
+	color: #222222;
+	font: normal 14px/24px "Open Sans Semibold", Arial, sans-serif;
+	margin: 0;
+}
+.form-actions {
+    padding-left: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+form {
+    margin-bottom: 0;
+}

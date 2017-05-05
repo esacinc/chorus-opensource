@@ -1,0 +1,36 @@
+<form id="loginForm" class="sign-in well-large" novalidate action="../j_spring_security_check?redirectAfterLogin={{redirectAfterLogin}}"  method="POST" name="loginForm" >
+    <h2>Sign In</h2>
+    <div class="alert-message">
+        <div class="success-message hidden" ng-show="loginResult.successMessage.length > 0">
+            {{ loginResult.successMessage }}
+        </div>
+        <div class="login-error-message" ng-show="loginResult.errorMessage.length > 0">
+            {{loginResult.errorMessage}}
+        </div>
+    </div>
+    <div class="credentials-group">
+        <div class="control-group">
+            <label class="control-label" for="email">Email</label>
+            <input id="email" type="email" name='j_username' class="dialog-text-input dont-hide ng-valid-email"/>
+        </div>
+        <div class="control-group" >
+            <label class="control-label" for="password">Password</label>
+            <input id="password"  type="password" name='j_password' class="dialog-text-input dont-hide"/>
+            <a class="link" href="authentication.html#/forgot-password">Forgot password?</a>
+        </div>
+    </div>
+
+    <div class="remember-me">
+        <label class="checkbox">
+            <input type="checkbox" name="_spring_security_remember_me"/>
+            Remember me
+        </label>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="main-action" id="sign-in">Sign in</button>
+        <span ng-switch="ssoProperties.enabled">
+            <span ng-switch-when="false"><span>&nbsp;&nbsp;or&nbsp;&nbsp;<a class="link" href="register.html">Create an account</a></span></span>
+        </span>
+    </div>
+</form>

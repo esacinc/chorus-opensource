@@ -1,0 +1,8 @@
+<span ng-repeat="tab in page.custom.searchTabs">
+    <span class="search-tab" ng-class="{'active':'active','disabled':'disabled'}[tab.state]">
+        <a ng-href="{{tab.href}}" ng-bind="tab.label" ng-show="tab.state == 'regular'"></a>
+        <span ng-bind="tab.label" ng-hide="tab.state == 'regular'"/>
+        <small class="number" ng-bind="tab.count"></small>
+    </span>
+    <i class="sep"></i>
+</span>

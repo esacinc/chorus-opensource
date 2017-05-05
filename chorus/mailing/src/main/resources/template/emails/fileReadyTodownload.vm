@@ -1,0 +1,7 @@
+Chorus: File ready for download
+Hello, ${user}!
+
+Files are ready for downloading.
+Use this url to download: ${downloadUrl}
+
+Thank you!

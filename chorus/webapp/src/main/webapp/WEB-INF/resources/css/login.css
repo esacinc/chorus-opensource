@@ -1,0 +1,166 @@
+/*Home page styles*/
+.btn{
+    color: #666;
+}
+.btn:hover{
+    color: #666;
+}
+.modal-footer:after{
+	clear:none;
+}
+.modal-footer button ~ button {
+    margin-left: 20px;
+}
+.form-actions {
+	padding-left: 0;
+	padding-bottom: 0;
+	margin-bottom: 0;
+}
+form {
+	margin-bottom: 0;
+}
+.white-overlay{
+	position:absolute;
+	top:0;
+	left:50%;
+	margin-left:-633px;
+}
+
+.intro-column{
+	width:382px;
+	float:left;
+}
+.intro-column .feature-box{
+	clear:both;
+	background:url(../img/feature-box-bg.png) center bottom no-repeat;
+	padding:20px 0;
+}
+.intro-column .feature-box:last-child{
+	background:none;
+}
+.intro-column .feature-box .image{
+	width:95px;
+	float:left;
+}
+.intro-column .feature-box .descr{
+	margin-left:95px;
+}
+.intro-column .feature-box h3{
+	margin:0 0 10px;
+	font: normal 14px/14px "open sans bold", Arial, sans-serif;
+	color:#333;
+}
+.intro-column .feature-box p:last-child{
+	margin:0;
+}
+.intro-column .feature-box p{
+	font: normal 13px/20px "Open Sans", Arial, sans-serif;
+	
+}
+.form-column{
+	margin-left:402px;
+	padding-top:20px;
+}
+
+#email, #password{
+	font: normal 16px/31px "Open Sans", Arial, sans-serif !important;
+	color:#111 !important;
+}
+form .link:hover{color:#1177a6;}
+form .link:active{color:#0b5273;}
+.control-label{
+	border: 1px solid #B2B2B2;
+    border-radius: 3px 0 0 3px;
+    height: 31px;
+    position: absolute;
+    text-align: center;
+    width: 90px;
+	color:#696969;
+    font: normal 14px/31px "open sans bold";
+	text-shadow:0 1px 0 #fff;
+	
+	background: rgb(252,252,252); /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlOGU4ZTgiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(232,232,232,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(232,232,232,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(232,232,232,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(232,232,232,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(232,232,232,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(232,232,232,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-8 */
+	border-color:#b2b2b2;
+    margin: 0;
+
+}
+.dialog-text-input{
+	height:33px !important;
+	line-height:31px;
+	background-color:#fff !important;
+    border-radius: 0 3px 3px 0;
+    left: 92px;
+    position: relative;
+    width: 306px !important;
+}
+input:-webkit-autofill {
+	background-color:#FFF !important;
+}
+.control-group{
+	margin-bottom:30px;
+}
+.remember-me{
+    padding-top: 15px;
+}
+.remember-me label.checkbox{
+    margin: 0;
+    padding: 0;
+}
+
+.dialog-text-input:active, .dialog-text-input:focus.dialog-text-input:focus, .dialog-text-input:hover, .dialog-text-input.dont-hide, .dialog-text-area:focus, .dialog-select{
+	border-radius:0 3px 3px 0 !important;
+}
+/*Home page styles end*/
+
+/* Error mesages on Login Page Start */
+.sign-in .alert-message {
+    margin: -15px -30px 0;
+}
+.sign-in .error-message {
+    padding: 10px 30px;
+    color: #8f0000;
+    background: #fff8f8;
+    border: 1px solid #efc9c9;
+    border-width: 1px 0;
+    margin-top: -1px;
+}
+.sign-in .success-message {
+    padding: 10px 30px;
+    color: #008f0a;
+    background: #fafff8;
+    border: 1px solid #c5efc8;
+    border-width: 1px 0;
+    margin-top: -1px;
+}
+.sign-in .control-group {
+    padding: 15px 30px;
+    margin: 0 -30px;
+}
+.sign-in .control-group.error {
+    background: #fff8f8;
+    border: 1px solid #efc9c9;
+    border-width: 1px 0;
+    margin-top: -1px;
+}
+.sign-in .error label {
+    color: #8f0000;
+}
+.sign-in .control-group .message {
+    display: block;
+    padding: 5px 0 0;
+    color: #8f0000;
+}
+.sign-in .modal-footer {
+    padding-top: 25px;
+}
+/* Error mesages on Login Page End */
+

@@ -1,0 +1,4 @@
+Chorus Administration: Email Sending Failed Notification
+
+Emails sending are failed for: ${failedEmails}
+"m_failed_mail_record" table ids: ${failedRecordsIds}

@@ -1,0 +1,12 @@
+${projectTitle}: Instrument Creation Request
+Hello, ${labHead}!
+
+Someone has just requested to create a new instrument. Please find the details below:
+
+Laboratory: ${laboratory};
+Instrument: ${instrument};
+Requested by: ${requesterEmail};
+
+Please feel free to login into your account and make your decision on instrument creation approval.
+
+Thanks!

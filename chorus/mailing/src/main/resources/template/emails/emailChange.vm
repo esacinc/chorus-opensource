@@ -1,0 +1,10 @@
+Chorus: Change Your Email
+Hello, ${user}!
+
+Someone has just requested to change email to your Chorus account. If that was you please follow this link to confirm a new email for your account:
+
+<a href="${emailChangeUrl}">${emailChangeUrl}</a>
+
+Otherwise please ignore this message.
+
+Thank you!

@@ -1,0 +1,14 @@
+Chorus: ${post.title} - Blog Post Edited
+Blog post in blog you subscribed to has been edited!
+
+Project ${post.blog.name}
+
+${post.title}
+
+${post.content.replaceAll("</?[^>]+/?>", "")}
+
+
+----
+View and comment post here - <a href="${postUrl}">${postUrl}</a>
+
+To unsubscribe, visit blog page and click Unsubscribe <a href="${blogUrl}">${blogUrl}</a>

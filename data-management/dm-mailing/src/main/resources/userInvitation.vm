@@ -1,0 +1,10 @@
+${projectTitle}: Invitation
+Hello!
+
+You have been invited to join ${projectTitle} by ${user}.
+${projectTitle} is a simple web application for storing, sharing, visualizing, and analyzing spectrometry files.
+
+You can create your account using this link:
+<a href="${projectUrl}">${projectUrl}</a>
+
+Thank you!

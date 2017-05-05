@@ -1,0 +1,54 @@
+<div class="relative">
+    <div class="dashboard-box outbox-box" resizable-table-columns="outbox-list">
+        <div class="heading clearfix">
+            <div class="cell cell-number"><span>&nbsp;</span></div>
+            <div class="cell cell-name" sorting="requesterName">To</div>
+            <div class="cell cell-details" sorting="details">Details</div>
+            <div class="cell cell-sent" sorting="sent" sort-by-default="asc">Sent</div>
+            <div class="cell cell-status">&nbsp;</div>
+        </div>
+        <div class="content clearfix" ng-hide="isTableLoading()">
+            <div class="row clearfix" ng-repeat="request in outbox | filter:page.filter | orderBy:sorting.field:sorting.reverse">
+                <div class="cell cell-number">
+                    <span ng-bind="$index + 1">1</span>
+                </div>
+                <div class="cell cell-name">
+                    <div class="ellipsize" set-text="request.to" set-title="request.to"></div>
+                </div>
+                <div class="cell cell-details">
+                    <div class="ellipsize" ng-bind-html-unsafe="request.description" set-title="request.description"></div>
+                </div>
+                <div class="cell cell-sent" set-text="request.sent | date"></div>
+                <div class="cell cell-status">
+                    <button class="btn table-button default-action btn-success"
+                            resource-object="request" event-handler="delete" success-handler="onAction" sync-operation-control="">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-show="isOutboxTableEmpty()" class="empty-table">{{getEmptyTableMessage()}}</span>
+    <span ng-show="isTableLoading()" class="empty-table">{{getLoadingTableMessage()}}</span>
+
+    <div id="outbox-mark-as-read-confirmation" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <div class="modal-header">
+                    <h3>Mark All Items as Read?</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to mark all items as read?</p>
+                    <p>All items will be removed from Outbox. This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                            ng-click="markAsRead.cancel()">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary main-action" ng-click="markAsRead.ok()">
+                        Ok
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

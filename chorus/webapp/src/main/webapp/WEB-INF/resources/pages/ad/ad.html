@@ -1,0 +1,14 @@
+<div class="ad" ng-show="advert.id">
+    <style>
+        .ad{
+            float: left;
+            margin-left: 45px;
+            margin-top: 10px;
+        }
+        .ad img{
+            cursor: pointer;
+        }
+
+    </style>
+    <img ng-src="data:image/JPEG;base64,{{advert.imageToDisplayRef}}" ng-click="advertClick(advert)"/>
+</div>

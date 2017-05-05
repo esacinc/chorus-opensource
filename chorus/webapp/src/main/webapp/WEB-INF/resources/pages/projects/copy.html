@@ -1,0 +1,48 @@
+<script type="text/javascript" src="../script/initProjectUi.js"></script>
+<script type="text/javascript" src="../script/message.js"></script>
+
+<div class="project-dialog" id="project-copy-dialog" modal-dialog ng-cloak>
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <form name="copyProjectForm" novalidate>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">?</button>
+                    <h3 id="projectCopyLabel">Pass a Copy of {{projectName}}</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div id="copying" class="dialog-container">
+                        <div class="copy-project table">
+                            <div>
+                                <div class="control-group clearfix">
+
+                                    <span>{{getCountOfMembers()}} </span>
+                                    <project-copying-selector users="users"
+                                                              selected-users="newOwners"
+                                                              invited-users="invitedOwnerUsers"
+                                                              exclude-emails="excludeEmails"
+                                                              email-notification="emailNotifications"
+                                                              invite-handler="inviteHandler">
+                                    </project-copying-selector>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary main-action" type="submit"
+                                ng-disabled="newOwners.length == 0 && invitedOwnerUsers.length == 0"
+                                ng-click="createCopy(newOwners.length == 0 && invitedOwnerUsers.length == 0)">
+                            Pass
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<confirm-action-for-unregistered confirm-action="createCopyAndForUnregisteredUsers"
+                                         plain-action="createCopyHandler"
+                                         dialog-messages="createCopyAndForUnregisteredUsersDialogMessages"></confirm-action-for-unregistered>
+

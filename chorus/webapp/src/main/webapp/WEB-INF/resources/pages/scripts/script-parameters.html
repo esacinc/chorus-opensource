@@ -1,0 +1,102 @@
+<style>
+
+    .modal .table.fixed-header thead,
+    .modal .table.fixed-header tbody {
+        width: 100%;
+    }
+
+    .modal .table.fixed-header thead{
+        display: table-header-group;
+    }
+    .modal .table.fixed-header tbody{
+        display: table-row-group;
+    }
+
+    .modal .table.fixed-header tbody {
+        height: auto;
+    }
+
+    .script-parameters .dialog-text-input.ng-invalid{
+        border-color: #df9393;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .no-margin{
+        margin-left: 0 !important;
+    }
+
+    .new-script-parameter-holder.row-fluid{
+        background: #fafafa;
+        padding: 2px 10px;
+        width: auto;
+        margin-bottom: 20px;
+    }
+
+</style>
+<div class="script-parameters">
+    <div class="row row-fluid new-script-parameter-holder" ng-show="editMode">
+        <div class="control-group">
+            <label class="control-label" for="parameter">New Parameter</label>
+            <input class="dialog-text-input dont-hide" id="parameter" type="text" ng-model="currentParameter.name"
+                   placeholder="Enter Parameter Name">
+        </div>
+        <div class="control-group span5 no-margin">
+            <label class="control-label" for="paramType">Type</label>
+            <select ui-select-2="" class="dialog-select dont-hide"
+                    data-placeholder="-- Select One --" id="paramType" ng-model="currentParameter.type">
+                <option></option>
+                <option value="REAL_NUMBER">Real Number</option>
+                <option value="INTEGER">Integer</option>
+                <option value="STRING">String</option>
+            </select>
+        </div>
+        <div class="control-group span5">
+            <label class="control-label" for="defaultValue">Default Value</label>
+            <input placeholder="Enter Default Value"
+                   class="dialog-text-input dont-hide"
+                   id="defaultValue"
+                   type="text" ng-model="currentParameter.defaultValue" parameter-value-validator="currentParameter.type">
+        </div>
+        <div class="control-group" style="width: 20%" >
+            <button class="btn secondary-action"
+                    ng-disabled="!currentParameter.type || !currentParameter.name"
+                    ng-click="addParameter(currentParameter); currentParameter=null" style="width: 100%;">Add
+            </button>
+        </div>
+    </div>
+    <div>
+        <div class="col-xs-12 ">
+            <table class="table table-bordered table-hover fixed-header" ng-hide="isDataEmpty()">
+                <thead>
+                <tr>
+                    <th class="">Name</th>
+                    <th class="">Type</th>
+                    <th class="">Default Value</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(name, info) in data">
+                    <td><span ng-bind="name" class=""></span></td>
+                    <td><span ng-bind="info.type" class=""></span></td>
+                    <td class=""><label for="t_{{name}}" class=""><input id="t_{{name}}" class="input dialog-text-input" parameter-value-validator="info.type"
+                                                                         ng-disabled="!editMode" ng-model="info.defaultValue">
+                    </label>
+                    </td>
+                    <td>
+                        <a ng-show="editMode" class="btn-link btn-sm btn-0" ng-click="removeParameter(name)">
+                            <span class="glyphicon glyphicon-remove icon-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div ng-show="isDataEmpty()">
+                <h4 class="center-block text-center">No Parameters</h4>
+            </div>
+        </div>
+    </div>
+</div>

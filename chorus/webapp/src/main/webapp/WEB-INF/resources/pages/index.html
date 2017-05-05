@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html ng-app="index-page">
+<head>
+    <meta charset="utf-8"/>
+    <title>Chorus - Home</title>
+	<!-- FavIcon -->
+	<link rel="icon" href="../img/favicon.ico" type="image/x-icon"/>
+
+    <script type="text/javascript" src="../script/util/logging.js"></script>
+
+    <!-- Twitter Bootstrap -->
+    <script src="../lib/jquery/jquery-1.8.2.min.js"></script>
+    <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="../lib/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../lib/angularjs/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-ui/angular-ui.min.js"></script>
+    <link rel="stylesheet" href="../lib/angular-ui/angular-ui.min.css">
+
+    <script type="text/javascript" src="../script/enums.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/error-catcher.js"></script>
+
+    <script type="text/javascript" src="../lib/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/detect-js/detect.js"></script>
+    <script type="text/javascript" src="../script/service/security-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/features-back.js?_version=${static.resources.version}"></script>
+
+    <script type="text/javascript" src="../script/service/news-back.js"></script>
+    <script type="text/javascript" src="../script/homepage.js"></script>
+    <script type="text/javascript" src="../script/controller/security-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/issues-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/statistics-back.js"></script>
+    <script type="text/javascript" src="../script/formatters.js"></script>
+    <script type="text/javascript" src="../script/components/current-year.directive.js"></script>
+
+    <script type="text/javascript" src="../script/appearance/appearance.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.service.js"></script>
+    <script type="text/javascript" src="../script/header/header.js"></script>
+    <script type="text/javascript" src="../script/header/header.controller.js"></script>
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Our Styles -->
+    <!--[if gte IE 9] its for gradients in select tags>
+      <style type="text/css">
+        .gradient {
+           filter: none;
+        }
+      </style>
+    <![endif]-->
+    <link rel="stylesheet" href="../css/dialogs.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-41329240-1', 'chorusproject.org');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+<body class="static-page homepage" ng-controller="home-controller">
+    <div class="fixed-area">
+        <div class="fixed-header-holder">
+            <div ng-init="activePage = 'index'" class="ng-include: 'header.html'"></div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="slider-box clearfix carousel slide" id="myCarousel">
+            <div class="slider-holder clearfix">
+                <div class="center-frame">
+                    <a href="#myCarousel" class="carousel-control left btn-prev" data-slide="prev">Previous</a>
+                    <a href="#myCarousel" class="carousel-control right btn-next" data-slide="next">Next</a>
+                    <div class="slider">
+                        <div class="slide-list carousel-inner">
+                            <div class="active item first" ng-controller="security">
+                                <span id="logo"><img src="../img/chorus-logo-home.png" alt="Chorus Logo" /></span>
+                                <h2>Manage your spectrometry files online.</h2>
+                                <p>Simple web application for storing, sharing, visualizing, and analyzing spectrometry files.</p>
+                                <span ng-switch="ssoProperties.enabled">
+                                    <a href="register.html" class="btn-create-account" ng-switch-when="false" ng-show="loggedInUser == null">
+                                        <span>Create a free account</span>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="item second">
+                                <h2>Create Instruments and Upload Data</h2>
+                                <div class="photo">
+                                    <img src="../img/img-slider02.png" alt="Create Instruments and Upload Data" />
+                                </div>
+                            </div>
+                            <div class="item third">
+                                <h2>Create Projects and Experiments</h2>
+                                <div class="photo">
+                                    <img src="../img/img-slider03.png" alt="Create Instruments and Upload Data" />
+                                </div>
+                            </div>
+                            <div class="item fourth">
+                                <h2>Collaborate with Colleagues</h2>
+                                <div class="photo">
+                                    <img src="../img/img-slider04.png" alt="Collaborate with Colleagues" />
+                                </div>
+                            </div>
+                            <div class="item fifth">
+                                <h2>Analyze Your Data</h2>
+                                <div class="photo">
+                                    <img src="../img/img-slider05.png" alt="Analyze Your Data" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-pager">
+                <ol class="carousel-indicators holder">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active">1</li>
+                    <li data-target="#myCarousel" data-slide-to="1">2</li>
+                    <li data-target="#myCarousel" data-slide-to="2">3</li>
+                    <li data-target="#myCarousel" data-slide-to="3">4</li>
+                    <li data-target="#myCarousel" data-slide-to="4">5</li>
+                </ol>
+            </div>
+        </div>
+        <div class="why-box clearfix">
+            <div class="center-frame">
+                <h2>Why Chorus?</h2>
+                <div class="items">
+                    <div class="item">
+                        <div class="feature-box">
+                            <div class="image">
+                                <img src="../img/create-experiments.png" alt="Create Experiments" />
+                            </div>
+                            <div class="descr">
+                                <h3>Create Experiments and Projects</h3>
+                                <p>Create your own experiments and group them in projects. Store data for each experiment in one place.</p>
+                            </div>
+                        </div>
+                        <div class="feature-box">
+                            <div class="image">
+                                <img src="../img/upload.png" alt="Upload Files" />
+                            </div>
+                            <div class="descr">
+                                <h3>Upload Files</h3>
+                                <p>Upload your experiment files along with the metadata and make them available to&nbsp;collaborators.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="feature-box">
+                            <div class="image">
+                                <img src="../img/share.png" alt="Share Data with Colleagues" />
+                            </div>
+                            <div class="descr">
+                                <h3>Share Data with Colleagues</h3>
+                                <p>Share your files with colleagues in your lab or in other laboratories. Get access to public projects and experiments.</p>
+                            </div>
+                        </div>
+                        <div class="feature-box">
+                            <div class="image">
+                                <img src="../img/analyze.png" alt="Analyze Your Data" />
+                            </div>
+                            <div class="descr">
+                                <h3>Analyze Your Data</h3>
+                                <p>You can analyze data you've uploaded into Chorus, make graphs and much more.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="twocolumns clearfix">
+                    <div class="content">
+                        <div class="benefits">
+                            <h2>More Benefits with Chorus</h2>
+                            <ul>
+                                <li><strong>Cost Efficient</strong> <br/>Replaces up-front capital infrastructure expenses with low variable costs that scale with growth of&nbsp;your data. Shared computational resources allow affordable analysis of&nbsp;large scale experiments.</li>
+                                <li><strong>High Performance</strong><br/>Fast raw data viewers and processing. Chorus is&nbsp;leveraging InfoClinika&rsquo;s cloud based data management platform designed for real time visualizations and parallel&nbsp;processing.</li>
+                                <li><strong>Reliable</strong><br/>Chorus is&nbsp;build on&nbsp;a&nbsp;top of&nbsp;Amazon cloud technologies leveraging redundant S3&nbsp;and Glacier storages, EC2 distributed computations, and highly available, replicated Amazon Relational Database Service. The user is&nbsp;always using the&nbsp;latest&nbsp;version.</li>
+                                <li><strong>Open</strong><br/>Chorus is&nbsp;meant to&nbsp;be&nbsp;one stop for all&nbsp;MS data management, processing, and analysis. It&rsquo;s architected as&nbsp;an&nbsp;open platform for integration of&nbsp;both open source and proprietary algorithms and services. Chorus is&nbsp;a&nbsp;nonprofit&nbsp;effort.</li>
+                                <li><strong>Vendor Neutral</strong><br/>Store, share, visualize, and analyze data across vendor&nbsp;platforms.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="aside">
+                        <h2>Usage Statistics</h2>
+                        <div class="statistics">
+                            <div class="section wide">
+                                <div class="frame">
+                                    <i class="icon users"></i>
+                                </div>
+                                <strong class="info" ng-bind="usage.usersCount | number"></strong>
+                                <p>Users</p>
+                            </div>
+                            <div class="section">
+                                <div class="frame">
+                                    <i class="icon volume"></i>
+                                </div>
+                                <strong class="info" ng-bind="usage.filesSize | sizeInTB"></strong>
+                                <p>Data<br />volume (TB)</p>
+                            </div>
+                            <div class="section">
+                                <div class="frame">
+                                    <i class="icon files"></i>
+                                </div>
+                                <strong class="info" ng-bind="usage.filesCount | number"></strong>
+                                <p>Data<br />files</p>
+                            </div>
+                            <div class="section">
+                                <div class="frame">
+                                    <i class="icon projects"></i>
+                                </div>
+                                <strong class="info" ng-bind="usage.projectsCount | number"></strong>
+                                <p>Public<br />projects</p>
+                            </div>
+                            <div class="section">
+                                <div class="frame">
+                                    <i class="icon experiments"></i>
+                                </div>
+                                <strong class="info" ng-bind="usage.experimentsCount | number"></strong>
+                                <p>Public<br />Experiments</p>
+                            </div>
+                        </div>
+                        <span ng-switch="ssoProperties.enabled">
+                            <span ng-switch-when="false">
+                                <a ng-show="!isUserLoggedIn()" href="register.html" class="btn-get-started"><em class="arrow"></em><span>Get Started <strong>Now</strong></span></a>
+                                <a ng-show="isUserLoggedIn()" href="dashboard.html" class="btn-get-started"><em class="arrow"></em><span>Get Started <strong>Now</strong></span></a>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-box clearfix">
+            <div class="center-frame">
+                <div class="twocolumns clearfix">
+                    <div class="content">
+                        <div class="news-box clearfix">
+                            <h2>Latest News</h2>
+                            <div class="new-item" ng-repeat="n in news|orderBy:'dateCreated':true">
+                                <h3><a href="news.html#{{'news' + n.id}}" ng-bind="n.title">Introducing the Chorus Project</a></h3>
+                                <p ng-bind-html-unsafe="n.introduction | newlines">Stratus Biosciences will be introducing the CHORUS Project and its capabilities at this year’s ASMS conference in Minneapolis in a Workshop at 5:30 p.m. Wednesday June 12, 2013.  Participants will be able to access CHORUS on their laptops and mobile devices and provide feedback on what they feel are the essential features of such a community platform.</p>
+                                <span class="posted">Posted on <span ng-bind="n.dateCreated| date"></span></span>
+                            </div>
+                            <div class="more">
+                                <a href="news.html">Read more news</a>
+                            </div>
+                        </div>
+                        <div class="testimonials-box clearfix">
+                            <h3>Testimonials</h3>
+                            <div class="text clearfix">
+                                <div id="Testimonials" class="carousel slide">
+                                    <ol class="carousel-indicators paging">
+                                        <li data-target="#Testimonials" data-slide-to="0" class="active"></li>
+                                        <li data-target="#Testimonials" data-slide-to="1"></li>
+                                        <li data-target="#Testimonials" data-slide-to="2"></li>
+                                    </ol>
+                                    <!-- Carousel items -->
+                                    <div class="carousel-inner">
+                                        <div class="active item">
+                                            <div class="photo">
+                                                <img src="../img/img-testimonial-roy-martin.jpg" alt="Roy Martin" />
+                                            </div>
+                                            <div class="overflow">
+                                                <blockquote>
+                                                    <i class="icon"></i>
+                                                    <p class="quote"><q>I'd like to add my voice to the call for a more organized way to share data, and adopt standards so that we are all accountable for our results. All of our efforts should add to the greater understanding, and not to the fog of unsupportable claims. As a vendor, we really want to see the community adopt standards, and with them the understanding of what is good data. That means the ability to share data and apply all the appropriate quality metrics.</q></p>
+                                                    <cite>
+                                                        <i class="icon"></i>
+                                                        LeRoy B. Martin, III, Ph.D<br />Sr. Manager<br />
+                                                        Biological Mass Spectrometry<br />Waters Corporation</cite>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="photo">
+                                                <img src="../img/arthur-moseley.jpg" alt="photo testimonials" />
+                                            </div>
+                                            <div class="overflow">
+                                                <blockquote>
+                                                    <i class="icon"></i>
+                                                    <p class="quote"><q>The information content from proteomic analyses continue to&nbsp;increase in&nbsp;lockstep with advances in&nbsp;mass spectrometers. As&nbsp;these instruments increase in&nbsp;resolution, mass accuracy, sensitivity, &amp;&nbsp;speed&nbsp;&mdash; and add new capabilities (ion-mobility), their RAW data file sizes have proportionally increased. All proteomics laboratories struggle with the fundamentals of&nbsp;storing and importantly&nbsp;&mdash; sharing&nbsp;&mdash; the tens of&nbsp;Terabytes of&nbsp;data generated in&nbsp;their labs. From what&nbsp;I have seen, CHORUS addresses these challenges, while adding state of&nbsp;the art visualization capabilities. We&nbsp;plan to&nbsp;use CHORUS as&nbsp;an&nbsp;integral part of&nbsp;our data sharing plan.</q></p>
+                                                    <cite>
+                                                        <i class="icon"></i>
+                                                        M. Arthur Moseley, PhD.<br />
+                                                        Director of Proteomics Duke University School of Medicine
+                                                    </cite>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="photo">
+                                                <img src="../img/chris-tirpak.jpg" alt="photo testimonials" />
+                                            </div>
+                                            <div class="overflow">
+                                                <blockquote>
+                                                    <i class="icon"></i>
+                                                    <p class="quote"><q>This team truly gets&nbsp;it. They understand the science and as&nbsp;importantly the issues around the collaboration and sharing required to&nbsp;move the science forward. They also understand the flexibility, adaptability, and power that cloud computing will give them. As&nbsp;cloud computing advances they will be&nbsp;ready to&nbsp;take advantage of&nbsp;what it&nbsp;has to&nbsp;offer. Also, I&nbsp;won&rsquo;t be&nbsp;surprised to&nbsp;see cloud computing evolve to&nbsp;help StratusBiosciences solve the problems unique to&nbsp;collaborative big science data. If&nbsp;there is&nbsp;a&nbsp;team that can make this happen, that has the passion for the problem at&nbsp;hand, and is&nbsp;ready to&nbsp;lead the way, this is&nbsp;the&nbsp;team.</q></p>
+                                                    <cite>
+                                                        <i class="icon"></i>
+                                                        Chris Tirpak<br />
+                                                        Vice President of Information Technology at Echostar
+                                                    </cite>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aside">
+                        <div class="partner-box">
+                            <h2>Our Partners</h2>
+                            <ul class="partner-list">
+                                <li><a href="http://www.infoclinika.com/" class="logo-infoclinika">Infoclinika</a></li>
+                                <li><a href="http://aws.amazon.com/" class="logo-amazon-services">Amazon web services</a></li>
+                                 <li><a href="http://www.pitt.edu/" class="logo-university-of-pittsburgh">University of Pittsburgh</a></li>
+                                <li><a href="http://www.washington.edu/" class="logo-university-of-washington">University of Washington</a></li>
+                                <li><a href="http://www.proteinmetrics.com/" class="logo-protein-metrics">Protein Metrics</a></li>
+                                <li><a href="http://www.agilent.com/" class="logo-agilent-technologies">Agilent Technologies</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="how-box clearfix">
+                    <h2>How To</h2>
+                    <div class="text">
+                        <div class="item" ng-repeat="item in items| limitTo: 4">
+                            <a href="#" title="{{item.snippet.title}}" ng-click="showVideo($index)">
+                                <img ng-src="{{item.snippet.thumbnails.high.url}}" alt="item.snippet.title" />
+                                <span class="btn-play">Play it</span>
+                                <span class="title" ng-bind="item.snippet.title"></span>
+                                <span class="overlay"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="more">
+                        <a href="support.html#/videos">View more videos</a>
+                    </div>
+                </div>
+                <div class="about-box clearfix">
+                    <h2>About Us</h2>
+                    <p>Recognizing that the sharing, public dissemination, and analysis of mass spectrometry data has become a major challenge for many laboratories, Stratus Biosciences was founded with the ambitious goal to solve these problems. Stratus Biosciences is a not-for-profit company based in Seattle, WA with the goal of building and providing professionally developed software solutions for the mass spectrometry community. The Chorus Project is our cloud based platform for providing these services.</p>
+                    <div class="more">
+                        <a href="about.html">Read more about us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ng-include: 'footer.html'"></div>
+    <div id="preview-video" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <form name="VideoForm">
+                    <div class="modal-header">
+                        <a data-dismiss="modal" class="close" id="VideoClose" ng-click="closeVideo()" href="">&nbsp;</a>
+                        <h3 ng-bind='video.snippet.title'></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="dialog-container">
+                            <div class="video-holder">
+                                <iframe id="videoFrame" width="560" height="315" ng-src="{{'https://www.youtube.com/embed/' + video.snippet.resourceId.videoId + '?vq=hd720'}}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

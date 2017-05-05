@@ -1,0 +1,24 @@
+<div class="project-info clearfix" ng-controller="project-info">
+    <h3>Project Info</h3>
+    <div class="text">
+        <div class="row">
+            <h4>Laboratory</h4>
+            <p ng-bind="projectShort.lab.name || 'No Laboratory'"></p>
+        </div>
+        <div class="row">
+            <h4>Area of Research</h4>
+            <p ng-bind="projectShort.areaOfResearch"/>
+        </div>
+        <div class="row">
+            <h4>Modified</h4>
+            <p ng-bind="projectShort.modified | date"/>
+        </div>
+        <div class="row">
+            <h4>Description</h4>
+            <p ng-bind="project.details.description|charLimit:200"/>
+        </div>
+    </div>
+    <div class="more">
+        <a href="dashboard.html#/projects/all/{{ projectShort.id }}/experiments">Open project in app</a>
+    </div>
+</div>

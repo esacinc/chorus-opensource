@@ -1,0 +1,13 @@
+<div>
+    <div ng-show="options.type == 'dialog'">
+        <p>Cannot edit all selected files</p>
+    </div>
+    <div ng-show="options.type == 'info'">
+        <p>Edit labels and species operation is not available for selected files</p>
+    </div>
+    <p>Possible reasons: </p>
+    <ul>
+        <li>You are not owner of the selected files</li>
+        <li>The selected files are used in experiments</li>
+    </ul>
+</div>

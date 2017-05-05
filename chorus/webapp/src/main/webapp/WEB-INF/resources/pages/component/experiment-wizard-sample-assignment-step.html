@@ -1,0 +1,47 @@
+<div class="experiment-wizard-sample-assignment-step">
+    <div class="hint" ng-show="vm.selectedSampleTypes.length > 0">All fields should be filled</div>
+    <div class="limit-table limit-table-body">
+        <table class="table table-hover factor-table fixed-index"
+               ng-class="{
+               'column2' : vm.selectedSampleTypes.length == 0,
+               'column3' : vm.selectedSampleTypes.length == 1,
+               'column4': vm.selectedSampleTypes.length == 2,
+               'column5': vm.selectedSampleTypes.length == 3,
+               'column6': vm.selectedSampleTypes.length == 4,
+               'column8': vm.selectedSampleTypes.length == 6,
+               'column10': vm.selectedSampleTypes.length == 8,
+               'column12': vm.selectedSampleTypes.length == 10
+               }"
+               id="samples-table">
+            <thead>
+            <tr>
+                <th class="width32"><span class="number-cell">Row</span></th>
+                <th sorting="name" sort-by-default="asc" ng-click="vm.changeSorting('name')"><span class="name-cell">Prep Name</span>
+                </th>
+                <th class="annotation" ng-show="!vm.specialLabelType" ng-repeat="sampleType in vm.selectedSampleTypes">
+                    <div ng-show="vm.mixedSamplesCount > 0" title="Sample({{vm.allSampleTypeNames[sampleType]}}">Sample Name({{vm.allSampleTypeNames[sampleType]}})</div>
+                    <div ng-show="vm.mixedSamplesCount == 0" title="Sample">Sample Name</div>
+                </th>
+                <th class="annotation" ng-show="vm.specialLabelType" ng-repeat="selectedSampleType in vm.selectedSampleTypes">
+                    <div title="{{selectedSampleType}}" ng-bind="vm.getLabelForSampleType(selectedSampleType, vm.selectedSampleTypes.length)"></div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="preparedSample in vm.preparedSamples">
+                <td ng-bind="$index+1"></td>
+                <td title="{{preparedSample.name}}"><div ng-bind="preparedSample.name" class="ellipsize"></div></td>
+                <td class="annotation-value" ng-repeat="sampleType in vm.selectedSampleTypes">
+                    <div contenteditable input-key-press="vm.keyPressedInTable()"
+                         class="contenteditable-label"
+                         ng-model="preparedSample.samples[sampleType]"
+                         title="Sample name for {{sampleType}} for Prepared Sample {{preparedSample.name}}"
+                         paste-in-table-validation></div>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

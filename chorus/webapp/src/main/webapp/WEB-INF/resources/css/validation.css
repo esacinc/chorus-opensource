@@ -1,0 +1,47 @@
+/* Used in registration form and experiment creation form */
+form .ng-invalid.ng-dirty {
+    background-color: #fabfc3;
+}
+
+form .ng-invalid.ng-pristine {
+}
+
+form .ng-valid.ng-dirty {
+	
+}
+/*input:focus:required:invalid:focus, 
+textarea:focus:required:invalid:focus, 
+select:focus:required:invalid:focus{
+	background:transparent !important;
+	box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset !important;
+    border:1px solid #b2b2b2;
+}*/
+
+.errorParamsMessage{
+    color: #8f0000;
+    font: normal 13px/24px "Open Sans Semibold", Arial, sans-serif;
+    margin-top: 8px;
+    float: left;
+}
+.validation-error-message {
+    color: #8f0000;
+    font: normal 13px/24px "Open Sans Semibold", Arial, sans-serif;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.required-field{
+    border: 1px solid #df9393!important;
+}
+
+.no-models-warning {
+    text-align: left;
+    max-width: 400px;
+    max-height: 30px;
+    line-height: 15px !important;
+}
+
+.no-models-warning p {
+    margin-top: -20px;
+    margin-left: 25px;
+}

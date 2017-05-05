@@ -1,0 +1,9 @@
+Chorus: Instrument Creation Approved
+Hello 123, ${user}!
+
+Your request of instrument creation has just been approved. Please find the details below:
+
+Laboratory: ${laboratory};
+Instrument: ${instrument};
+
+Thanks!

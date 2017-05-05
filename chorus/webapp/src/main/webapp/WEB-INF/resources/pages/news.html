@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html  ng-app="news-page" ng-controller="news-controller">
+<head>
+    <meta charset="utf-8"/>
+    <title>Chorus - News</title>
+	<!-- FavIcon -->
+	<link rel="icon" href="../img/favicon.ico" type="image/x-icon"/>
+
+    <script type="text/javascript" src="../script/util/logging.js"></script>
+
+    <!-- Twitter Bootstrap -->
+    <script src="../lib/jquery/jquery-1.8.2.min.js"></script>
+    <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../lib/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../lib/angularjs/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-ui/angular-ui.min.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/detect-js/detect.js"></script>
+    <script type="text/javascript" src="../script/error-catcher.js"></script>
+    <script type="text/javascript" src="../script/service/security-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/features-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/security-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/issues-back.js"></script>
+    <script type="text/javascript" src="../script/enums.js"></script>
+    <script type="text/javascript" src="../script/news.js"></script>
+    <script type="text/javascript" src="../script/service/news-back.js"></script>
+    <script type="text/javascript" src="../script/components/current-year.directive.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.service.js"></script>
+    <script type="text/javascript" src="../script/header/header.js"></script>
+    <script type="text/javascript" src="../script/header/header.controller.js"></script>
+
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Our Styles -->
+    <!--[if gte IE 9] its for gradients in select tags>
+      <style type="text/css">
+        .gradient {
+           filter: none;
+        }
+      </style>
+    <![endif]-->
+    <link rel="stylesheet" href="../css/dialogs.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="static-page news-page">
+    <div class="fixed-area">
+        <div ng-init="activePage = 'news'" class="ng-include: 'header.html'"></div>
+    </div>
+    <div class="main-content">
+        <div class="content-box clearfix">
+            <div class="center-frame">
+                <div class="twocolumns clearfix">
+                    <div class="content">
+                        <h2>News</h2>
+                        <div class="last-news">
+                            <div class="new-item clearfix" id="{{'news' + n.id}}" ng-repeat="n in news|orderBy:'dateCreated':true">
+                                <div class="heading">
+                                    <h3 ng-bind="n.title"></h3>
+                                    &mdash; <span class="date" ng-bind="n.dateCreated| date">June 10, 2013</span>
+                                </div>
+                               <pre ng-bind-html-unsafe="n.text" class="news-pre"></pre>
+                            </div>
+
+                            <!-- We don't have Archive yet
+                            <div class="hide">
+                                <div class="new-item clearfix">
+                                    <div class="heading">
+                                        <h3>New Servers Have Been Set Up</h3>
+                                        <span class="date">&mdash; April 19, 2013</span>
+                                    </div>
+                                    <p>Our IT-team has set up 3 new servers on Amazon S3. Users count is stable rising and we adapt our system for new conditions.<br />Phasellus fermentum, leo vitae iaculis tristique, felis leo iaculis turpis, ac egestas quam odio non purus. Fusce gravida tortor quis metus malesuada eu vulputate elit porta. Nulla ac risus enim. Sed sagittis sollicitudin purus, in varius arcu varius ut. In id viverra dui. Nam non turpis justo. Nulla urna nisi, ullamcorper ac lacinia et, lobortis accumsan erat. Donec pellentesque cursus ipsum ut porttitor. Donec ac sodales turpis.</p>
+                                    <p>Phasellus vel hendrerit elit. Etiam libero magna:</p>
+                                    <ul>
+                                        <li>Nulla urna nisi</li>
+                                        <li>Ullamcorper ac lacinia et</li>
+                                        <li>Lobortis accumsan erat.</li>
+                                    </ul>
+                                    <p>Donec auctor, nisi et vehicula scelerisque, sem sapien rhoncus libero, in mattis odio enim nec mauris. Maecenas vitae magna sed nisi venenatis hendrerit.</p>
+                                </div>
+                                <div class="new-item clearfix">
+                                    <div class="heading">
+                                        <h3>New Servers Have Been Set Up</h3>
+                                        <span class="date">&mdash; April 19, 2013</span>
+                                    </div>
+                                    <p>On April 10, 2013 the number of our users reached 1000 point and quickly rises, Our developers started to prepare new servers for rising success of new web service. We plan to launch 3 new servers by April 20, 2013.</p>
+                                    <p>Vestibulum egestas hendrerit nunc quis aliquam. Maecenas ligula nunc, sagittis ut eleifend et, vehicula vitae nisi. Nunc lobortis, augue ac cursus congue, sem odio molestie purus, a suscipit nisi erat id sapien. Aliquam scelerisque eros odio. Nunc nec urna metus, suscipit sagittis felis. Aenean sit amet est vitae arcu porttitor molestie. Quisque sit amet erat vel magna scelerisque ultrices. Praesent dolor diam, fermentum vitae commodo ac, malesuada dapibus felis. Nulla molestie nunc a velit tristique cursus. Praesent et ornare justo. Suspendisse mauris orci, convallis nec viverra eget, suscipit eu enim. In odio massa, eleifend </p>
+                                </div>
+                                <div class="new-item clearfix">
+                                    <div class="heading">
+                                        <h3>Welcome to Chorus Project</h3>
+                                        <span class="date">&mdash; April 07, 2013</span>
+                                    </div>
+                                    <p>Recognizing that the sharing, public dissemination, and analysis of mass spectrometry data has become a major challenge for many laboratories, Stratus Biosciences was founded with the ambitious goal to solve these problems.</p>
+                                    <p>Vestibulum egestas hendrerit nunc quis aliquam. Maecenas ligula nunc, sagittis ut eleifend et, vehicula vitae nisi. Nunc lobortis, augue ac cursus congue, sem odio molestie purus, a suscipit nisi erat id sapien. Aliquam scelerisque eros odio. Nunc nec urna metus, suscipit sagittis felis. Aenean sit amet est vitae arcu porttitor molestie. Quisque sit amet erat vel magna scelerisque ultrices. Praesent dolor diam, fermentum vitae commodo ac, malesuada dapibus felis. Nulla molestie nunc a velit tristique cursus. Praesent et ornare justo. Suspendisse mauris orci, convallis nec viverra eget, suscipit eu enim. In odio massa, eleifend </p>
+                                </div>
+                            </div>
+                            <div class="more">
+                                <a href="#/"><span><strong>Archive</strong> &mdash; 3 News</span><em class="arrow"></em></a>
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                    <div class="aside">
+                        <!--
+                        Needed future functionality for these blocks
+                        <div class="banner clearfix">
+                            <a href="#"><img src="../img/img-banner.jpg" alt="Banner text" /></a>
+                        </div>
+                        <div class="subscribe-box clearfix">
+                            <label for="subscribe">Subscribe to Our Newsletter &amp; Updates</label>
+                            <input class="dialog-text-input dont-hide" placeholder="Tell us your email" id="subscribe" />
+                            <button class="btn main-action" type="submit">Subscribe</button>
+                        </div>
+                        -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ng-include: 'footer.html'"></div>
+</body>
+</html>

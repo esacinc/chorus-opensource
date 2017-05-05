@@ -1,0 +1,29 @@
+{
+    "factors":[
+        {
+            "name":"Max Factor",
+            "units":"Meters",
+            "numeric":true,
+            "experimentId":12,
+            "id":10
+        },
+        {
+            "name":"Non Numeric",
+            "units":"",
+            "numeric":false,
+            "experimentId":12,
+            "id":12
+        }
+    ],
+    "files":[
+        {
+            "id":7,
+            "factorValues":["1", "One"]
+        },
+        {
+            "id":12,
+            "factorValues":["2", "Two"]
+        }
+    ]
+
+}

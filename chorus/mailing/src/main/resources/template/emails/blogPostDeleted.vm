@@ -1,0 +1,10 @@
+Chorus: ${post.title} - Deleted Blog Post from ${post.blog.name} Project
+
+We want to inform you that "${post.title}" Blog Post has been deleted from "${post.blog.name}" Project
+
+
+#if (${blogSubscriber})
+----
+To unsubscribe, visit blog page and click Unsubscribe <a href="${blogUrl}">${blogUrl}</a>
+#end
+

@@ -1,0 +1,6 @@
+${projectTitle}: Instrument Request Approved
+Hello, ${user}!
+
+Your request for an access to the ${instrument} instrument has been approved. You are now an operator of this instrument. It means you are now able to upload the RAW data files with it.
+
+Thank you for your patience!

@@ -1,0 +1,281 @@
+<div class="instrument-model-dialog" modal-dialog="instrument-models/">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <form name="createInstrumentModelForm" novalidate>
+
+                <div class="modal-header">
+                    <a id="create-instrument-model-close" class='close' data-dismiss='modal' ng-click="dialogNotToReturn = false">&nbsp;</a>
+                    <h3 id="create-instrument-model-label" ng-bind="title"></h3>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="tab-content">
+                        <div ng-switch="editMode" class="control-group">
+                            <label for="technology-type">Technology Type</label>
+                            <div ng-switch-when="false" class="row-fluid" >
+                                <div class="span11">
+                                    <select id="technology-type"
+                                            ng-disabled="editMode"
+                                            ui-select2
+                                            name="technology-type"
+                                            ng-model="model.technologyType.name"
+                                            data-placeholder="-- Select One --"
+                                            class="dialog-select">
+                                        <option></option>
+                                        <option value="{{technologyType.name}}"
+                                                ng-repeat="technologyType in technologyTypes"
+                                                ng-bind="technologyType.name"
+                                                ng-selected="model.technologyType.name==technologyType.name">
+                                        </option>
+                                    </select>
+                                <span ng-show="validationErrors.technologyType"
+                                      class="error-message-new-instrument-modal-dialog"
+                                      ng-bind="validationErrors.technologyType"></span>
+                                </div>
+                                <div class="span1">
+                                    <div>
+                                        <button class="btn secondary-action add-file-ext-button add-new-button"
+                                                ng-disabled="editMode"
+                                                ng-click="showCreateTechnologyTypeDialog()">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-switch-when="true" class="item">
+                                <div class="dialog-text" ng-bind="model.technologyType.name"></div>
+                            </div>
+                        </div>
+
+                        <div ng-switch="editMode" class="control-group">
+                            <label for="vendor">Vendor</label>
+                            <div ng-switch-when="false" class="row-fluid">
+                                <div class="span11">
+                                    <select id="vendor"
+                                            ui-select2
+                                            ng-disabled="editMode"
+                                            name="vendor"
+                                            ng-model="model.vendor.name"
+                                            data-placeholder="-- Select One --"
+                                            class="dialog-select">
+                                        <option></option>
+                                        <option value="{{vendor.name}}"
+                                                ng-repeat="vendor in vendors"
+                                                ng-bind="vendor.name"
+                                                ng-selected="model.vendor.name==vendor.name">
+                                        </option>
+                                    </select>
+                                <span ng-show="validationErrors.vendor"
+                                      class="error-message-new-instrument-modal-dialog"
+                                      ng-bind="validationErrors.vendor"></span>
+                                </div>
+                                <div class="span1">
+                                    <div>
+                                        <button class="btn secondary-action add-new-button"
+                                                ng-disabled="editMode"
+                                                ng-click="showCreateVendorDialog()">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-switch-when="true" class="item">
+                                <div class="dialog-text" ng-bind="model.vendor.name"></div>
+                            </div>
+                        </div>
+
+                        <div ng-switch="editMode" class="control-group">
+                            <label for="instrument-type">Instrument Type</label>
+                            <div ng-switch-when="false" class="row-fluid">
+                                <div class="span11">
+                                    <select id="instrument-type"
+                                            ui-select2
+                                            name="instrument-type"
+                                            ng-model="model.instrumentType.name"
+                                            ng-disabled="editMode"
+                                            data-placeholder="-- Select One --"
+                                            class="dialog-select">
+                                        <option></option>
+                                        <option value="{{instrumentType.name}}"
+                                                ng-repeat="instrumentType in instrumentTypes"
+                                                ng-bind="instrumentType.name"
+                                                ng-selected="model.instrumentType.name==instrumentType.name">
+                                        </option>
+                                    </select>
+                                <span ng-show="validationErrors.instrumentType"
+                                      class="error-message-new-instrument-modal-dialog"
+                                      ng-bind="validationErrors.instrumentType"></span>
+                                </div>
+                                <div class="span1">
+                                    <div>
+                                        <button class="btn secondary-action add-new-button"
+                                                ng-disabled="editMode"
+                                                ng-click="showCreateInstrumentTypeDialog()">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-switch-when="true" class="item">
+                                <div class="dialog-text" ng-bind="model.instrumentType.name"></div>
+                            </div>
+                        </div>
+
+                        <div ng-switch="editMode" class="control-group">
+                            <div>
+                                <label>File Extensions</label>
+                            </div>
+                            <div ng-switch-when="false" class="row-fluid">
+                                <div>
+                                    <div class="span11">
+                                        <div class="file-ext-holder pull-left" style="width: 420px;">
+                                            <div ng-show="model.extensions.length == 0"
+                                                 class="inline-block margin-right-5 pull-left">No file extensions specified
+                                            </div>
+                                            <div ng-repeat="extension in model.extensions"
+                                                 class="inline-block margin-right-5 pull-left">
+                                                <span ng-bind="extension"></span>
+                                    <span><i ng-click="removeVendorExtension($index)"
+                                             class="icon item-delete"></i></span>
+                                            </div>
+                                        </div>
+                                        <input class="file-ext-input pull-right"
+                                               ng-disabled="editMode"
+                                               placeholder=".extension"
+                                               type="text"
+                                               ng-model="nextVendorExtension"
+                                               on-enter="addVendorExtension(nextVendorExtension); nextVendorExtension='';"/>
+                                        <span ng-show="validationErrors.extensions"
+                                              class="error-message-new-instrument-modal-dialog"
+                                              ng-bind="validationErrors.extensions"></span>
+                                    </div>
+                                    <div class="span1">
+                                        <div>
+                                            <button class="btn secondary-action add-new-button"
+                                                    ng-disabled="!nextVendorExtension || editMode"
+                                                    ng-click="addVendorExtension(nextVendorExtension); nextVendorExtension='';">
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-switch-when="true" class="item">
+                                <div class="dialog-text">
+                                    <span ng-repeat="extension in model.extensions" ng-bind="extension"
+                                          class="margin-right-5"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="control-group">
+                            <label for="new-instrument-model-name">Name</label>
+                            <input id="new-instrument-model-name"
+                                   class="form-control dialog-text-input dont-hide"
+                                   maxlength="50"
+                                   ng-model="model.name"/>
+                        <span class="error-message-new-instrument-modal-dialog" ng-show="validationErrors.name"
+                              ng-bind="validationErrors.name"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn secondary-action" data-dismiss="modal" ng-click="dialogNotToReturn = false">Cancel</button>
+                    <button class="btn btn-primary main-action" type="submit"
+                            ng-click="dialogNotToReturn = false; save();" ng-bind="actionTitle">
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--//TODO:2016-12-07:andrey.lavrov: investigate angular max call stack issue if this poput is created outside the parent modal.-->
+    <div id="create-new-technology-type" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-mini-frame">
+                <div class="modal-header">
+                    <h3>New Technology Type</h3>
+                </div>
+                <div class="modal-body" style="padding: 10px 30px">
+                    <div class="control-group">
+                        <label for="create-new-technology-type-input">Name</label>
+                        <input id="create-new-technology-type-input" class="dialog-text-input dont-hide" ng-model="creation.technologyType"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action"
+                            ng-click="hideCreateTechnologyTypeDialog()"
+                            aria-hidden="true">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            ng-disabled="!creation.technologyType || !creation.technologyType.trim()"
+                            class="btn btn-primary main-action"
+                            ng-click="createTechnologyType(creation.technologyType)">OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-new-instrument-type" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-mini-frame">
+                <div class="modal-header">
+                    <h3>New Instrument Type</h3>
+                </div>
+                <div class="modal-body" style="padding: 10px 30px">
+                    <div class="control-group">
+                        <label for="create-new-instrument-type-input">Name</label>
+                        <input id="create-new-instrument-type-input" class="dialog-text-input dont-hide" ng-model="creation.instrumentType"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action"
+                            ng-click="hideCreateInstrumentTypeDialog()"
+                            aria-hidden="true">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            ng-disabled="!creation.instrumentType || !creation.instrumentType.trim()"
+                            class="btn btn-primary main-action"
+                            ng-click="createInstrumentType(creation.instrumentType)">OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-new-vendor" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-mini-frame">
+                <div class="modal-header">
+                    <h3>New Vendor</h3>
+                </div>
+                <div class="modal-body" style="padding: 10px 30px">
+                    <div class="control-group">
+                        <label for="create-new-vendor-input">Name</label>
+                        <input id="create-new-vendor-input" class="dialog-text-input dont-hide" ng-model="creation.vendor"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action"
+                            ng-click="hideCreateVendorDialog()"
+                            aria-hidden="true">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            ng-disabled="!creation.vendor || !creation.vendor.trim()"
+                            class="btn btn-primary main-action"
+                            ng-click="createVendor(creation.vendor)">OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

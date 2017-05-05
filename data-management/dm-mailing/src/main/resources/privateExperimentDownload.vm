@@ -1,0 +1,11 @@
+${projectTitle}: Experiment Download Private Link
+Hello!
+
+${user} has sent you a private link to download his shared experiment "${experiment}".
+
+To start download please follow this link:
+<a href="${downloadLink}">${downloadLink}</a>
+
+Note, that you should be authenticated on ${projectTitle}.
+
+Thank you!

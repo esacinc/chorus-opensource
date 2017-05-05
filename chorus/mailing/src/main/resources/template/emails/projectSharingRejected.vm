@@ -1,0 +1,12 @@
+Chorus: Experiment Data Access Rejected
+Hello, ${requester}!
+
+Unfortunately your request to access the experiment in the private project "${project}" has been rejected.
+
+#if ($!comment != "")
+Here is the rejection comment:
+
+    ${comment}
+#end
+
+Thank you for your patience.

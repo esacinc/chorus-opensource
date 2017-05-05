@@ -1,0 +1,91 @@
+@media screen and (max-width:1900px) {
+
+    .account-area .user-name .btn-group {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:1700px) {
+
+    .account-area .user-name .btn-group {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:1600px) {
+
+    .account-area .user-name .btn-group {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:1500px) {
+
+    .account-area .user-name .btn-group {
+        width: 250px;
+    }
+}
+
+@media screen and (max-width:1450px) {
+
+    .account-area .user-name .btn-group {
+        width: 200px;
+    }
+}
+
+
+@media screen and (max-width:1400px) {
+
+    .account-area .user-name .btn-group {
+        width: 180px;
+    }
+}
+
+@media screen and (max-width:1300px) {
+
+    .account-area .user-name .btn-group {
+        width: 130px;
+    }
+}
+
+@media screen and (max-width:1250px) {
+
+    .account-area .user-name .btn-group {
+        width: 120px;
+    }
+}
+
+@media screen and (max-width:1240px) {
+
+    .account-area .user-name .btn-group {
+        width: 110px;
+    }
+}
+
+@media screen and (max-width:1230px) {
+
+    .account-area .user-name .btn-group {
+        width: 105px;
+    }
+}
+
+@media screen and (max-width:1220px) {
+
+    .account-area .user-name .btn-group {
+        width: 80px;
+    }
+}
+
+@media screen and (max-width:1200px) {
+
+    .account-area .user-name .btn-group {
+        width: 70px;
+    }
+}
+
+@media screen and (max-width:1050px) {
+
+    .account-area .user-name .btn-group {
+        width: 65px;
+    }
+}

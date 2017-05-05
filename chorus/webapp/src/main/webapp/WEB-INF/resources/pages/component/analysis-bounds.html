@@ -1,0 +1,5 @@
+<label class="checkbox dlc">
+    <input type="checkbox" ng-model="check" ng-disabled="disabled || min || max"/> {{checkboxLabel}}
+</label>
+<label class="value-label" for="{{ inputId }}" ng-bind="label"></label>
+<input id="{{ inputId }}" min="{{min}}" max="{{max}}" can-be-negative="false" double-value-validation="true" ng-model="model" ng-disabled="disabled || check" class="dialog-text-input dont-hide disabled">

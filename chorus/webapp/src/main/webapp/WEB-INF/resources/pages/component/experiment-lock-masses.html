@@ -1,0 +1,28 @@
+<div class="lock-masses">
+    <div class="control-group span6">
+        <label class="control-label">Lock Mz</label>
+        <input class="dialog-text-input" can-be-negative="false" double-value-validation="true" placeholder="Lock Mass" type="text" ng-model="value.lockMass">
+        <div class="holder">
+            <button class="btn secondary-action" ng-click="addValue(value); value = ''">Add</button>
+            <select ui-select2 data-placeholder="Select charge" class="dialog-select" ng-model="value.charge" on-enter="addValue(value); value=''">
+                <option></option>
+                <option value="-3">-3</option>
+                <option value="-2">-2</option>
+                <option value="-1">-1</option>
+                <option value="1">+1</option>
+                <option value="2">+2</option>
+                <option value="3">+3</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group span6">
+        <div class="values-list">
+            <span ng-show="values.length == 0" class="dialog-empty-table">There are no values of Mz</span>
+            <div class="values-list-item" ng-repeat="val in values">
+                <span ng-bind="val.lockMass"></span>
+                <span ng-bind="val.charge | chargeFormatted"></span>
+                <a class="icon item-delete" ng-click="removeValue($index)"></a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,324 @@
+<!-- TODO: eliminate copy/paste -->
+
+
+<link rel="stylesheet" href="../css/validation.css" xmlns="http://www.w3.org/1999/html">
+<!-- Used modal integration from http://angular-ui.github.com -->
+<div modal-dialog id="uploadDialog" style="width: 700px" >
+    <div class="modal-holder">
+    <div class="modal-frame">
+    <form name="form">
+        <div class="modal-header" >
+            <div class="uploads-files-alert-container">
+                <ul class="upload-files-alert">
+                    <li class="alert single-upload-alert" ng-repeat="alert in alerts">{{alert}}</li>
+                </ul>
+            </div>
+            <a class="close" ng-click="onCancel()">&times;</a>
+            <a class="rollup" ng-show="step == 4 && !uploadFinished && !showCancelConfirm" ng-click="hide();" data-dismiss="modal">Roll up</a>
+
+			<h3 ng-show="step == 4 && !uploadFinished && !isZipping && !zipFailed">
+                    Uploading  <span ng-bind="stats.currentIndex + ' of ' + uploadItems.length"></span><span class="state-string" ng-bind="'Estimated time left ' + stats.remainingTimeFormatted()"> &nbsp; </span><span class="state-string" ng-bind="'Total progress ' + stats.uploadProgressFormatted()+'%'"></span>
+            </h3>
+            <h3 ng-show="step == 4 && !uploadFinished && isZipping">
+                Uploading  <span ng-bind="stats.currentIndex + ' of ' + (zipItems.length + uploadItems.length)"></span><span ng-show="zipItems.length == 0" ><span class="state-string" ng-bind="'Estimated time left ' + stats.remainingTimeFormatted()"> &nbsp; </span><span class="state-string" ng-bind="'Total progress ' + stats.uploadProgressFormatted()+'%'"></span></span>
+            </h3>
+            <h3 ng-show="step == 4 && uploadFinished">Upload Complete</h3>
+            <h3 ng-show="step == 4 && zipFailed">Zipping Failed</h3>
+
+            <h3 ng-show="step < 4">Upload Files</h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="step-headers" ng-show="step < 4">
+                <div class="steps-line"></div>
+                <div class="step-holder steps-count-4 active" ng-class="{active: step == 1}">
+                    <div class="number">1</div>
+                    <div class="title">Select Instrument</div>
+                </div>
+                <div class="step-holder steps-count-4" ng-class="{active: step == 2}">
+                    <div class="number">2</div>
+                    <div class="title">Select Files</div>
+
+                </div>
+                <div class="step-holder steps-count-4" ng-class="{active: step == 3}">
+                    <div class="number">3</div>
+                    <div class="title">Set Labels</div>
+                </div>
+                <div class="step-holder steps-count-4" ng-class="{active: step == 4}">
+                    <div class="number">4</div>
+                    <div class="title">Upload</div>
+                </div>
+            </div>
+            <div class="dialog-container" ng-switch="step">
+                <div ng-switch-when="1">
+
+                    <div class="row-fluid" ng-show="showLabSelector()">
+                        <div class="span3">
+                            <label class="control-label" for="labs">Laboratory</label>
+                        </div>
+                        <div class="span9">
+                            <select name="lab" ui-select2 data-placeholder="-- Select One --" id="labs" class="dialog-select" ng-model="selectedLab.id">
+                                <option></option>
+                                <option value="{{lab.id}}" ng-repeat="lab in labitems" ng-bind="lab.name" ng-selected="selectedLab.id == lab.id"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="techtype">Technology Type</label>
+                        </div>
+                        <div class="span9">
+                            <select name="techtype" ui-select2 data-placeholder="-- Select One --" id="techtype" class="dialog-select" ng-model="selectedTechType.id">
+                                <option></option>
+                                <option value="{{techType.id}}" ng-repeat="techType in techTypes" ng-bind="techType.name" ng-selected="selectedTechType.id == techType.id"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="vendor">Vendor</label>
+                        </div>
+                        <div class="span9">
+                            <select name="vendor" ui-select2 data-placeholder="-- Select One --" id="vendor" class="dialog-select" ng-model="selectedVendor.id">
+                                <option></option>
+                                <option value="{{vendor.id}}" ng-repeat="vendor in vendors" ng-bind="vendor.name" ng-selected="selectedVendor.id == vendor.id"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid" ng-show="showInstrumentSelector()">
+                        <div class="span3">
+                            <label for="instrument">Instrument</label>
+                        </div>
+                        <div class="span9">
+                            <select ui-select2="{formatResult: formatInstrument}" ng-model="selectedInstrument.id"
+                                    id="instrument" class="dialog-select" name="instrument" ui-select2-validator="" data-placeholder="-- Select One --">
+                                    <option></option>
+                                    <option value="{{instrument.id}}" ng-repeat="instrument in filteredInstruments"
+                                            ng-selected="selectedInstrument.id == instrument.id"
+                                            ng-bind="instrument.name"
+                                            title="{{getInstrumentSN(instrument)}}">
+                                    </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span3">
+                            <label for="specie">Default Species</label>
+                        </div>
+                        <div class="span9">
+                            <select ui-select2 ng-model="defaultSpecie.id"
+                                    id="specie" class="dialog-select">
+                                <option value="{{specie.id}}" ng-repeat="specie in species" ng-bind="specie.name"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row-fluid" ng-show="selectedInstrument.autotranslate && isFeatureAvailable(LabFeatures.BILLING) && selectedInstrument.translationAvailable">
+                        <div class="span3">
+                            <label for="autotranslate">Auto Translate</label>
+                        </div>
+                        <div class="span9">
+                            <input type="checkbox" id="autotranslate" ng-model="selectedInstrument.autotranslateSelected">
+                        </div>
+                    </div>
+                    <div class="row-fluid error" ng-show="showNoDefaultModelError()">
+                        <div class="span12">
+                            <span class="error-message message inline-block">
+                                There is no instrument model for this combination of Technology type and Vendor. Please contact the Administrator to create a new model.
+                            </span>
+                        </div>
+                    </div>
+                    </div>
+                <div ng-switch-when="2">
+                    <!-- Browse Button -->
+                    <div class="row-fluid file-selection" ng-hide="isFileChooserDisabled() || step !=2">
+                        <div class="span2">
+                            <label for="specie">Choose files</label>
+                        </div>
+                        <div class="span9">
+                            <span class="select-file-btn btn secondary-action">
+                                Browse&hellip;
+                                <input type="file" multiple accept="{{getAllowedExtensions()}}" id="fileChooser"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="drop-area">
+                            <div id="drop-box-overlay" ng-hide="filesToUpload.length > 0" ng-show="filesToUpload.length == 0">
+                                <div class="overlay-caption">
+									<i class="icon drop-here" ng-hide="(isFolderArchiveSupport() && !isUploadSupported('folder-upload')) || (isMultipleFilesSupport() && !isUploadSupported('multiple-files-upload'))"></i>
+                                    <span ng-hide="(isFolderArchiveSupport() || isMultipleFilesSupport()) && !isUploadSupported('folder-upload') || isFileChooserDisabled()">Drag &amp; drop files <span class="inline" ng-show="isUploadSupported('folder-upload')">or folders</span> here</span>
+                                    <span ng-show="isFolderArchiveSupport() && !isMultipleFilesSupport() && isUploadSupported('folder-upload')">Drag &amp; drop folders here</span>
+                                    <span ng-show="isFolderArchiveSupport() && !isUploadSupported('folder-upload')" style="color: #858881; margin-top: 10%;">Please use Chrome browser to drop folders.
+                                         <a style="display: block;" class="active" href="https://www.google.com/chrome/">Download Chrome</a>
+                                    </span>
+                                     <span ng-show="isMultipleFilesSupport() && !isUploadSupported('multiple-files-upload')" style="color: #858881; margin-top: 5%;">Your browser doesn't support archiving files.<br> Please, use Chrome browser.
+                                         <a style="display: block;" class="active" href="https://www.google.com/chrome/">Download Chrome</a>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- File list preview table -->
+
+                                <div id="files-preview" ng-hide="filesToUpload.length == 0" ng-show="filesToUpload.length > 0">
+                                    <table class="table table-hover table-striped upload-preview fixed-table">
+                                        <colgroup>
+                                            <col style="width: 65%"/>
+                                            <col/>
+                                            <col/>
+                                            <col style="width: 30px"/>
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Size</th>
+                                            <th>Date</th>
+                                            <th><!-- Delete operation header --></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="file in filesToUpload">
+                                            <td ng-bind="file.name" class="ellipsize"></td>
+                                            <td ng-bind="file.size && (file.size | fileSize) || 'Directory'"></td>
+                                            <td>{{file.date  | date: 'mediumDate'}}</td>
+                                            <td><!-- Delete operation link--><a ng-click="removeFile($index);" class="icon item-delete" title="Remove item from the list">&nbsp;</a> </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div ng-switch-when="3">
+                    <div class="row-fluid">
+                        <p class="helper-text">
+                            You may mark each of files with the optional labels to ease the search and filtering in future. For convenience, labels should be delimited with commas. E.g. 'mass-spec, after-treatment, fullscan'
+                        </p>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="control-group">
+                            <!-- Label-specific table for files -->
+                            <!-- TODO: create proper styling and remove inline styles -->
+                            <table class="table table-hover fixed-header labels-list">
+                                <colgroup>
+                                    <col/>
+                                    <col/>
+                                    <col/>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th style="padding-left: 31px;">Name</th>
+                                    <th>Species</th>
+                                    <th>Label</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="file in getItemsForLabeling()" ng-mouseover="file.mouseover = true" ng-mouseout="file.mouseover = false">
+                                    <td title="{{file.name}}"><span class="ellipsize"><span class="line-number">{{$index + 1}}.</span> {{file.uploadName}}</span></td>
+                                    <td>
+                                        <select ui-select2 class="dialog-select species" ng-model="file.specie"  required>
+                                            <option value="{{specie.id}}" ng-repeat="specie in species" ng-selected="specie.id==file.specie">
+                                                {{specie.name}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                       <div id="{{file.labelId()}}" contenteditable paste-in-table-validation
+                                       class="contenteditable-label" ng-model="file.labels"
+                                       ui-keypress="{'enter': 'selectNextLabel(file.name, $event)'}"
+                                       ui-keydown="{9:'selectNextLabel(file.name, $event)'}"></div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div ng-switch-when="4">
+                    <div class="well row-fluid" ng-show="isZipping">
+                        <span class="control-group current-state-info">Zipping: <span class="ellipsize" ng-bind="zippingProcess.completed && 'Done' || zippingProcess.dir.name"></span></span>
+                        <span class="current-state-info">&nbsp;&nbsp;&nbsp;{{zippingProcess.dir.progress}}%</span>
+                        <div class="progress-bar active">
+                            <div class="done-strip" ng-style="{width: zippingProcess.dir.progress + '%'}"></div>&nbsp;
+                        </div>
+                    </div>
+					<div class="scrollable-container">
+						<table class="table uploading-files table-striped">
+							<colgroup>
+								<col class="file-name"/>
+								<col class="upload-details"/>
+                                <col/>
+							</colgroup>
+							<tbody>
+								<tr ng-repeat="item in getUploadItems()">
+									<td title="{{item.name}}"><div class="ellipsize" ng-bind="item.name"></div></td>
+									<td>
+                                        <!-- State Info -->
+                                        <span ng-show="item.status == 'waiting'" class="current-state-info">{{item.size | fileSize}}&nbsp;&nbsp;&nbsp;Waiting</span>
+                                        <span ng-show="item.status == 'removing'" class="current-state-info">{{item.size | fileSize}}&nbsp;&nbsp;&nbsp;Removing</span>
+										<span ng-show="item.status == 'in-progress'" class="current-state-info">{{item.uploaded | fileSize}} of {{item.size | fileSize}} ({{stats.uploadSpeed | uploadSpeed}}) &nbsp;&nbsp;&nbsp;{{item.remainingTimeFormatted()}}&nbsp;remaining</span>
+                                        <span ng-show="item.status == 'done'" class="current-state-info">{{item.uploaded | fileSize}} of {{item.size | fileSize}}</span>
+                                        <span ng-show="item.status == 'zipping-wait'" class="current-state-info">Waiting for zip</span>
+                                        <span ng-show="item.status == 'zipping'" class="current-state-info">Zipping...</span>
+
+                                        <!-- Done mark... -->
+										<span ng-show="item.status == 'done'" class="done">Done</span>
+
+                                        <span ng-show="item.status == 'failed'" class="done">Failed</span>
+
+                                        <!-- ...Or progress bar for incomplete items -->
+                                        <div ng-show="item.status == 'in-progress'" class="progress-bar active">
+                                            <div class="done-strip" ng-style="{width: item.completePercentageFormatted() + '%'}"></div>
+                                        </div>
+                                        <div ng-show="item.status == 'waiting' || item.status == 'zipping' || item.status == 'zipping-wait'"  class="progress-bar ">
+                                            <div class="done-strip" style="width:0;"></div>
+                                        </div>
+									</td>
+									<td>
+                                        <!-- Operations -->
+										<span ng-show="item.status == 'done'" class="icon upload-done"></span>
+										<span ng-show="item.status == 'failed'" class="icon"></span>
+                                        <i ng-show="item.status == 'waiting' || item.status == 'in-progress'" ng-click="onRemoveUploadingItem(item)" class="icon item-delete" title="Remove item from upload scope"></i>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal-footer" ng-class="{'upload-confirm-popup': showCancelConfirm}">
+            <div ng-show="showCancelConfirm">
+                <span ng-bind="itemToRemove && 'Upload of selected file will be canceled. Are You sure?' || 'Upload of all files will be canceled. Are You sure?'"></span>
+                <button class="btn secondary-action" ng-click="hideConfirm()">No</button>
+                <button class="btn btn-primary main-action" ng-click="onCancelConfirm()">Yes</button>
+            </div>
+            <span class="fileUploadErrorMessage" ng-show="zipFailed">
+                <i class="icon warning-uploads"></i>
+                <span ng-switch="zipFailed.type">
+                    <span ng-switch-when="SIZE_LIMIT_EXCEED">
+                        Files size > 4GB. Please use
+                        <a class='desktopUploaderLink' desktop-uploader-url>Desktop Uploader<span hide-when-private-installation="true">(Beta)</span></a>.
+                    </span>
+                </span>
+
+            </span>
+
+            <button class="btn secondary-action" ng-show="!uploadFinished && !showCancelConfirm" ng-click="onCancel()">Cancel</button>
+            <button class="btn secondary-action back" ng-click="step = step - 1" ng-show="step > 1  && step <4"><span class="left-tail"></span>Back</button>
+            <button class="btn main-action next" ng-click="step = step + 1" ng-show="step < 3" ng-disabled="isFormInvalid(step) || isPairsInvalid">Next <span class="right-tail"></span></button>
+            <button class="btn btn-primary main-action" ng-click="step = step + 1; beginUpload()" ng-show="step == 3">Upload</button>
+            <button class="btn main-action" ng-click="pause()" ng-show="step == 4 && !uploadFinished && !showCancelConfirm && !zipFailed" ng-disabled="isPauseDisabled()" ng-bind="getPauseButtonText()"><i class="icon pause-btn"></i></button>
+            <button id="okButton" class="btn btn-primary secondary-action" ng-show="step == 4 && uploadFinished && !showCancelConfirm" data-dismiss="modal" ng-click="modalReturnUrl = getModalReturnUrl(); clearRoot()">Close</button>
+
+        </div>
+    </form>
+    </div>
+    </div>
+</div>

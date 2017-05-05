@@ -1,0 +1,22 @@
+${projectTitle}: Issue Reported
+
+Hello!
+
+The following issue has been reported:
+
++ User:
+${username}
+
++ Issue Title:
+${issueTitle}
+
++ Issue Description:
+
+${issueContents}
+
+Thanks!
+
+
+
+
+

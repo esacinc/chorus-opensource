@@ -1,0 +1,52 @@
+<div class="relative">
+    <div class="dashboard-box users-box" resizable-table-columns="laboratory-users-list">
+        <div class="heading clearfix">
+            <div class="cell cell-id" sorting="id"><span>ID</span></div>
+            <div class="cell cell-name" sorting="firstName">First Name</div>
+            <div class="cell cell-name" sorting="lastName" sort-by-default="asc">Last Name</div>
+            <div class="cell cell-email" sorting="email">Email</div>
+        </div>
+        <div class="content clearfix">
+            <div class="row clearfix" ng-repeat="user in users | orderBy:sorting.field:sorting.reverse" ng-mouseenter="$scope.showRemoveButton = user" ng-mouseleave="$scope.showRemoveButton = null">
+                <div class="cell cell-id"><div class="ellipsize" set-text="user.id" set-title="user.id"></div></div>
+                <div class="cell cell-name">
+                    <span>
+                        <i ng-show="user.labHead" class="icon member" title="Lab Head"/>
+                        <i ng-show="!user.labHead" class="icon member" title="User In Laboratory"/>
+                    </span>
+                    <span set-text="user.firstName"></span>
+                </div>
+                <div class="cell cell-name">
+                    <div class="ellipsize" set-text="user.lastName"></div>
+                </div>
+                <div class="cell cell-email">
+                    <i ng-show='!user.labHead && $scope.showRemoveButton == user' class='icon delete float-right' title='Remove From Lab' ng-click='displayConfirmation(user)'>&nbsp;</i>
+                    <div class="ellipsize" set-text="user.email"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-show="isTableEmpty()" class="empty-table" ng-bind="getEmptyTableMessage()"></span>
+</div>
+
+<div id="remove-user-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+    <div class="modal-frame">
+        <div class="modal-header">
+            <h3>Remove User?</h3>
+        </div>
+        <div class="modal-body" style="padding: 10px 30px">
+            <p>Are you sure you want to remove "{{confirmation.getName()}}" User from laboratory?</p>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true" ng-click="confirmation.hidePopup()">
+                Cancel
+            </button>
+            <button type="submit"
+                    class="btn btn-primary main-action" ng-click="confirmation.removeItem()">Remove
+            </button>
+        </div>
+    </div>
+    </div>
+</div>

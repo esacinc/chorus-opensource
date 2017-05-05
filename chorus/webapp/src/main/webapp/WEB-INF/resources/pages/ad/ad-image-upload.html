@@ -1,0 +1,87 @@
+<!-- Browse Button -->
+<div class="row-fluid file-selection control-group" ng-hide="existingAttachments.length!=0 || uploadingAttachments!=0">
+    <label for="advertisementImageChooser">Choose Image File<p><small class="optional-string">(Image must be 160 x 600 pixels)</small></p></label>
+    <span class="select-file-btn btn secondary-action">
+        Browse&hellip;
+        <input type="file" accept="{{getAllowedAdExtensionsAsString()}}" id="advertisementImageChooser"/>
+    </span>
+</div>
+
+<label class="control-label" for="description" ng-show="existingAttachments.length!=0 || uploadingAttachments!=0">
+    <span ng-bind="attachmentOptions.attachmentType" id="description"></span>&nbsp;
+</label>
+
+<div class="attachments-holder" ng-switch="attachmentsReadOnly">
+    <div class="unsupported-files-alert-container">
+        <ul class="unsupported-files-alert">
+            <li class="alert single-alert" ng-repeat="alert in alerts">{{alert}}</li>
+        </ul>
+    </div>
+
+    <div>
+        <!--Not Empty Attachments-->
+        <ul class="attacmments-list" ng-show="existingAttachments.length > 0 && existingAttachments.length < 5 || show">
+
+            <li ng-repeat="attachment in existingAttachments" class="attachment-item {{attachment.ext.substr(1)}}">
+                <span class="attachment-type" ng-bind="attachment.type"></span>
+                <span class="name ellipsize" ng-bind="attachment.name"></span>
+                <span class="size" ng-bind="attachment.size | fileSize"></span>
+                <span class="attachment-action">
+                    <a ng-click="downloadAdImage(attachment.attachmentId)">
+                        <i class="icon download-attach" title="Download file"></i>
+                    </a>
+                    <span ng-hide="attachmentsReadOnly">
+                        <i class="attach-action-sep"></i>
+                        <a ng-click="removeExistingAttachment(attachment.attachmentId)">
+                            <i class="icon delete-attach" title="Remove attachment"></i>
+                        </a>
+                    </span>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- no attachments in readonly mode -->
+    <div ng-switch-when="true">
+        <div class="empty-attachments" ng-show="existingAttachments.length == 0 && uploadingAttachments == 0">
+            <div class="center-text">
+                <span>No Attachments</span>
+            </div>
+        </div>
+    </div>
+
+    <div ng-switch-when="false">
+        <!--Uploading Table-->
+        <div class="scrollable-container" ng-show="uploadingAttachments.length > 0">
+            <table class="table uploading-files table-striped">
+                <colgroup>
+                    <col class="file-name">
+                    <col>
+                </colgroup>
+                <tbody>
+                <!--Uploading Item-->
+                <tr ng-repeat="attachment in uploadingAttachments"
+                    ng-class="attachment.isUploading && 'uploading-file' || 'queue-item'">
+                    <td>
+                        <span class="filename ellipsize" ng-bind="attachment.name"></span>
+                        <span class="current-state-info-min" ng-show="!attachment.isUploading">{{attachment.size | fileSize}}</span>
+                        <!-- Progress bar-->
+                        <div class="progress-bar active" ng-show="attachment.isUploading">
+                            <div ng-style="{width: attachment.uploadProgress + '%'}" class="done-strip"></div>
+                        </div>
+                        <!-- State Info -->
+                        <span class="current-state-info" ng-show="attachment.isUploading">{{attachment.uploadedSize | fileSize}} of {{attachment.size | fileSize}} ({{attachment.uploadSpeed | fileSize}}/s) &nbsp;&nbsp;&nbsp;{{attachment.remainingTime}}&nbsp;remaining</span>
+
+
+                    </td>
+                    <td>
+                        <!-- Operations -->
+                        <a ng-click="removeUploadingAttachment($index, attachment)" class="icon delete-attach"
+                           title="Remove item from the list"></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

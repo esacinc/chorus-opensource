@@ -1,0 +1,119 @@
+<div class="relative">
+    <div class="dashboard-box inbox-box" resizable-table-columns="inbox-list">
+        <div class="heading clearfix">
+            <div class="cell cell-number"><span>&nbsp;</span></div>
+            <div class="cell cell-name" sorting="from">From</div>
+            <div class="cell cell-details" sorting="description" sort-by-default="asc">Details</div>
+            <div class="cell cell-sent" sorting="sent">Sent</div>
+            <div class="cell cell-status">&nbsp;</div>
+        </div>
+        <div class="content clearfix" ng-hide="isTableLoading()">
+            <div class="row clearfix" ng-repeat="request in inbox | filter:page.filter | orderBy:sorting.field:sorting.reverse">
+                <div class="cell cell-number">
+                    <span ng-bind="$index + 1">1</span>
+                </div>
+                <div class="cell cell-name">
+                    <div class="ellipsize" set-text="request.from" set-title="request.from"></div>
+                </div>
+                <div class="cell cell-details">
+                    <div class="ellipsize" ng-bind-html-unsafe="request.description" set-title="request.description"></div>
+                </div>
+                <div class="cell cell-sent" set-text="request.sent | date"></div>
+                <div class="cell cell-status">
+                    <div ng-show="request.availableActions == 'OK'">
+                        <button class="btn table-button default-action btn-success"
+                                resource-object="request" event-handler="delete" success-handler="onAction" sync-operation-control="">OK</button>
+                    </div>
+                    <div ng-show="request.availableActions == 'APPROVE_REFUSE'">
+                        <button ng-click="approve(request)" class="btn table-button default-action btn-success">Approve</button>
+                        <button ng-click="refuse(request)" class="btn table-button btn-success second-action">Refuse</button>
+                    </div>
+                    <button  ng-show="showDetailsButton(request)"  ng-click="showDetails(request)" class="table-button btn btn-success"
+                             data-toggle="modal" title="Show Request Details">
+                        <i class="icon details"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-show="isInboxTableEmpty()" class="empty-table">{{getEmptyTableMessage()}}</span>
+    <span ng-show="isTableLoading()" class="empty-table">{{getLoadingTableMessage()}}</span>
+
+    <div id="confirmRefuseModal" class="modal hide" tabindex="-1" role="dialog"
+         aria-labelledby="confirmRefuseModalLabel" aria-hidden="true">
+        <div class="modal-holder">
+        <div class="modal-frame">
+        <form name="confirmRefuseModalForm">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">?</button>
+                <h3 id="confirmRefuseModalLabel">Confirmation</h3>
+            </div>
+            <div class="modal-body">
+                <p class="static-value">Please enter your comment (optional):</p>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <textarea maxlength="1000" class="input-xlarge dialog-text-area" rows="3" id="confirmRefuseTextArea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">
+                    Close
+                </button>
+                <button type="submit"
+                        class="btn btn-primary main-action" id="confirmRefuseButton">Refuse
+                </button>
+            </div>
+        </form>
+        </div>
+        </div>
+    </div>
+
+    <div id="creationInstrumentRequestError" class="modal hide" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <div class="modal-header">
+                    <h3>Cannot Create Instrument</h3>
+                </div>
+                <div class="modal-body" style="padding: 30px 10px">
+                    <p class="static-value">Instrument with such name or serial number already exists.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn  secondary-action" data-dismiss="modal">Cancel</button>
+                    <button ng-click="rejectInstrumentCreation()" type="button" class="btn btn-primary main-action" data-dismiss="modal">Reject</button>
+                    <button ng-click="editInstrumentCreationDetails()" type="button" class="btn btn-primary main-action" data-dismiss="modal">Edit Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="inbox-mark-as-read-confirmation" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <div class="modal-header">
+                    <h3>Mark All Items as Read?</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to mark all items as read?</p>
+                    <p>All items, except those, that need approval decision will be removed from Inbox. This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                            ng-click="markAsRead.cancel()">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary main-action" ng-click="markAsRead.ok()">
+                        Ok
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="loadingDataInProgress" class="loader">
+        <p>Loading...</p>
+    </div>
+
+</div>
+
+

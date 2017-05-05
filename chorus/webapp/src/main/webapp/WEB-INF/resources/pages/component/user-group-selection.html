@@ -1,0 +1,71 @@
+<div class="sharedSpace user-list-holder" data-ng-class="{'disabled' : selectionDisabled}">
+    <div class="overlay"></div>
+    <!--<span class="opt-descr">{{getCountOfMembers()}}</span> todo group can contain several members-->
+    <div class="scrollable-container user-list">
+        <span ng-show="isTableEmpty()" class="dialog-empty-table">{{emptyTableMessage()}}</span>
+        <table class="table table-striped width100p">
+            <tbody>
+            <tr ng-repeat="item in selected()">
+                <td><i class="icon member">&nbsp;</i></td>
+                <td ng-show="isGroup(item)" class="width325">
+                    <span ng-bind="groupName(item)" class="ellipsize width300"> </span>
+                </td>
+                <td ng-show="isUser(item)" class="width200">
+                    <span ng-bind="userEmail(item)" class="ellipsize user-mail"> </span>
+                    <span ng-bind="userName(item)" class="ellipsize user-name"> </span>
+                </td>
+                <td>
+                </td>
+                <td ng-show="showAllowWrite" class="width100">
+                    <label class="allow-write" >
+                        <input name="allow-write" type="checkbox" ng-disabled="selectionDisabled" data-ng-class="{'disabled' : selectionDisabled}" ng-model="item.allowWrite"/>Allow Create Experiments
+                    </label>
+                </td>
+                <td class="nowrap">
+                    <strong set-text="getUserDescription(item)"></strong>
+                    <span ng-show="isUserCanBeRemoved(item)" class="m-btn">
+                        <a ng-click="removeItem(item)" ng-disabled="selectionDisabled" data-ng-class="{'disabled' : selectionDisabled}" class="icon item-delete" packageid="2" title="Remove"></a>
+                    </span>
+                </td>
+            </tr>
+            <tr ng-repeat="item in invitedUsers">
+                <td><i class="icon member">&nbsp;</i></td>
+                <td class="width200">
+                    <span ng-bind="item.email" class="ellipsize width200"> </span>
+                </td>
+                <td></td>
+                <td class="width100" ng-show="showAllowWrite">
+                    <label class="allow-write">
+                        <input name="allow-write" type="checkbox" ng-disabled="selectionDisabled" data-ng-class="{'disabled' : selectionDisabled}" ng-model="item.allowWrite"/>Allow Create Experiments
+                    </label>
+                </td>
+                <td>
+                    <span ng-show="isUserCanBeRemoved(item)" class="m-btn">
+                        <a ng-click="removeItem(item)" ng-disabled="selectionDisabled" data-ng-class="{'disabled' : selectionDisabled}" class="icon item-delete" packageid="2" title="Remove"></a>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <table class="table add-people-holder">
+        <tr>
+            <td>
+                <label class="small-label" ng-bind="addActionText()"> </label>
+
+                <div class="clearfix">
+                    <input select-with-auto-complete
+                           ng-model="toAdd"
+                           name="add-selection"
+                           placeholder="{{addPlaceHolderText()}}" class="dialog-text-input dont-hide add-users"
+                           ng-disabled="selectionDisabled"
+                           data-ng-class="{'disabled' : selectionDisabled}">
+                </div>
+                <label ng-show="isEmailNotificationsAvailable()" class="small-label">
+                    <input type="checkbox" checked="checked" ng-model="emailNotification" ng-disabled="selectionDisabled" data-ng-class="{'disabled' : selectionDisabled}"/>Send email
+                    notifications</label>
+            </td>
+        </tr>
+    </table>
+</div>

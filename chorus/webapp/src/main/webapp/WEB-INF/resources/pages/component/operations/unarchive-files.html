@@ -1,0 +1,19 @@
+<div>
+    <div>
+        <p>The selected files will be put into the analyzable storage. That would allow to translated the files and use
+            them for plotting and various types of data processing. Also the file downloads are immediate for this type of storage.
+        </p>
+        <p>
+            This operation typically takes 4 to 6 hours.
+        </p>
+    </div>
+    <div ng-show="!options.model.allAvailableToUnarchive">
+        <div>
+            <p>Archive operation is not available for all selected files. </p>
+        </div>
+        <p>Possible reasons: </p>
+        <ul>
+            <li>For the some selected files laboratory billing plan does not provide Analysable Storage feature</li>
+        </ul>
+    </div>
+</div>

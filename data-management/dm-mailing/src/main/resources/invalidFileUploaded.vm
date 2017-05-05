@@ -1,0 +1,8 @@
+${projectTitle}: Invalid File Uploaded
+Hello, ${user}!
+
+We want to inform you that <a href="${fileUrl}"> ${fileName}</a> file had been marked as invalid.
+
+Thank you!
+
+

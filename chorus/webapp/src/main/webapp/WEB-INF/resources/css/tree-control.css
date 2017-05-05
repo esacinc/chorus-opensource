@@ -1,0 +1,174 @@
+/***--- Modal dialog which containes treecontrol -------------------------------------------------------------------***/
+.modal.add-algorithm .control-group{
+    margin-bottom: 15px;
+}
+
+.modal.add-algorithm .control-group:last-child{
+    margin-bottom: 0;
+}
+
+.modal.add-algorithm .dialog-container h5{
+    font-family: "open sans semibold";
+    margin: 0 0 10px 0;
+    line-height: 12px;
+}
+/*.modal.add-algorithm .dialog-container:last-child {
+    margin-bottom: 0;
+}*/
+.modal.add-algorithm .modal-body .algorithms-holder,
+#analysesTabsContent .analyses-holder{
+    border: 1px solid #b2b2b2;
+    padding: 12px 20px 22px 19px;
+    margin-bottom: 30px;
+    max-height: 280px;
+    overflow-y: auto;
+    height: 180px;
+}
+
+/***--- End of Modal dialog which containes treecontrol ------------------------------------------------------------***/
+
+.modal.add-algorithm .modal-body .algorithms-holder treecontrol ul{
+    margin: 0;
+    padding: 0 0 0 24px;
+    list-style: none;
+    border: none;
+    overflow: hidden;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder ul li{
+    padding: 0;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder .tree-light > ul > li{
+    border-bottom: 1px solid #ddd;
+    line-height: 29px;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder .tree-light ul li.tree-collapsed{
+    line-height: 31px;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder treeitem ul{
+    /*margin: 3px 0 3px;*/
+    padding: 0;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder treeitem ul li {
+    /*padding: 0 0 0 24px;*/
+    line-height: 24px;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder treeitem ul li .tree-label span{
+    font: 13px "open sans" normal;
+    color: #000;
+    margin-left: 0;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder ul li .tree-label span{
+    font: 13px "open sans semibold" normal;
+    margin-left: -13px;
+}
+
+treecontrol li.tree-expanded i.tree-leaf-head, treecontrol li.tree-collapsed i.tree-leaf-head {display:none;}
+treecontrol li.tree-expanded i.tree-branch-head, treecontrol li.tree-collapsed i.tree-branch-head {display:inline;}
+treecontrol li.tree-leaf i.tree-branch-head {display:none;}
+treecontrol li.tree-leaf i.tree-leaf-head {display:inline;}
+#analysesTabsContent .analyses-holder i.tree-leaf-head{
+    position:relative;
+    float: left;
+}
+
+treecontrol li i {
+    cursor: pointer;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-label{
+    cursor: pointer;
+}
+#analysesTabsContent .analyses-holder .tree-label:hover .icon.item-delete{
+    cursor: pointer;
+    background-position:-25px -67px;
+    width:12px;
+    height:12px;
+    margin-bottom: 1px; /*ie10 fix */
+    vertical-align: middle; /*ie10 fix */
+    float: right;
+    margin-top: 5px;
+}
+#analysesTabsContent .analyses-holder .tree-label:hover .item-delete{
+    display: block;
+}
+#analysesTabsContent .analyses-holder .tree-label .item-delete{
+    display: none;
+}
+
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder treeitem ul li .tree-label,
+#analysesTabsContent .analyses-holder .tree-holder .tree-label{
+    padding: 3px 0 2px 29px;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+}
+.modal.add-algorithm .modal-body .algorithms-holder .tree-holder treeitem ul li .tree-label:hover,
+#analysesTabsContent .analyses-holder .tree-holder .tree-label:hover{
+    background-color: #edf9fe;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+
+treecontrol.tree-classic li .tree-selected {
+    background-color: #aaddff;
+    font-family: "open sans bold";
+}
+treecontrol.tree-light li.tree-expanded i {
+    background: url("../img/node-opened-2.png") no-repeat;
+    position: relative;
+    top: 8px;
+    left: -24px;
+    float: left;
+    height: 12px;
+    width: 11px;
+}
+
+treecontrol.tree-light li.tree-collapsed i {
+    background: url("../img/node-closed-2.png") no-repeat;
+    float: left;
+    width: 12px;
+    height: 12px;
+    position: relative;
+    top: 10px;
+    left: -24px;
+}
+
+treecontrol.tree-light li.tree-leaf i {
+    padding: 0;
+    width: 0;
+    height: 0;
+    background: none no-repeat;
+}
+
+treecontrol treeitem .tree-selected-holder i.tree-leaf-head,
+#analysesTabsContent .analyses-holder .tree-selected-holder i.tree-leaf-head{
+    background: url("../img/icon-sprite.png") -21px -401px no-repeat;
+    width: 12px;
+    height: 9px;
+    top: 9px;
+    left: 8px;
+}
+
+treecontrol.tree-light li .tree-selected {
+    background-color: #edf9fe;
+    font-family: "open sans bold";
+    font-weight: bold !important;
+}
+
+treecontrol.tree-dark li.tree-leaf i {
+    padding: 0;
+    width: 0;
+    height: 0;
+    background: none no-repeat;
+}
+
+treecontrol.tree-dark li .tree-selected {
+    font-family: "open sans bold";
+}
+
+treecontrol.tree-dark {
+    color: #ddd;
+}
+
+
+
+
+

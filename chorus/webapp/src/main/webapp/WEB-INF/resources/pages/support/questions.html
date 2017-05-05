@@ -1,0 +1,15 @@
+<div ng-show="questions.length != 0">
+    <ul class="faq-list">
+        <li ng-repeat="question in questions">
+            <h3><span ng-click="toggleOpened($event)" class="title" ng-bind="question.title"></span><em class="arrow"></em></h3>
+            <div class="hide">
+                <p ng-bind-html-unsafe="question.content"></p>
+            </div>
+        </li>
+    </ul>
+</div>
+<h3 ng-show="questions.length == 0" class="message">For this topic there are no questions/answers yet</h3>
+<div ng-show="forumProperties.enabled && questions.length != 0">
+    <h3>Still have questions?</h3>
+    <p><a href="{{forumProperties.url}}">Post to our on-line forum questions</a> and we'll get back to you as soon as we can.</p>
+</div>

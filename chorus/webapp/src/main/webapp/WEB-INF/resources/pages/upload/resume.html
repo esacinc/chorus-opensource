@@ -1,0 +1,87 @@
+
+<div modal-dialog class="unfinished-uploads-dialog">
+    <div class="modal-holder">
+    <div class="modal-frame">
+    <div class="modal-header" >
+        <a class="close" ng-click="onCancel()">&times;</a>
+        <a class="rollup" ng-show="showMinimizeButton()" data-dismiss="modal">Roll up</a>
+        <h3>
+			<i class="icon warning-dialog-header"></i>
+            Unfinished Uploads: 
+			
+			<span ng-pluralize count="uploadItems.length" when="{'0': 'No files', 'one': '1 file', 'other': '{} files'}">12345 files</span>
+        </h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="dialog-container">
+			<span class="table-description" ng-show="refreshNote"><strong>Note: </strong>you should refresh file locations by clicking on <span class="refresh-file-location" ><i class="icon refresh"></i></span> button.</span>
+            <div class="alert" ellipsize="25" ng-bind="errorMessage" ng-show="errorMessage"/>
+            <div class="scrollable-container">
+                <table class="table uploading-files table-striped">
+                    <colgroup>
+                        <col class="file-name"/>
+                        <col class="upload-details"/>
+                        <col/>
+                    </colgroup>
+                    <tbody>
+                    <tr ng-repeat="item in uploadItems">
+                        <!-- inspired by https://github.com/angular/angular.js/issues/757 and http://jsfiddle.net/marcenuc/ADukg/89/ -->
+
+                        <td title="{{item.name}}"><div class="ellipsize continue-upload" ng-bind="item.name"></div> </td>
+						<td><div class="refresh-location-wrapper">
+								<span ng-show="item.status == 'select-file'" class="refresh-file-location"
+								><i class="icon refresh"></i></span>
+								<input type="file" onchange="angular.element(this).scope().setFile(this)" fileIndex="{{$index}}"/>
+							</div></td>
+                        <td>
+                            <!-- State Info -->
+                            <span ng-show="item.status == 'waiting'" class="current-state-info">{{item.uploaded | fileSize}} of {{item.size | fileSize}} &nbsp;&nbsp;&nbsp;Waiting</span>
+                            <span ng-show="item.status == 'removing'" class="current-state-info">{{item.size | fileSize}}&nbsp;&nbsp;&nbsp;Removing</span>
+                            <span ng-show="item.status == 'in-progress'" class="current-state-info">({{stats.uploadSpeed | uploadSpeed}}) &nbsp;&nbsp;&nbsp;{{item.remainingTimeFormatted()}}&nbsp;remaining</span>
+
+                            <!-- Done mark... -->
+                            <span ng-show="item.status == 'done'" class="done">Done</span>
+
+                            <span ng-show="item.status == 'failed'" class="done">Failed</span>
+
+                            <!-- ...Or progress bar for incomplete items -->
+                            <div ng-show="item.status != 'done' && item.status != 'failed'" class="progress-bar" ng-class="item.status == 'select-file' && 'inactive' || 'active'">
+                                <div class="done-strip" ng-style="{width: item.completePercentageFormatted() + '%'}"></div>
+                            </div>
+                        </td>
+                        <td ng-class="{unfinished: item.status == 'select-file'}">
+                            <!-- Operations -->
+                            <span ng-show="item.status == 'done'" class="icon upload-done"></span>
+                            <span ng-show="item.status == 'failed'" class="icon"></span>
+                            <i ng-show="item.status == 'waiting' || item.status == 'select-file'" class="icon item-delete" title="Remove item from upload scope" ng-click="onCancelItem(item)"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" ng-class="{'upload-confirm-popup': showCancelConfirm}">
+
+        <div ng-show="showCancelConfirm">
+            <span ng-bind="itemToRemove && 'Upload of selected file will be canceled. Are You sure?' || cancelAll && 'Upload of all files will be canceled. Are You sure?' || 'Upload will be canceled. Are You sure?'"></span>
+            <button class="btn secondary-action" ng-click="hideConfirm()">No</button>
+            <button class="btn btn-primary main-action" ng-click="onCancelConfirm()">Yes</button>
+        </div>
+        <div ng-show="!showCancelConfirm">
+            <button ng-show="!nothingToUpload()" class="btn secondary-action cancel-all" ng-click="onCancelAll()">Cancel all</button>
+
+            <button class="btn secondary-action" ng-click="onCancel()" ng-show="!isUploadStarted() && !nothingToUpload()">Later</button>
+            <button class="btn btn-primary main-action" ng-click="resume()" ng-show="!isUploadStarted() && !nothingToUpload()" ng-disabled="!readyToResume()">Resume</button>
+
+            <button id="pauseButton" class="btn btn-primary main-action" ng-click="pause()" ng-show="isUploadStarted() && !uploadFinished()" ng-bind="getPauseButtonText()"><i class="icon pause-btn"></i></button>
+            <button id="okButton" class="btn btn-primary main-action" ng-show="uploadFinished() && nothingToUpload()" ng-click="onCancel()">Close</button>
+
+        </div>
+
+    </div>
+    </div>
+    </div>
+</div>

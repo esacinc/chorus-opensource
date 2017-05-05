@@ -1,0 +1,348 @@
+* {
+    font-size: 12px;
+    line-height: 24px;
+}
+/*Common styles*/
+.clearfix{
+	clear:both;
+}
+.icon{
+    background-image:url(../img/icon-sprite.png);
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:10px;
+    height:10px;
+}
+.icon.external{
+    background-position:-209px 0;
+    width:5px;
+    height:9px;
+    margin: 4px 0 0 1px;
+    vertical-align: top;
+}
+.icon.laboratory,
+.icon.laboratory-delete{
+    background-position:-104px -124px;
+    width:24px;
+    height:20px;
+    line-height:20px;
+    display:block;
+}
+.laboratory-list .icon.laboratory-delete{
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 3.5+, IE10 */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(100%); /* Chrome 19+ & Safari 6+ */
+}
+.icon.plus,
+.icon.minus {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width:14px;
+    height:14px;
+}
+.icon.plus{
+    background-position:-139px -316px;
+}
+.icon.minus{
+    background-position:-139px -300px;
+}
+.icon.delete,
+.icon.item-delete{
+    cursor: pointer;
+    background-position:-25px -67px;
+    width:12px;
+    height:12px;
+    margin-bottom: 1px; /*ie10 fix */
+    vertical-align: middle; /*ie10 fix */
+}
+.laboratory-list-holder .table .icon.delete:hover,
+.icon.item-delete:hover{
+    background-position:-70px -166px;
+    text-decoration: none;
+}
+.icon.return{
+    cursor: pointer;
+    background-position:-155px -300px;
+    width:14px;
+    height:16px;
+    margin-top: -2px;
+    vertical-align: top;
+}
+.icon.validation-message-warning {
+    display: inline-block;
+    width: 19px;
+    height: 17px;
+    background: url(../img/icon-sprite.png) no-repeat -110px -62px;
+    top: 3px;
+    position: relative;
+}
+
+a:hover .icon.external{
+    background-position:-219px 0;
+}
+form{
+	margin:0;
+}
+form * {
+    color: #111111;
+    font-family: "Open Sans",Arial,sans-serif;
+}
+.empty-table, .dialog-empty-table{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font: normal 13px/20px "Open Sans Semibold",Arial,sans-serif;
+    color:#999;
+    margin:-10px 0 0 -82px;
+    width:164px;
+    height:20px;
+    padding-top: 40px;
+    text-align: center;
+}
+.dialog-empty-table{
+    padding-top:0;
+}
+.page-header{
+	border-bottom:0;
+}
+.center-form{
+	width:500px;
+	position:relative;
+	/*left:50%;
+	margin-left:-250px;*/
+    margin: 0 auto;
+}
+.center-logo{
+	display:block;
+	margin:10px auto;
+}
+.center-form .half-col{
+	width:48%;
+	float:left;
+    margin-right: 0;
+    padding-right: 2%;
+}
+.center-form .half-col~.half-col{
+	float:right;
+    margin: 0 -30px 0 0;
+    padding-right: 30px;
+    padding-left: 2%;
+}
+body{
+	background:url(../img/home-page-overlay.png)center 0 no-repeat transparent;
+}
+.texture{
+	background:url(../img/texture2.png) 0 0 repeat #f5f5f5;
+	min-height:100%;
+}
+.well-large{
+	background: none repeat scroll 0 0 white;
+    border: 1px solid #B2B2B2;
+    box-shadow: 0 0 6px #AAAAAA;
+	padding:19px 30px 30px;
+}
+h2{
+	color:#222;
+	font: normal 22px/40px "Open Sans Semibold", Arial, sans-serif;
+	margin:0 0 20px 0;
+	padding:0;
+}
+h1{
+	color:#222;
+    font: normal 22px "open sans bold";
+	margin:0 0 20px 0;
+	padding:0;
+	text-align:center;
+}
+
+.modal-footer{
+	padding:0;
+	border:0;
+	background:none;
+	text-align:left;
+}
+form .link{
+	color:#0e658d;
+	font:normal 13px "Open Sans", Arial, sans-serif;
+	text-decoration:underline;
+	line-height:30px;
+}
+form .add-lab-holder .link{
+    font-size: 12px;
+}
+.center-frame{
+	width:862px;
+	margin:0 auto;
+}
+.footer{
+	margin-top:50px;
+	padding-bottom:20px;
+	background:url(../img/footer-sep-bg.png) center 0 no-repeat;
+	padding-top:20px;
+}
+.footer a.infoclinika{
+	text-decoration:none;
+	font-size:13px;
+	line-height:12px;
+	vertical-align:top;
+}
+.footer a.infoclinika:hover{
+	text-decoration:underline;
+}
+.footer .copyright{
+	float:left;
+	margin-right:33px;
+	line-height:12px;
+	font-size:13px;
+}
+.footer a{
+	font: normal  12px/20px "Open Sans", Arial, sans-serif;
+	color:#333;
+	text-decoration:underline;
+}
+.footer a:hover{
+	color:#666;
+}
+.footer a:active{
+	color:#222;
+}
+.footer ul.footer-links{
+	float:left;
+	margin:0;
+	padding:0;
+}
+.footer ul.footer-links li{
+	list-style:none;
+	float:left;
+	height:14px;
+	border-right:1px solid #626262;
+	padding-right:10px;
+	margin-right:10px;
+}
+.footer ul.footer-links li a{
+	display:block;
+	line-height:13px;
+}
+.footer ul.footer-links li.compatibility a{
+    color: #489d42;
+}
+.footer ul.footer-links li:last-child{
+	border:0;
+}
+.footer .desktop-client-url a {
+    color: #489d42;
+}
+
+.footer .desktop-client-url a span {
+    line-height: 13px;
+}
+
+.footer.center-frame .desktop-client-url {
+    margin-top: 9px;
+}
+
+.footer .compatibility a {
+    line-height: 24px !important;
+}
+
+.narrow-footer-wrapper {
+	width:540px;
+    padding-left: 10px;
+	margin:0 auto;
+}
+.main-logo{
+    width:301px;
+    margin:0 auto 80px;
+    padding-top:40px;
+}
+
+#current-year {
+    text-decoration: none;
+    line-height: 12px;
+    vertical-align: top;
+}
+.error-page ~ .footer {
+    margin-top: -54px;
+}
+
+/*Common styles end*/
+
+/* Header Styles Start */
+.fixed-area{
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    background:url(../img/texture2.png) 0 0 repeat #F5F5F5;
+    z-index:2;
+    border-bottom:1px solid #b2b2b2;
+    min-width:990px;
+}
+.fixed-area .center-frame{
+    width: 862px;
+    min-width:862px;
+}
+.header{
+    padding:6px 18px;
+    height: 32px;
+    background:url(../img/bg-header.gif) repeat-x;
+    border-bottom: 2px solid #b1b1b1;
+}
+.logo-holder{
+    float:left;
+    width:162px;
+}
+.logo-holder img{
+    display:block;
+}
+.logo-holder h1{
+    margin:0;
+    padding:0;
+    line-height:10px;
+}
+#menu {
+    float: left;
+    padding: 4px 10px 0 0;
+    margin: 0;
+    list-style: none;
+}
+#menu li {
+    float: left;
+    padding: 0 12px 0 0;
+    margin: 0;
+    list-style: none;
+}
+#menu li a {
+    font: normal 13px/24px "Open Sans Semibold",Helvetica,Arial,sans-serif;
+    color: #4c4c4c;
+    float: left;
+    padding: 1px 9px;
+    border-radius: 4px;
+}
+#menu li a:hover {
+    padding: 0 8px;
+    border: 1px solid #8c8c8c;
+    text-decoration: none;
+}
+#menu li.active a,
+#menu li.active a:hover{
+    color: #fff;
+    padding: 1px 9px;
+    background: #8c8c8c;
+    box-shadow: 0 1px 1px #5d5d5d inset;
+    border: none;
+}
+
+#menu li a .forum-url {
+    font: normal 13px/24px "Open Sans Semibold", Helvetica, Arial, sans-serif;
+}
+
+.introBox {
+    padding-top: 120px;
+    margin: 0;
+}
+/* Header Styles End */
+
+
+

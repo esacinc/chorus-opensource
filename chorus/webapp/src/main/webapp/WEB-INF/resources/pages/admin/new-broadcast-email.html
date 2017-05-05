@@ -1,0 +1,37 @@
+<div modal-dialog tabindex="-1" role="dialog"
+     aria-hidden="true" class="create-broadcast-notification">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">?</button>
+                <h3>Broadcast Notification</h3>
+            </div>
+            <form  name="createBroadcastNotificationForm" novalidate>
+                <div class="modal-body">
+                    <div class="dialog-container">
+                        <div class="row-fluid">
+                            <div class="control-group" data-ng-class="{error: createBroadcastNotificationForm.name.$error.inputValidator}">
+                                <label class="control-label" for="createBroadcastNotificationFormTitle">Title
+                                    <span class="error-message" ng-show="createBroadcastNotificationForm.title.$invalid">is required</span>
+                                </label>
+                                <input id="createBroadcastNotificationFormTitle" name="body" class="span12 dialog-text-input dont-hide" ng-model="notification.title" input-validator required/>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="control-group" data-ng-class="{error: createBroadcastNotificationForm.name.$error.inputValidator}">
+                                <label class="control-label" for="createBroadcastNotificationFormBody">Body
+                                    <span class="error-message" ng-show="createBroadcastNotificationForm.body.$invalid">is required</span>
+                                </label>
+                                <textarea rows="10" id="createBroadcastNotificationFormBody" name="body" class="span12 dialog-text-area dont-hide" ng-model="notification.body" input-validator required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary main-action" type="submit" ng-disabled="createBroadcastNotificationForm.$invalid" ng-click="save()" data-dismiss="modal">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

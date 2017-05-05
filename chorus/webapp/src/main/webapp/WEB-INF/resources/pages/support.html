@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="support-page" ng-app="support-page">
+<head>
+    <meta charset="utf-8"/>
+    <title>Chorus - Support</title>
+    <!-- FavIcon -->
+    <link rel="icon" href="../img/favicon.ico" type="image/x-icon"/>
+
+    <script type="text/javascript" src="../script/util/logging.js"></script>
+
+    <!-- Twitter Bootstrap -->
+    <script src="../lib/jquery/jquery-1.8.2.min.js"></script>
+    <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="../lib/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../lib/angularjs/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-ui/angular-ui.min.js"></script>
+    <link rel="stylesheet" href="../lib/angular-ui/angular-ui.min.css">
+    <script type="text/javascript" src="../script/enums.js"></script>
+    <script type="text/javascript" src="../script/error-catcher.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/detect-js/detect.js"></script>
+    <script type="text/javascript" src="../script/support.js"></script>
+    <script type="text/javascript" src="../script/service/security-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/features-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/security-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/issues-back.js"></script>
+
+    <script src="../lib/jquery/jquery.highlight-4.js"></script>
+
+    <script type="text/javascript" src="../script/modals.js"></script>
+    <script type="text/javascript" src="../script/components/current-year.directive.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.service.js"></script>
+    <script type="text/javascript" src="../script/header/header.js"></script>
+    <script type="text/javascript" src="../script/header/header.controller.js"></script>
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Our Styles -->
+    <!--[if gte IE 9] its for gradients in select tags>
+      <style type="text/css">
+        .gradient {
+           filter: none;
+        }
+      </style>
+    <![endif]-->
+    <link rel="stylesheet" href="../css/dialogs.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-41329240-1', 'chorusproject.org');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+<body class="static-page" ng-controller="support-controller">
+    <div class="fixed-area">
+        <div ng-init="activePage = 'support'" class="ng-include: 'header.html'"></div>
+    </div>
+    <div class="main-content">
+        <div class="content-box clearfix">
+            <div class="center-frame">
+                <div class="search-area clearfix">
+                    <h2>Support</h2>
+                    <div class="input-append">
+                        <span class="icon search-icon" ng-click="search()"></span>
+                        <input ng-model="searchQuery" on-enter="search()"
+                               class="main-search" id="inputIcon" type="text"
+                               ng-type="text" placeholder="Search in Support Topics"/>
+                    </div>
+                </div>
+                <div ng-switch="isSearchResult">
+                    <div ng-switch-when="false">
+                        <div class="tabs-holder clearfix">
+                            <div class="center-frame">
+                                <div class="contact-info" ng-show="forumProperties.enabled">
+                                    <p><span class="icon email"></span><strong><a href={{forumProperties.url}}">Post to our on-line forum questions</a></strong></p>
+                                </div>
+                                <ul class="nav nav-tabs">
+                                    <li ng-class="{active: getActiveTab() == 'questions'}"><a href="#/questions" ng-click="tabClick('questions')">FAQ</a></li>
+                                    <li ng-class="{active: getActiveTab() == 'videos'}"><a href="#/videos" ng-click="tabClick('videos')">Videos</a></li>
+                                    <!--<li ng-class="{active: getActiveTab() == 'documentation'}"><a href="#/documentation" ng-click="tabClick('documentation')">Documentation</a></li>
+                                    <li ng-class="{active: getActiveTab() == 'message'}"><a href="#/message" ng-click="tabClick('message')">Leave Us a Message</a></li>-->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="twocolumns clearfix" >
+
+                            <div ng-switch="getActiveTab()">
+                                <div ng-switch-when="questions" class="sidebar sidebar-menu">
+                                    <h3>Topics</h3>
+                                    <ul class="nav">
+                                        <li ng-class="{active: isLinkActive('questions', 'faq')}"><a href="#/questions/faq"><i class="bullet"></i>Most Relevant Questions</a></li>
+                                        <li ng-class="{active: isLinkActive('questions', 'accounts')}"><a href="#/questions/accounts"><i class="bullet"></i>Accounts</a></li>
+                                        <li ng-class="{active: isLinkActive('questions', 'upload')}"><a href="#/questions/upload"><i class="bullet"></i>Upload</a></li>
+                                        <li ng-class="{active: isLinkActive('questions', 'projects')}"><a href="#/questions/projects"><i class="bullet"></i>Projects</a></li>
+                                        <li ng-class="{active: isLinkActive('questions', 'experiments')}"><a href="#/questions/experiments"><i class="bullet"></i>Experiments</a></li>
+                                        <li ng-class="{active: isLinkActive('questions', 'instruments')}"><a href="#/questions/instruments"><i class="bullet"></i>Instruments</a></li>
+                                        <li ng-class="{active: isLinkActive('questions', 'groups')}"><a href="#/questions/groups"><i class="bullet"></i>Sharing Groups</a></li>
+                                        <li ng-class="{active: isLinkActive('questions', 'messaging')}"><a href="#/questions/messaging"><i class="bullet"></i>Messaging</a></li>
+                                        <li hide-when-private-installation="true" ng-class="{active: isLinkActive('questions', 'billing')}"><a href="#/questions/billing"><i class="bullet"></i>Billing</a></li>
+                                    </ul>
+                                </div>
+
+                                <div ng-switch-when="videos" class="sidebar sidebar-menu">
+                                    <h3>Topics</h3>
+                                    <ul class="nav">
+                                        <li ng-class="{active: isLinkActive('videos', 'relevant')}"><a href="#/videos/relevant"><i class="bullet"></i>Most Relevant Videos</a></li>
+                                        <li ng-class="{active: isLinkActive('videos', 'projects')}"><a href="#/videos/projects"><i class="bullet"></i>Projects</a></li>
+                                        <li ng-class="{active: isLinkActive('videos', 'accounts')}"><a href="#/videos/accounts"><i class="bullet"></i>Accounts</a></li>
+                                        <li ng-class="{active: isLinkActive('videos', 'instruments')}"><a href="#/videos/instruments"><i class="bullet"></i>Instruments Management</a></li>
+                                        <li ng-class="{active: isLinkActive('videos', 'rawFiles')}"><a href="#/videos/rawFiles"><i class="bullet"></i>Visualisation of RAW Files</a></li>
+                                        <li ng-class="{active: isLinkActive('videos', 'experiments')}"><a href="#/videos/experiments"><i class="bullet"></i>Experiments Collaboration</a></li>
+                                        <li ng-class="{active: isLinkActive('videos', 'files')}"><a href="#/videos/files"><i class="bullet"></i>Files Management</a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="content" ng-view></div>
+
+                        </div>
+                    </div>
+                    <div class="search-results-box" ng-switch-when="true">
+                        <div ng-view></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="ng-include: 'footer.html'"></div>
+    <div id="preview-video" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <form name="VideoForm">
+                    <div class="modal-header">
+                        <a data-dismiss="modal" class="close" id="VideoClose" ng-click="closeVideo()">&nbsp;</a>
+                        <h3 ng-bind='video.snippet.title'></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="dialog-container">
+                            <div class="video-holder">
+                                <iframe id="videoFrame" width="560" height="315" src="{{'https://www.youtube.com/embed/' + video.snippet.resourceId.videoId + '?vq=hd720'}}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

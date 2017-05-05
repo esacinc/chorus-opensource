@@ -1,0 +1,10 @@
+Chorus: Experiment Data Access Requested
+Hello, ${projectCreator}!
+
+User ${user} has attempted to download an experiment "${experiment}" and requested an access to the enclosing project "${project}".
+
+You can share "${project}" project with ${user} to allow an access to the experiment.
+
+Please feel free to login into your account and make your decision on project sharing approval.
+
+Thanks!

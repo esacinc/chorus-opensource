@@ -1,0 +1,85 @@
+<div  modal-dialog>
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <form action="" ng-submit="save()" name="form">
+                <div class="modal-header">
+                    <a id="detailsLaboratoryClose" class='close' data-dismiss='modal'>?</a>
+
+                    <h3 id="detailsLaboratoryLabel">Laboratory Operator Request Details</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="general">
+                            <div class="table laboratory-details">
+                                <div class="control-group control-dialog clearfix">
+                                    <label>Sent</label>
+                                    <div class="item">
+                                <span class="dialog-text"
+                                      ng-bind="details.contactEmail"
+                                      ng-model="details.contactEmail"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.url.$error.inputValidator}">
+                                    <label for="url">Institution URL</label>
+                                    <input id="url" class="dialog-text-input dont-hide"
+                                           ng-bind="details.institutionUrl"   name = "url"
+                                           ng-model="details.institutionUrl" input-validator="" required/>
+                                    <span class="error-message">Field Laboratory URL is required</span>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.name.$error.inputValidator}">
+                                    <label for="name">Laboratory Name</label>
+                                    <input id="name" class="dialog-text-input dont-hide" name="name"
+                                           ng-bind="details.name"   input-validator=""
+                                           ng-model="details.name" required/>
+                                    <span class="error-message">Field Laboratory Name is required</span>
+                                </div>
+                                <div class="control-group control-dialog clearfix">
+                                    <label>Sent Date</label>
+                                    <div class="item">
+                                <span class="dialog-text"
+                                      ng-bind="details.modified | date"></span>
+                                    </div>
+                                </div>
+                                <h5 class="control-group-header">Laboratory Head</h5>
+                                <div class="control-group clearfix" data-ng-class="{error: form.fName.$error.inputValidator}">
+                                    <label for="fName">First Name</label>
+                                    <input id="fName" class="dialog-text-input dont-hide"
+                                           ng-bind="details.headFirstName"  name="fName"  input-validator=""
+                                           ng-model="details.headFirstName" required/>
+                                    <span class="error-message">Field First Name is required</span>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.lName.$error.inputValidator}">
+                                    <label for="lName">Last Name
+                                    </label>
+                                    <input id="lName" class="dialog-text-input dont-hide" name="lName"
+                                           ng-bind="details.headLastName"  input-validator=""
+                                           ng-model="details.headLastName" required/>
+                                    <span class="error-message">Field Last Name is required</span>
+                                </div>
+                                <div class="control-group clearfix" data-ng-class="{error: form.email.$invalid}">
+                                    <label for="email">Email
+                                    </label>
+                                    <input id="email" class="dialog-text-input dont-hide" type="email"
+                                           ng-bind="details.headEmail" name="email" input-validator=""
+                                           ng-model="details.headEmail" required/>
+                                    <span class="error-message" ng-show="!form.email.$error.email">Field email is required</span>
+                                    <span class="error-message" ng-show="form.email.$error.email">Field email is invalid</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary main-action" type="submit" ng-disabled="labForm.$invalid" ng-click="refuse()">
+                        Refuse
+                    </button>
+                    <button class="btn btn-primary main-action" type="submit" ng-click="updateAndApprove(details)"
+                            ng-disabled="form.$invalid">
+                        Approve
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

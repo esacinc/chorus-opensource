@@ -1,0 +1,17 @@
+Chorus: Lab Membership Request
+Hello, ${labHead}!
+
+Someone has just requested a membership in laboratory. Please find the details below:
+
+Laboratory: ${laboratory};
+Requested by: ${requesterName};
+
+Please feel free to login into your account and make your decision on lab membership permission.
+
+To save your time you may use direct links to make your decision.
+
+In order approve a membership please follow this link: <a href="${approveUrl}">${approveUrl}</a>
+
+To refuse please use this link: <a href="${refuseUrl}">${refuseUrl}</a>
+
+A person who requested the membership will be notified about your decision.

@@ -1,0 +1,9 @@
+Chorus: Experiment Download Public Link
+Hello!
+
+${user} has sent you a direct link to download his shared experiment "${experiment}".
+
+To start download please follow this link:
+<a href="${downloadLink}">${downloadLink}</a>
+
+Thank you!

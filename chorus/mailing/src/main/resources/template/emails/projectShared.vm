@@ -1,0 +1,6 @@
+Chorus: Project Shared
+Hello, ${sharedToUser}!
+
+${user} has shared ${project} project with you. You may now access the data of this project.
+
+Thank you!

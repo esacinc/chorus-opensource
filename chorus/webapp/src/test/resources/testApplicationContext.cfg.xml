@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+    <import resource="classpath*:model.cfg.xml"/>
+    <import resource="classpath*:h2.cfg.xml"/>
+
+    <mvc:annotation-driven/>
+    <context:component-scan base-package="com.infoclinika.mssharing.web">
+        <context:exclude-filter type="regex" expression="com\.infoclinika\.mssharing\.web\.services\..*"/>
+        <context:exclude-filter type="regex" expression="com\.infoclinika\.mssharing\.web\.persistence\.MysqlWebPersistenceProvider"/>
+    </context:component-scan>
+
+    <bean id="fileStorageService" class="com.infoclinika.mssharing.platform.fileserver.impl.InMemoryStorageService"/>
+    <bean id="seacher" class="com.infoclinika.mssharing.web.MockSearcher"/>
+    <bean id="blogService" class="com.infoclinika.mssharing.blog.persistence.MockBlogService"/>
+    <bean id="demoDataCreator" depends-on="seedDataCreator" class="com.infoclinika.mssharing.web.demo.DemoDataCreator">
+        <constructor-arg value="true"/>
+    </bean>
+    <bean id="ruleValidator" name="validator, ruleValidator"
+          class="com.infoclinika.mssharing.model.internal.RuleValidatorImpl"/>
+    <bean id="securityChecker" class="com.infoclinika.mssharing.model.internal.RuleValidatorImpl"/>
+
+    <bean id="projectAttachmentsUploadHelper"
+          class="com.infoclinika.mssharing.platform.web.uploader.ProjectAttachmentsUploadHelper"/>
+    <bean id="experimentAttachmentsUploadHelper"
+          class="com.infoclinika.mssharing.platform.web.uploader.ExperimentAttachmentsUploadHelper"/>
+
+    <bean class="com.infoclinika.mssharing.web.rest.auth.ChorusAuthenticationServiceImpl"/>
+    <bean class="com.infoclinika.mssharing.web.security.SpringUserProvider" />
+
+    <context:property-placeholder ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"
+                                  location="classpath:application.properties,
+                                  classpath:messaging.properties"
+                                  order="1"
+            />
+</beans>

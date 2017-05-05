@@ -1,0 +1,87 @@
+<style>
+    .script-dialog .modal-frame {
+        width: 800px !important;
+    }
+</style>
+
+<div id="new-script-dialog" class="script-dialog" modal-dialog="">
+
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <form name="form" role="form" novalidate="">
+
+                <div class="modal-header">
+                    <a id="createScriptClose" class='close' data-dismiss='modal'>&nbsp;</a>
+
+                    <h3 id="createScriptLabel">Create Script</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="dialog-container">
+                        <div class="control-group clearfix">
+                            <label for="name">Name</label>
+                            <input ng-model="script.details.name" type="text" class="dialog-text-input dont-hide"
+                                   id="name"
+                                   required="">
+                        </div>
+                        <div class="control-group clearfix">
+                            <label for="type">Type</label>
+                            <select ng-model="script.type" ui-select2=""
+                                    id="type"
+                                    data-placeholder="-- Select One --"
+                                    class="dialog-select" required="">
+                                <option></option>
+                                <option value="R" ng-selected="true">Statistical Script (R)</option>
+                                <option value="PYTHON">Python Script</option>
+                            </select>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label for="lab">Laboratory</label>
+                            <select ng-model="script.lab" ui-select2=""
+                                    id="lab"
+                                    data-placeholder="-- Select Laboratory --"
+                                    class="dialog-select" required="">
+                                <option></option>
+                                <option ng-repeat="lab in userLabs" value="{{lab.id}}">{{lab.name}}</option>
+                            </select>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label for="description">Description</label>
+                              <textarea ng-model="script.details.description"
+                                        id="description" class="dialog-text-area dont-hide"></textarea>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label for="text">Script Text </label>
+                                 <textarea id="text" rows="20"
+                                           ng-model="script.details.text"
+                                           class="dialog-text-area dont-hide"
+                                           required=""></textarea>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label>Parameters &nbsp;
+                                <a tabindex="0" class="btn-link"
+                                   ip-popover=""
+                                   data-toggle="tooltip"
+                                   data-html="true"
+                                   data-trigger="hover focus"
+                                   data-title="Description"
+                                   data-content="Parameters are the defined constants in your script. To access the parameter from script you should use &quot;$&quot; symbol.<br>
+                                 Ex: <code>run(&quot;Gaussian Blur...&quot;, &quot;sigma = &quot; + $sigmaBlur);</code>"
+                                        >
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </a>
+                            </label>
+                            <ip-script-parameters data="script.details.parameters"></ip-script-parameters>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary main-action" ng-disabled="form.$invalid" ng-click="create(); " data-dismiss="modal">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

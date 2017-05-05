@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "id": 7,
+      "preparedSample": {
+        "name": "prepared_sample_for_file_7",
+        "samples": [
+          {
+            "name": "sample_1",
+            "type": "LIGHT",
+            "factorValues": [
+              "healthy",
+              50
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "preparedSample": {
+        "name": "prepared_sample_for_file_8",
+        "samples": [
+          {
+            "name": "sample_2",
+            "type": "LIGHT",
+            "factorValues": [
+              "sick",
+              500
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

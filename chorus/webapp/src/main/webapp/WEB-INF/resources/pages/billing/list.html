@@ -1,0 +1,142 @@
+<div>
+    <div class="center-frame relative" data-ng-class="{'main-view-holder': total>25}">
+        <div class="billing-content">
+            <div class="dashboard-box laboratory-info clearfix">
+                <div class="heading clearfix">
+                    <div class="cell cell-name sortable active" unroute-sorting="labName">Lab Name
+                    </div>
+                    <div class="cell cell-lab-head" unroute-sorting="labHead">Lab Head</div>
+                    <div class="cell cell-balance" unroute-sorting="storeBalance">Balance</div>
+                </div>
+                <div class="content clearfix">
+                    <div class="row clearfix not-select"
+                         ng-repeat="lab in labs | orderBy:sorting.field:sorting.reverse "
+                         data-ng-class="{'active': opened == lab}">
+                        <div class="row-holder relative clearfix not-select"
+                             ng-dblclick="toggleExpandMenu(lab);"
+                             switch-class-animated="opened == lab && 'active opened' || ''">
+                            <i class="icon collapsible" title="Double-click to view details"></i>
+
+                            <div class="cell cell-name table-link"><strong><a ng-click="openBilling(lab)">{{lab.labName}}</a></strong>
+                            </div>
+                            <div class="cell cell-lab-head">{{lab.labHead}}</div>
+                            <div class="cell cell-balance" ng-class="{'negative-balance': lab.storeBalance < 0}">
+                                <span>
+                                                                    {{lab.storeBalance | price}}
+
+                                </span>
+                                <span ng-show="isAdmin">
+                                     <button ng-click="showAdminTopUpBalanceDialog(lab)" class="btn btn-success pull-right"
+                                             data-toggle="modal" title="Show Request Details">
+                                         Top Up
+                                     </button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="info-expand clearfix">
+                            <div class="content clearfix">
+                                <div class="item item-email">
+                                    <strong class="title">Laboratory Head email</strong>
+                                    <p>{{lab.details.headEmail}}</p>
+                                </div>
+                                <div class="item item-features">
+                                    <strong class="title">Features</strong>
+                                    <ul>
+                                        <li ng-repeat="feature in lab.details.featuresData.features" class="enabled"
+                                            ng-bind="feature"></li>
+                                    </ul>
+                                </div>
+                                <div class="item item-members">
+                                    <strong class="title">Members</strong>
+
+                                    <p>{{lab.details.members}}</p>
+                                </div>
+                                <div class="item item-url">
+                                    <strong class="title">Laboratory url</strong>
+
+                                    <p>{{lab.details.url}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-topup-lab-balance" class="modal hide" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <div class="modal-header">
+                    <a class='close' data-dismiss='modal'>&nbsp;</a>
+
+                    <h3>Top Up Lab Balance</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="control-group clearfix">
+                        <div class="dialog-container">
+                            <div class="control-group clearfix">
+                                <label>Select laboratory</label>
+
+                                <div class="item">
+                                    <div class="dialog-text" ng-bind="adminTopUpBalance.item.labName"></div>
+                                </div>
+                            </div>
+                            <div class="control-group clearfix">
+                                <label>Lab balance</label>
+
+                                <div class="item">
+                                    <div class="dialog-text"
+                                         ng-class="{'negative-balance': adminTopUpBalance.item.storeBalance < 0}"
+                                         ng-bind="adminTopUpBalance.item.storeBalance | price"></div>
+                                </div>
+                            </div>
+                            <div class="control-group clearfix">
+                                <label for="labAmount">Top Up Amount ($)</label>
+
+                                <div class="item">
+                                    <input min="0" id="labAmount" type="number" class="dialog-text-input"
+                                           ng-model="adminTopUpBalance.amount">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action" ng-click="adminTopUpBalance.hidePopup()">
+                        Close
+                    </button>
+                    <button class="btn main-action"
+                            ng-disabled="!adminTopUpBalance.amount"
+                            ng-click="adminTopUpBalance.options.success()">
+                        Top Up
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-top-up-confirmation" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <div class="modal-header">
+                    <h3>Top Up Lab Balance</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="dialog-container">
+                        <p>
+                            The balance of <span ng-bind="adminTopUpBalance.item.labName"></span> laboratory has been successfully topped up with <span ng-bind="(adminTopUpBalance.amount * 100) | price"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary main-action" ng-click="adminTopUpBalance.confirmation.options.success()">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

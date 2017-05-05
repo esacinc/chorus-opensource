@@ -1,0 +1,113 @@
+<div>
+    <style>
+        #email-not-activated-dialog .modal-footer {
+            padding: 30px;
+            border-radius: 0;
+            position: relative;
+            background: #f5f5f5;
+        }
+    </style>
+    <form name="form" novalidate class="" ng-switch='page.form.editProfileMode'>
+        <h2 ng-bind='page.form.title' ng-hide='page.form.editProfileMode'></h2>
+        <div class="clearfix">
+            <div class="control-group half-col" ng-class="{error: !form.firstName.$valid && (form.firstName.$dirty || (form.firstName.$pristine && buttonPressed)) || form.firstName.$error.inputValidator}">
+                <label class="control-label" for="firstName">First Name <span class="error-message">is required</span></label>
+                <div class="controls">
+                    <input id="firstName" type="text" name="firstName" class="dialog-text-input dont-hide" ng-model="account.firstName" input-validator required/>
+                </div>
+            </div>
+    
+            <div class="control-group half-col" ng-class="{error: !form.lastName.$valid && (form.lastName.$dirty || (form.lastName.$pristine && buttonPressed))  || form.lastName.$error.inputValidator}">
+                <label class="control-label" for="lastName">Last Name <span class="error-message">is required</span></label>
+                <input id="lastName" name="lastName" type="text" class="dialog-text-input dont-hide" ng-model="account.lastName" input-validator required/>
+            </div>
+        </div>
+        <div ng-switch-when="false" class="user-credentials">
+            <div class="control-group" ng-class="{
+                   error: !isEmailAvailable || (!isEmail(account.email) && form.email.$dirty) || form.email.$error.inputValidator,
+                   warning: !isEmailInstitutional(account.email) && isEmailAvailable
+                }">
+                <label class="control-label" for="email">Email
+                    <span class="error-message" ng-show="!isEmailAvailable">is already registered</span>
+                    <span class="error-message" ng-show="!isEmailActivated">, but account is not activated. <a class="link" ng-click="confirmActivationEmailResend()">Resend activation email?</a></span>
+                    <span class="error-message" ng-show="isEmailAvailable && account.email && !isEmail(account.email)">is invalid</span>
+                    <span class="error-message" ng-show="!account.email">is required</span>
+                    <span class="error-message warning-message" ng-show="!isEmailInstitutional(account.email) && isEmailAvailable">does not belong to an institution</span>
+                </label>
+                <input id="email" type="text" name="email" ng-disabled="accountHelper.invited" class="dialog-text-input dont-hide" ng-model="account.email" input-validator="" required/>
+            </div>
+    
+            <div class="control-group" ng-class="{error: (account.email && form.confirmEmail.$error.likeAs && form.confirmEmail.$dirty) || form.confirmEmail.$error.inputValidator}">
+                <label class="control-label" for="confirmEmail">Confirm Email
+                    <span class="error-message" ng-show='account.email && form.confirmEmail.$error.likeAs && !form.confirmEmail.$error.inputValidator'>and email addresses should match</span>
+                    <span class="error-message" ng-show='form.confirmEmail.$error.inputValidator'>is required</span>
+                </label>
+                <input id="confirmEmail" name="confirmEmail" ng-disabled="accountHelper.invited" ng-model="accountHelper.confirmEmail" type="text" class="dialog-text-input dont-hide" like-as="account.email" input-validator required/>
+            </div>
+    
+            <div class="control-group" 
+                 ng-class="{error: form.password.$invalid && (form.password.$dirty || (form.password.$pristine && buttonPressed)) || form.password.$error.inputValidator || form.password.$error.passwordStrength || form.password.$error.passwordBlackList}">
+                <label class="control-label" for="password">Password
+                    <span class="error-message" ng-show="form.password.$error.inputValidator">is required</span>
+                    <span class="error-message" ng-show="!form.password.$error.inputValidator && form.password.$error.passwordStrength">
+                        doesn't meet requirements
+                        <i class="icon validation-message-warning" title="Should be at least 8 characters long.&#10;Must contain both letters and digits."></i>
+                    </span>
+                    <span class="error-message" ng-show="!form.password.$error.passwordStrength && form.password.$error.passwordBlackList">is in black list</span>
+                </label>
+                <input id="password" type="password" name="password" class="dialog-text-input dont-hide" ng-model="account.password" input-validator required password-strength password-black-list/>
+            </div>
+    
+            <div class="control-group" ng-class="{error: (form.confirmPassword.$error.likeAs && form.confirmPassword.$dirty) || form.confirmPassword.$error.inputValidator}">
+                <label class="control-label" for="confirmPassword">Confirm Password
+                    <span class="error-message" ng-show="form.confirmPassword.$error.likeAs && !form.confirmPassword.$error.inputValidator">and password don't match</span>
+                    <span class="error-message" ng-show="form.confirmPassword.$error.inputValidator">is required</span></label>
+                <input id="confirmPassword" type="password" name="confirmPassword" ng-model="accountHelper.confirmPassword" class="dialog-text-input dont-hide" input-validator like-as="account.password" required/>
+            </div>
+            <div class="control-group laboratorySelector last-form-group">
+                <label class="control-label optional">Laboratory&nbsp;<span class="optional-string">(optional)</span></label>
+                <laboratory-selector laboratories="allLabs" selected-laboratories="account.selectedLaboratories" undeletable-laboratories='account.alreadyAddedLaboratories'
+                                     pending-labs='pendingLabs' removal-laboratories="account.removalLaboratories"></laboratory-selector>
+            </div>
+            <div class="modal-footer">
+                <button class="btn main-action" ng-disabled="form.$invalid || !isEmailAvailable || !isEmail(account.email)"
+                        ng-click="save(form.$valid && isEmailAvailable && isEmail(account.email))" ng-bind='page.form.saveButtonTitle'>Create</button>
+                <a class="btn secondary-action" href="../pages/dashboard.html">Cancel</a>
+            </div>
+        </div>
+        <div class="accountModalFooter" ng-switch-when="true">
+            <div class="control-group laboratorySelector last-form-group">
+                <label class="control-label optional">Laboratory&nbsp;<span class="optional-string">(optional)</span></label>
+                <laboratory-selector laboratories="allLabs" selected-laboratories="account.selectedLaboratories" undeletable-laboratories='account.alreadyAddedLaboratories'
+                                     pending-labs='pendingLabs' removal-laboratories="account.removalLaboratories"></laboratory-selector>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal" ng-show="page.form.editProfileMode">Cancel</button>
+                <button class="btn main-action" ng-disabled="form.$invalid"
+                        ng-click="save(form.$invalid)" ng-bind='page.form.saveButtonTitle'>Create</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="email-not-activated-dialog" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3> Email is not activated</h3>
+            </div>
+            <div class="modal-body">
+                <p>Resend activation email to address:</p>
+                <p>{{account.email}}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">
+                    Cancel
+                </button>
+                <a ng-click="resendEmail()" class="btn btn-primary main-action">
+                    Send email
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

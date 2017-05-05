@@ -1,0 +1,51 @@
+<style>
+    #email-not-activated-dialog .modal-footer {
+        padding: 30px;
+        border-radius: 0;
+        position: relative;
+        background: #f5f5f5;
+    }
+</style>
+<form id="loginForm" class="sign-in well-large" novalidate action="../j_spring_security_check"  method="POST" name="loginForm" >
+    <h2>Email Validation</h2>
+    <div class="alert-message">
+        <div class="success-message hidden" ng-show="loginResult.successMessage.length > 0">
+            {{ loginResult.successMessage }}
+        </div>
+        <div class="login-error-message" ng-show="loginResult.errorMessage.length > 0 && !vm.emailVerified">
+            {{loginResult.errorMessage}}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="redirectToLoginPageLink" href="dashboard.html" style="display: none">Log in</a>
+        <button type="button" class="main-action" id="redirectoLogin"
+                ng-show="loginResult.successMessage.length > 0" ng-click="vm.redirectToLoginPage()">Log In</button>
+        <button type="button" class="main-action" id="resendVerificationEmail"
+                ng-show="!vm.emailVerified" ng-click="vm.confirmActivationEmailResend()">Re-send an email</button>
+    </div>
+</form>
+
+<div id="email-not-activated-dialog" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3> Email is not activated</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group">
+                    <label class="control-label" for="reSendEmailInput" ><span style="padding-top: 4px;display: block;">Email:</span></label>
+                    <input id="reSendEmailInput" type="email" class="dialog-text-input dont-hide ng-valid-email"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">
+                    Cancel
+                </button>
+                <a ng-click="vm.resendEmail()" class="btn btn-primary main-action"> <!--todo duplicated-->
+                    Send an email
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

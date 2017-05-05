@@ -1,0 +1,126 @@
+<script type="text/javascript" src="../script/initProjectUi.js"></script>
+<script type="text/javascript" src="../script/message.js"></script>
+
+
+<div class="relative" data-ng-class="{'main-view-holder': total>25}" ng-cloak>
+    <div class="dashboard-box projects-box" resizable-table-columns="projects" ng-style="viewStyle">
+        <div class="heading clearfix">
+            <div class="cell cell-number not-resizable">
+                <span>&nbsp;</span>
+            </div>
+            <div ng-repeat="column in displayedColumnNames" ng-switch="column.sortable" class="cell column-head-cell"
+                 ng-style="column.style">
+                <div ng-switch-when="true" set-text="column.title" class="ellipsize"
+                     route-sorting="{{column.modelViewName}}"></div>
+                <div ng-switch-when="false" class="ellipsize" set-text="column.title"></div>
+            </div>
+        </div>
+        <div class="content clearfix">
+            <div class="row clearfix not-select" ng-repeat="project in projects"
+                 ng-mouseenter="$scope.showDetailsButton = project"
+                 ng-mouseleave="$scope.showDetailsButton = null"
+                 right-click-context-menu
+                 data-ng-class="{'active': opened == project, 'row-with-details-button': $scope.showDetailsButton}">
+                <div class="row-holder relative clearfix not-select"
+                     ng-dblclick="toggleExpandMenu(project);"
+                     switch-class-animated="opened == project && 'opened' || ''">
+                    <i class="icon collapsible" title="Double-click to view details"></i>
+                    <div class="cell cell-number not-resizable">
+                        <span set-text="$index + 1 + (pageSize * pageNumber)"></span>
+                    </div>
+                    <div class="cell cell-id" ng-style="getStyle(0)">
+                        <div class="ellipsize" set-text="project.id" set-title="project.id"></div>
+                    </div>
+                    <div class="cell cell-name" ng-style="getStyle(1)">
+                        <div class="dropdown context" ng-show="getLoggedUserName() == project.creatorEmail || loggedInUser.id == project.lab.labHead || project.accessLevel == 'PRIVATE'">
+                            <a ng-show="$scope.showDetailsButton" title="More" class="btn table-button" button-click-context-menu><span class="arrow"></span></a>
+                            <div class="dropdown-menu context-menu hide" >
+                                <span class="arrow"></span>
+                                <ul>
+                                    <li ng-show="getLoggedUserName() == project.creatorEmail || loggedInUser.id == project.lab.labHead">
+                                        <project-details text="'Edit'" eid="{{project.id}}"></project-details>
+                                    </li>
+                                    <li ng-show="(loggedInUser.username == project.creatorEmail || loggedInUser.id == project.lab.labHead) && project.blogEnabled ">
+                                        <a title="Go to project blog" class="" href="blog.html#/{{project.id}}"><i class="icon blog"></i>Project blog</a>
+                                    </li>
+                                    <li ng-show="getLoggedUserName() == project.creatorEmail || loggedInUser.id == project.lab.labHead">
+                                        <project-copy text="'Pass a copy'" eid="{{project.id}}"></project-copy>
+                                    </li>
+                                    <li class="delete-item" ng-show="project.accessLevel == 'PRIVATE'">
+                                        <a title="Remove project" class="" ng-click="displayConfirmation(project)"><i class="icon delete"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="name ellipsize" ng-class="{'no-context': !(getLoggedUserName() == project.creatorEmail || project.accessLevel == 'PRIVATE' || loggedInUser.id == project.lab.labHead)}">
+                            <i ng-show="project.accessLevel == 'PUBLIC'" class="icon public" title="Public Project"></i>
+                            <i ng-show="project.accessLevel == 'PRIVATE'" class="icon private" title="Private Project"></i>
+                            <i ng-show="project.accessLevel == 'SHARED'" class="icon shared" title="Shared Project"></i>
+                            <project-name eid="project.id" name="project.name" set-title="project.name"></project-name>
+                            <i class="icon down-load"></i>
+                        </div>
+                    </div>
+
+                    <cell-column ng-repeat="column in hidableColumns"
+                                 type="column.dataType"
+                                 value="getCellValue($index, project)"
+                                 cell-title="getCellTitle($index, project)"
+                                 cell-style="getStyle($index + 2)"
+                                 cell-class="res = (column.name | spaceToUnderscore) + '_gen'">
+                    </cell-column>
+
+                </div>
+                <div class="info-expand clearfix">
+                    <div class="cell cell-description">
+                        <h3>Description</h3>
+                        <p ng-bind="project.details.description"></p>
+                        <p class="none" ng-show="project.details.description.length == 0">No description</p>
+                    </div>
+                    <div class="cell cell-attachments">
+                        <h3>Attachment<span ng-show="project.attachments.length != 1">s</span></h3>
+                        <p class="none" ng-show="project.attachments.length == 0">No attachments</p>
+                        <ul class="attacmments-list">
+                            <li ng-repeat="attachment in project.attachments" class="attachment-item {{attachment.type}}">
+                                <span class="attachment-type" ng-bind="attachment.type"></span>
+                                <span class="name ellipsize" ng-bind="attachment.name"></span>
+                                <span class="size" ng-bind="attachment.size | fileSize"></span>
+                                <a ng-click="downloadAttachment(attachment.attachmentId); $event.stopPropagation()"><i class="icon download-attach" title="Download file"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-show="isTableEmpty()" class="empty-table" ng-bind="getEmptyTableMessage()"></span>
+</div>
+
+<route-pagination max-items="25" max-shown="7" default-page="1" items="[25, 50, 100, 200]" total-items="total"></route-pagination>
+
+<div id="remove-project-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+    <div class="modal-frame">
+        <div class="modal-header">
+            <h3>Remove Project?</h3>
+        </div>
+        <div class="modal-body" style="padding: 10px 30px">
+            <p>Are you sure you want to remove "{{confirmation.getName()}}" Project? <br/>
+                All your experiments of this project will be moved to Trash or you can remove the selected project permanently.</p>
+
+            <div class="control-group clearfix">
+                <label for="remove-permanently" style="float: left; width: 140px">Remove permanently</label>
+                <input type="checkbox" class="dont-hide" ng-model="confirmation.removePermanently" style="width: 15px; height: 15px;" id="remove-permanently">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true" ng-click="confirmation.hidePopup()">
+                Cancel
+            </button>
+            <button type="submit"
+                    class="btn btn-primary main-action" ng-click="confirmation.removeItem()">Remove
+            </button>
+        </div>
+    </div>
+    </div>
+</div>
+

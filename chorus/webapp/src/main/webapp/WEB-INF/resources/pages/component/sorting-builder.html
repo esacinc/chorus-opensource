@@ -1,0 +1,62 @@
+<div class="clearfix">
+
+    <h5>Global Filter Settings</h5>
+
+    <div class="clearfix logic with-labels">
+        <div class="control-group span2">
+            <label class="control-label">Dimension</label>
+            <select ui-select2="{minimumResultsForSearch: 5}" ui-select2-validator
+                    class="dialog-select"
+                    ng-change="handleDimensionChange(filterValue.byDimension)"
+                    ng-model="filterValue.byDimension">
+                <option value="{{dimension.value}}"
+                        ng-repeat="dimension in dimensionList"
+                        ng-selected="filterValue.byDimension==dimension.value"> {{dimension.name}}
+                </option>
+            </select>
+        </div>
+        <div class="control-group span2" ng-if="filterValue.byDimension=='columnAnnotations'">  <!--don't show sheet selector for row annotaions selected -->
+            <label for="algorithmApplyToSheet">Sheet</label>
+            <select id="algorithmApplyToSheet" name="dataToDisplay" class="dialog-select"
+                    ng-model="filterValue['SHEET_NAME']"
+                    ui-select2 ui-select2-validator>
+                <option value="{{matrix.name}}"
+                        ng-repeat="matrix in matrices"
+                        ng-selected="matrix.name==filterValue['SHEET_NAME']">
+                    {{matrix.name}}
+                </option>
+            </select>
+        </div>
+        <div class="control-group span2" style="clear: both; margin-left: 0;">
+            <label class="control-label">
+                <span ng-if="filterValue.byDimension=='columnAnnotations'">Matrix Column</span>
+                <span ng-if="filterValue.byDimension=='rowAnnotations'">Annotation Column</span>
+            </label>
+            <select ui-select2="{minimumResultsForSearch: 5}" ui-select2-validator
+                    class="dialog-select"
+                    ng-model="filterValue.sortBy" ng-if="filterValue.byDimension=='rowAnnotations'">
+                <option value="{{$index+1}}"
+                        ng-selected="sortByField.name==filterValue.sortBy"
+                        ng-repeat="sortByField in sortByFieldList">
+                    {{sortByField.name}}
+                </option>
+            </select>
+            <span ng-if="filterValue.byDimension=='columnAnnotations'">
+                <input type="number" min="0" value="0" ng-model="filterValue.sortBy" style="width: 90%;">
+            </span>
+        </div>
+        <div class="control-group span2">
+            <label class="control-label">Direction</label>
+            <select ui-select2="{minimumResultsForSearch: 5}" ui-select2-validator
+                    class="dialog-select"
+                    ng-model="filterValue['SORT_ORDER']">
+                <option value="{{direction.name}}"
+                        ng-selected="direction.name==filterValue['SORT_ORDER']"
+                        ng-repeat="direction in directions">
+                    {{direction.text}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+</div>

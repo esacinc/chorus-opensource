@@ -1,0 +1,10 @@
+${projectTitle}: Lab Creation Request Rejected
+Hello!
+
+Unfortunately your ${lab} lab creation request has been rejected by the administrators. Here is the rejection comment:
+
+${comment}
+
+Perhaps, you may try to contact them directly and then repeat your request.
+
+Thank you for your patience.

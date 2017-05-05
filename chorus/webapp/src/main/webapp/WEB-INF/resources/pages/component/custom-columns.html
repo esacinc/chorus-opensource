@@ -1,0 +1,11 @@
+<div>
+    <ul ui-sortable ng-model="allowedColumns">
+        <li ng-repeat="column in allowedColumns">
+            <label>
+                <span class="arrow"></span>
+                <input type="checkbox" ng-model="column.visible"/>
+                <span ng-bind="column.name"></span>
+            </label>
+        </li>
+    </ul>
+</div>

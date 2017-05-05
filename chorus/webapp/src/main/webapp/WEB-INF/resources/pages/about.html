@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html ng-app="static-page">
+<head>
+    <meta charset="utf-8"/>
+    <title>Chorus - About</title>
+	<!-- FavIcon -->
+	<link rel="icon" href="../img/favicon.ico" type="image/x-icon"/>
+
+    <script type="text/javascript" src="../script/util/logging.js"></script>
+
+    <!-- Twitter Bootstrap -->
+    <script src="../lib/jquery/jquery-1.8.2.min.js"></script>
+    <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/detect-js/detect.js"></script>
+    <script type="text/javascript" src="../lib/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../lib/angularjs/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../lib/angular-ui/angular-ui.min.js"></script>
+    <script type="text/javascript" src="../script/enums.js"></script>
+    <script type="text/javascript" src="../script/error-catcher.js"></script>
+    <script type="text/javascript" src="../script/service/security-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/features-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/controller/security-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../script/service/issues-back.js"></script>
+    <script type="text/javascript" src="../script/static-common.js"></script>
+    <script type="text/javascript" src="../script/about.js"></script>
+    <script type="text/javascript" src="../script/components/current-year.directive.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.js"></script>
+    <script type="text/javascript" src="../script/appearance/appearance.service.js"></script>
+    <script type="text/javascript" src="../script/header/header.js"></script>
+    <script type="text/javascript" src="../script/header/header.controller.js"></script>
+
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Our Styles -->
+    <!--[if gte IE 9] its for gradients in select tags>
+      <style type="text/css">
+        .gradient {
+           filter: none;
+        }
+      </style>
+    <![endif]-->
+    <link rel="stylesheet" href="../css/dialogs.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="static-page about-page">
+    <div class="fixed-area">
+        <div ng-init="activePage = 'about'" class="ng-include: 'header.html'"></div>
+    </div>
+    <div class="main-content">
+        <div class="content-box clearfix">
+            <div class="center-frame">
+                <div class="twocolumns clearfix">
+                    <div class="content">
+                        <h2>About Chorus Project</h2>
+                        <p>Chorus is&nbsp;a&nbsp;new cloud application that provides scientists with the ability to&nbsp;securely store, analyze and share their&nbsp;MS data regardless of&nbsp;the original raw file format. The goal of&nbsp;Chorus is&nbsp;to&nbsp;create a&nbsp;complete catalogue of&nbsp;the world&rsquo;s mass spectrometric data that can be&nbsp;openly accessed&nbsp;by, and freely accessible&nbsp;to, the global scientific community as&nbsp;well as&nbsp;the general public. Chorus will be&nbsp;invaluable to&nbsp;scientists in&nbsp;all fields that rely on&nbsp;mass spectrometry as&nbsp;a&nbsp;tool for answering the questions: &ldquo;What is&nbsp;it&nbsp;and how much is&nbsp;there?&rdquo;.</p>
+                        <div class="hide">
+                            <p>Chorus is&nbsp;enabled by&nbsp;Amazon Web Services, Inc. a&nbsp;global cloud based computing environment that includes the Amazon Elastic Compute Cloud (Amazon EC2), Amazon Simple Storage Service (Amazon&nbsp;S3), and the Amazon extremely low cost storage service (Amazon Glacier). Chorus provides custom built data analysis tools that convert proprietary data formats to&nbsp;a&nbsp;common MAP Reduce format for processing large data sets with a&nbsp;parallel and distributed algorithms on&nbsp;the cloud. The initial data analysis tools include chromatographic and mass spectral viewers, as&nbsp;well as&nbsp;a&nbsp;database search engine for protein sequence identification. While Chorus&rsquo;s capabilities have been initially designed to&nbsp;meet the data-intense needs of&nbsp;the proteomics community, Chorus&rsquo;s chromatographic and spectral analysis tools can be&nbsp;used by&nbsp;anyone conducting&nbsp;MS analyses.</p>
+                            <p>A&nbsp;distinguishing feature of&nbsp;Chorus is&nbsp;that researchers can choose to&nbsp;keep their data sequestered and entirely private, or&nbsp;they can choose to&nbsp;make their data available to&nbsp;select collaborators or&nbsp;put it&nbsp;in&nbsp;the public domain for world-wide access, analysis and discussion. It&nbsp;is&nbsp;the open sharing capability that leads to&nbsp;the name Chorus&nbsp;&mdash; a&nbsp;community of&nbsp;shared data voices which together generate new knowledge, new tools, and new understanding.</p>
+                            <p>Stratus Biosciences, a&nbsp;not-for-profit corporation, has been formed by&nbsp;Yates, MacCoss and Bondarenko to&nbsp;manage and administer a&nbsp;public instance of&nbsp;Chorus for its worldwide users. As&nbsp;a&nbsp;not-for-profit, Stratus Biosciences&rsquo; goal is&nbsp;to&nbsp;cover its costs and ensure the sustainability and growth of&nbsp;Chorus for the mass spectrometry community.</p>
+                            <p>Stratus Biosciences will be&nbsp;launching Chorus at&nbsp;the 61st American Society for Mass Spectrometry (ASMS) and Allied Topics Conference, June 9&nbsp;&mdash; 13, 2013&nbsp;at the Minneapolis Convention Center in&nbsp;Minneapolis, MN. A&nbsp;Workshop has been scheduled for the evening of&nbsp;Wednesday June&nbsp;12, 2013 where participants can access Chorus on&nbsp;their laptops and mobile devices. Agilent technologies will also host a&nbsp;terminal featuring Chorus in&nbsp;their ASMS hospitality suite.</p>
+                        </div>
+                        <div class="more">
+                            <a href="#/"><span>Know more details</span><em class="arrow"></em></a>
+                        </div>
+                    </div>
+                    <div class="aside">
+                        <h2>Contact Us</h2>
+                        <div class="contact-info">
+                            <p><span class="icon email"></span><strong><a href="mailto:&#105;&#110;&#102;&#111;&#064;&#099;&#104;&#111;&#114;&#117;&#115;&#112;&#114;&#111;&#106;&#101;&#099;&#116;&#046;&#111;&#114;&#103;">info@chorusproject.org</a></strong></p>
+                            <p><span class="icon phone"></span>+<strong>1-425-442-8058</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-box clearfix">
+                    <h2>Who We Are</h2>
+                    <div class="section clearfix">
+                        <div class="photo">
+                            <img src="../img/img-christine-wu.jpg" alt="Christine Wu" />
+                        </div>
+                        <div class="text">
+                            <div class="position">
+                                <h3>Christine Wu, Ph.D.</h3>
+                                <h4>&mdash; Chief Executive Officer</h4>
+                                <p><a href="mailto:&#099;&#104;&#114;&#105;&#115;&#116;&#105;&#110;&#101;&#046;&#119;&#117;&#064;&#115;&#116;&#114;&#097;&#116;&#117;&#115;&#098;&#105;&#111;&#115;&#099;&#105;&#101;&#110;&#099;&#101;&#115;&#046;&#111;&#114;&#103;">christine.wu@stratusbiosciences.org</a></p>
+                            </div>
+                            <p>Dr. Wu was trained as a cell biologist and protein biochemist with 20+ years expertise in the characterization of proteins. Dr. Wu has worked  the development and application of new proteomics methods, particularly for the quantitation and structural analysis of transmembrane proteins.  Previously, she held tenured faculty appointments at both the University of Colorado and the University of Pittsburgh. Dr. Wu has significant leadership expertise and has managed large data collection efforts.</p>
+                            <div class="hide">
+                                <p>Dr. Wu received her Ph.D. in Cell Biology from the University of Colorado in 2001 where she worked to characterize the Golgi proteome.  From 2001 to 2004 she was a postdoctoral fellow at The Scripps Research Institute working with Professor John Yates.  While at Scripps, Dr. Wu developed new methods for measuring membrane proteins, published the first example of a 15N labeled rodent for proteomics, developed methods for organellar proteomics, and contributed significantly to software for the analysis of high throughput proteomics data.</p>
+                            </div>
+                            <div class="more">
+                                <a href="#/"><span>More</span><em class="arrow"></em></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section clearfix">
+                        <div class="photo">
+                            <img src="../img/img-nathan-yates.jpg" alt="Nate Yates" />
+                        </div>
+                        <div class="text">
+                            <div class="position">
+                                <h3>Nathan Yates, Ph.D.</h3>
+                                <h4>&mdash; Chief Scientific Officer</h4>
+                                <p><a href="mailto:&#110;&#097;&#116;&#104;&#097;&#110;&#046;&#121;&#097;&#116;&#101;&#115;&#064;&#115;&#116;&#114;&#097;&#116;&#117;&#115;&#098;&#105;&#111;&#115;&#099;&#105;&#101;&#110;&#099;&#101;&#115;&#046;&#111;&#114;&#103;">nathan.yates@stratusbiosciences.org</a></p>
+                            </div>
+                            <p>Nathan Yates is&nbsp;Associate Professor in&nbsp;the Department of&nbsp;Cell Biology and the Scientific Director of&nbsp;the Biomedical Mass Spectrometry Center at&nbsp;the University of&nbsp;Pittsburgh. Dr.&nbsp;Yates&rsquo; research is&nbsp;focused on&nbsp;the development of&nbsp;distributed analysis tools for mass spectrometry in&nbsp;line with his vision that the next-generation of&nbsp;data analysis tools will accelerate new discoveries in&nbsp;basic research and drive the rapid adoption of&nbsp;mass spectrometry in&nbsp;translational and clinical research. Dr.&nbsp;Yates joined the University of&nbsp;Pittsburgh following a&nbsp;<nobr>16-year</nobr> career at&nbsp;Merck Research Laboratories where he&nbsp;first met Michael MacCoss and where he&nbsp;established Merck&rsquo;s first open access <nobr>LC-MS</nobr> system and deployed a&nbsp;network of&nbsp;mass spectrometers to&nbsp;enable the distributed analysis of&nbsp;hundreds of&nbsp;thousands of&nbsp;medicinal chemistry samples annually.</p>
+                            <div class="hide">
+                                <p>Upon then joining Merck&rsquo;s Molecular Profiling Group in&nbsp;2002, Dr.&nbsp;Yates invented Differential Mass Spectrometry (dMS), demonstrating its ability to&nbsp;compare proteomic samples from healthy and diseased patients. The dMS method became the foundation for Merck&rsquo;s proteomic biomarker discovery pipeline. Based on&nbsp;dMS and together with Mr.&nbsp;Andrey Bondarenko (then of&nbsp;Rosetta Biosoftware), Dr.&nbsp;Yates developed Elucidator Proteomic Analysis Suite which was acquired by&nbsp;Microsoft in&nbsp;2009. Elucidator was the first enterprise-scale proteomics analysis solution that enabled the analysis of&nbsp;hundreds of&nbsp;terabytes of&nbsp;high-resolution mass spectrometry data from thousands of&nbsp;patient samples. Dr.&nbsp;Yates received his Ph.D. in&nbsp;analytical chemistry from the University of&nbsp;Florida in&nbsp;1993, followed by&nbsp;a&nbsp;postdoctoral fellowship at&nbsp;the University of&nbsp;Virginia.</p>
+                            </div>
+                            <div class="more">
+                                <a href="#/"><span>More</span><em class="arrow"></em></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section clearfix">
+                        <div class="photo">
+                            <img src="../img/img-andrey-bondarenko.jpg" alt="Andrey Bondarenko" />
+                        </div>
+                        <div class="text">
+                            <div class="position">
+                                <h3>Andrey Bondarenko</h3>
+                                <h4>&mdash; Chief Technology Officer</h4>
+                                <p><a href="mailto:&#097;&#110;&#100;&#114;&#101;&#121;&#046;&#098;&#111;&#110;&#100;&#097;&#114;&#101;&#110;&#107;&#111;&#064;&#115;&#116;&#114;&#097;&#116;&#117;&#115;&#098;&#105;&#111;&#115;&#099;&#105;&#101;&#110;&#099;&#101;&#115;&#046;&#099;&#111;&#109;">andrey.bondarenko@stratusbiosciences.com</a></p>
+                            </div>
+                            <p>Andrey Bondarenko is&nbsp;President and CEO of&nbsp;InfoClinika, Inc., a&nbsp;life sciences software development company focused on&nbsp;cloud based solutions for genomics data management and analyses. Mr.&nbsp;Bondarenko has 20&nbsp;years of&nbsp;experience in&nbsp;the strategic application of&nbsp;data analysis and statistical methods in&nbsp;genomics, proteomics, metabolomics, and mass spectrometry and is&nbsp;an&nbsp;inventor on&nbsp;many core patents for the analysis of&nbsp;biological response signals, including the management and processing of&nbsp;mass spectrometry data. Prior to&nbsp;founding InfoClinika in&nbsp;2011, Mr.&nbsp;Bondarenko developed industry defining products and integrated solutions for drug discovery, biomarker identification, standards development, and clinical data submissions in&nbsp;FDA regulated environments.</p>
+                            <div class="hide">
+                                <p>He&nbsp;held senior management positions in&nbsp;industry, including Chief Product Architect at&nbsp;Rosetta Informatics and Merck where he&nbsp;was the architect of&nbsp;the Rosetta Resolver and Elucidator software systems bringing them from concept to&nbsp;leading commercial products. These systems were used for gene and protein expression analysis in&nbsp;the world&rsquo;s largest pharmaceutical companies and in&nbsp;hundreds of&nbsp;universities around the world. At&nbsp;InfoClinika, Mr.&nbsp;Bondarenko is&nbsp;developing software solutions to&nbsp;serve the broader proteomics and metabolomics community providing a&nbsp;more cost effective way for researchers around the world to&nbsp;leverage the novel tools and technologies now available.</p>
+                            </div>
+                            <div class="more">
+                                <a href="#/"><span>More</span><em class="arrow"></em></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section clearfix">
+                        <div class="photo">
+                            <img src="../img/img-chris-tirpak.jpg" alt="Chris Tirpak" />
+                        </div>
+                        <div class="text">
+                            <div class="position">
+                                <h3>Chris Tirpak</h3>
+                                <h4>&mdash; VP Systems Technology/Deputy CTO</h4>
+                                <p>&nbsp;</p>
+                            </div>
+                            <p>Chris Tirpak has over 20&nbsp;years of&nbsp;experience in&nbsp;the high tech industry. He&nbsp;currently serves at&nbsp;VP of&nbsp;Systems Technology/Deputy CTO at&nbsp;EchoStar, a&nbsp;world leader in&nbsp;direct to&nbsp;home and commercial satellite communications. In&nbsp;his role at&nbsp;EchoStar Chris is&nbsp;involved in&nbsp;nearly every aspect of&nbsp;the technology required for delivering over 7500&nbsp;TV channels, 50,000 video on&nbsp;demand titles, consumer internet data services, commercial internet data services via 21&nbsp;satellites and EchoStar&rsquo;s internet services to&nbsp;over 20&nbsp;million users worldwide. Chris has been involved in&nbsp;extreme scalable systems design and high availability throughout his entire career and a&nbsp;proponent of&nbsp;cloud computing since before it&nbsp;was popular.</p>
+                            <div class="hide">
+                                <p>Chris, Nathan, Andrey and Mike have been collectively brainstorming ways to&nbsp;use the power of&nbsp;the cloud and other cutting edge commercial technologies to&nbsp;drive the next big revolution in&nbsp;bio-informatics and research sharing for years. Chris has also infused the conversation with the startup mentality of&nbsp;rapid product iteration&nbsp;&mdash; build&nbsp;it, ship&nbsp;it, measure&nbsp;it, refine it&nbsp;to&nbsp;get product into the hands of&nbsp;those that will use&nbsp;it. Chris is&nbsp;proud to&nbsp;see StratusBiosciences finally come to&nbsp;fruition.</p>
+                            </div>
+                            <div class="more">
+                                <a href="#/"><span>More</span><em class="arrow"></em></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ng-include: 'footer.html'"></div>
+</body>
+</html>

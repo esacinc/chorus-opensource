@@ -1,0 +1,105 @@
+<div class="relative" data-ng-class="{'main-view-holder': total>25}">
+    <div class="dashboard-box trash-box" resizable-table-columns="trash">
+        <div class="heading clearfix" ng-style="viewStyle">
+            <div class="cell cell-number">
+                <span>&nbsp;</span>
+            </div>
+            <div class="cell cell-check">
+                <input type="checkbox" ng-model="allItemsSelected" ng-click="selectAll(trash, asc = !asc)"/>
+            </div>
+            <div class="cell cell-id">ID</div>
+            <div class="cell cell-name">Name</div>
+            <div class="cell cell-type">Type</div>
+            <div class="cell cell-lab">Laboratory</div>
+            <div class="cell cell-date">Deletion Date</div>
+        </div>
+        <div class="content clearfix" ng-style="viewStyleContent">
+            <div class="row clearfix" ng-repeat="item in trash | orderBy: 'deletionDate': true">
+                <div class="row-holder relative clearfix"
+                     ng-click="selectItem(item, $event)">
+                    <div class="cell cell-number">
+                        <span set-text="$index + 1"></span>
+                    </div>
+                    <div class="cell cell-check" ng-click="selectItem(item, $event)">
+                        <input type="checkbox" ng-model="item.selected"
+                               ng-click="!contextOpened && $event.stopPropagation()"/>
+                    </div>
+                    <div class="cell cell-id">
+                        <div class="ellipsize" set-text="item.id" set-title="item.id"></div>
+                    </div>
+                    <div class="cell cell-name" ng-style="getStyle(0)">
+                        <div class="name ellipsize">
+                            <!--<span>-->
+                            <!--<i class="icon translation-status {{ file.statusObject.class }}" title="{{ file.statusObject.title }}"></i>-->
+                            <!--<i set-if="file.accessLevel == 'PUBLIC'" class="icon public" title="Public File"></i>-->
+                            <!--<i set-if="file.accessLevel == 'PRIVATE'" class="icon private" title="Private File"></i>-->
+                            <!--<i set-if="file.accessLevel == 'SHARED'" class="icon shared" title="Shared File"></i>-->
+                            <!--<i set-if="file.contentId != null" class="icon quickDownload" title="File is ready to download"></i>-->
+                            <!--</span>-->
+                            <span set-text="item.title" set-title="item.title"></span>
+                        </div>
+                    </div>
+                    <div class="cell cell-type">
+                        <div class="ellipsize" set-text="item.type" set-title="project.creator"></div>
+                    </div>
+                    <div class="cell cell-lab">
+                        <div class="ellipsize" set-text="item.labName | nullToEmptyString"
+                             set-title="item.labName | nullToEmptyString"></div>
+                    </div>
+                    <div class="cell cell-date">
+                        <div class="ellipsize" set-text="item.deletionDate | date"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <span ng-show="trash.length == 0" class="empty-table">Trash is empty</span>
+    </div>
+
+    <div id="restore-selected-confirmation" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <div class="modal-header">
+                    <h3>Restore Selected Items?</h3>
+                </div>
+                <div class="modal-body">
+                    <p ng-show="(notRestorableItems.projects.length + notRestorableItems.experiments.length + notRestorableItems.files.length) > 0">
+                        Following items will not be restored because active items with the same names exist
+                        <span ng-show="notRestorableItems.projects"><br />Projects:
+                            <span ng-repeat="item in notRestorableItems.projects">{{item.title}}<span ng-show="!$last">, </span></span>
+                        </span>
+                        <span ng-show="notRestorableItems.experiments"><br />Experiments:
+                            <span ng-repeat="item in notRestorableItems.experiments">{{item.title}}<span ng-show="!$last">, </span></span>
+                        </span>
+                        <span ng-show="notRestorableItems.files"><br />Files:
+                            <span ng-repeat="item in notRestorableItems.files">{{item.title}}<span ng-show="!$last">, </span></span>
+                        </span>
+                    </p>
+                    <p ng-show="(duplicateProjects.length + duplicateExperiments.length + duplicateFiles.length) > 0">
+                        Following items will not be restored because they have duplicate names
+                        <span ng-show="duplicateProjects"><br />Projects:
+                            <span ng-repeat="item in duplicateProjects">{{item.title}}<span ng-show="!$last">, </span></span>
+                        </span>
+                        <span ng-show="duplicateExperiments"><br />Experiments:
+                            <span ng-repeat="item in duplicateExperiments">{{item.title}}<span ng-show="!$last">, </span></span>
+                        </span>
+                        <span ng-show="duplicateFiles"><br />Files:
+                            <span ng-repeat="item in duplicateFiles">{{item.title}}<span ng-show="!$last">, </span></span>
+                        </span>
+                    </p>
+                    <p>Are you sure You want to restore selected items?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                            ng-click="restoreSelectedPopup.cancel()">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary main-action" ng-disabled="!isReadNotRestorableItems" ng-click="restoreSelectedPopup.ok()">
+                        Restore
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<route-pagination max-items="25" max-shown="7" default-page="1" items="[25, 50, 100, 200]"-->
+    <!--total-items="total"></route-pagination>-->
+</div>

@@ -1,0 +1,113 @@
+<div class="relative">
+
+    <div class="dashboard-box scripts-box" resizable-columns="scripts-list">
+        <div class="heading clearfix">
+            <div class="cell cell-number">
+                <span>&nbsp;</span>
+            </div>
+            <div class="cell cell-id" route-sorting="id">
+                <span>ID</span>
+            </div>
+            <div class="cell cell-name" route-sorting="name">Script Name</div>
+            <div class="cell cell-author" route-sorting="author">Author</div>
+            <div class="cell cell-type" route-sorting="type" >Type</div>
+            <div class="cell cell-access" route-sorting="access" >Shared</div>
+            <div class="cell cell-date" route-sorting="creationDate" sort-by-default="desc">Creation Date</div>
+            <div class="cell cell-date" route-sorting="lastModified">Last Modified</div>
+        </div>
+        <div class="content clearfix">
+            <div class="row clearfix"
+                 ng-repeat="script in scripts | filter:page.filter"
+                 ng-mouseenter="hovered=script"
+                 ng-mouseleave="hovered=null"
+                 right-click-context-menu=""
+                 data-ng-class="{'active': opened == script, 'row-with-details-button':hovered}">
+
+                <div class="row-holder relative clearfix not-select"
+                     ng-dblclick="toggleExpandMenu(script);"
+                     switch-class-animated="opened == script && 'opened' || ''"
+                        >
+                    <!--<i class="icon collapsible" title="Double-click to view details"></i>-->
+                    <div class="cell cell-number"><span ng-bind="$index+1"></span></div>
+                    <div class="cell cell-id"><span ng-bind="script.id"></span></div>
+                    <div class="cell cell-name">
+                        <div class="dropdown context">
+                            <a button-click-context-menu=""
+                               ng-show="hovered"
+                               title="More"
+                               class="btn table-button">
+                                <span class="arrow"></span>
+                            </a>
+
+                            <div class="dropdown-menu context-menu">
+                                <span class="arrow"></span>
+                                <ul>
+                                    <li class="">
+                                        <ip-script-details eid="{{script.id}}"  text="script.accessible && 'Edit' || 'View'"
+                                                           url-param="!script.accessible && '/view' || ''"></ip-script-details>
+                                    </li>
+                                    <li ng-show="script.accessible" class="delete-item">
+                                        <a ng-click="displayConfirmation(script)"  title="Delete">
+                                            <i class="icon delete"></i>
+                                            <span class="">Delete</span>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a ng-click="duplicate(script)" class="duplicate"
+                                           title="Duplicate">
+                                            <i class="icon pass-copy"></i>Duplicate</a>
+                                    </li>
+                                    <li ng-show="script.accessible" class="">
+                                        <a ng-click="share(script)" class="share"
+                                           title="Duplicate">
+                                            <i class="icon pass-copy"></i>{{script.bPublic && 'Make Private' || 'Make Public'}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <script-name eid="script.id" name="script.name"
+                                     set-title="script.name" sub="!script.accessible && 'view' || ''"></script-name>
+                    </div>
+                    <div class="cell cell-author" ng-bind="script.author"></div>
+                    <div class="cell cell-type" ng-bind="script.type"></div>
+                    <div class="cell cell-access" set-text="formatAccessValue(script.bPublic)"></div>
+                    <div class="cell cell-date" ng-bind="script.creationDate | date"></div>
+                    <div class="cell cell-date" ng-bind="script.lastModified | date"></div>
+                </div>
+                <div class="info-expand clearfix">
+                    <div class="cell cell-description">
+                        <h3>Description</h3>
+                        <p ng-bind="script.description"></p>
+                        <p class="none" ng-show="!script.description || script.description.length == 0">No description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span ng-show="scripts.length==0" class="empty-table">There are not scripts</span>
+        <route-pagination max-items="25" max-shown="7" default-page="1" items="[25, 50, 100, 200]" total-items="total"></route-pagination>
+    </div>
+</div>
+<duplicate-script></duplicate-script>
+
+<div id="remove-script-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Remove Script?</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove "{{confirmation.getName()}}" Script?</p>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                        ng-click="confirmation.hidePopup()">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="btn btn-primary main-action" ng-click="confirmation.removeItem()">Remove
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

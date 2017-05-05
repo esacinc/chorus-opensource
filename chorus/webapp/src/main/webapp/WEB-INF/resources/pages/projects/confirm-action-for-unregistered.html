@@ -1,0 +1,29 @@
+<div id="confirm-action-for-unregistered" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a data-dismiss="modal" class="close" id="confirmSharingClose" href="">&nbsp;</a>
+
+                <h3 ng-bind="dialogMessages.title"></h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container">
+                    <p ng-bind="dialogMessages.dialogInformation"></p>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="btn secondary-action" id="removeUnregisteredAndSave"
+                        ng-click="projectDialogReturn(); plainAction()" ng-bind="dialogMessages.plainButtonText">
+                </button>
+                <button class="btn main-action" data-dismiss="modal" aria-hidden="true"
+                        ng-click="projectDialogReturn(); confirmAction()" ng-bind="dialogMessages.confirmButtonText">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+<label class="control-label optional" for="annotation-description" ng-show="existingAttachments.length!=0 || uploadingAttachments!=0">
+    <span ng-bind="attachmentOptions.attachmentType" id="annotation-description"></span>&nbsp;
+</label>
+
+<div class="attachments-holder" ng-switch="attachmentsReadOnly">
+    <div class="unsupported-files-alert-container">
+        <ul class="unsupported-files-alert">
+            <li class="alert single-alert" ng-repeat="alert in alerts">{{alert}}</li>
+        </ul>
+    </div>
+    <div>
+        <!--Not Empty Attachments-->
+        <ul class="attacmments-list" ng-show="existingAttachments.length > 0 || show">
+
+            <li ng-repeat="attachment in existingAttachments" class="attachment-item {{attachment.ext.substr(1)}}">
+                <span class="attachment-type" ng-bind="attachment.type"></span>
+                <span class="name ellipsize" ng-bind="attachment.name"></span>
+                <span class="size" ng-bind="attachment.size | fileSize"></span>
+                <span class="attachment-action" ng-show="attachmentCouldDownload">
+                    <a ng-click="downloadAttachment(attachment.attachmentId)">
+                        <i class="icon download-attach" title="Download file"></i>
+                    </a>
+                    <span ng-hide="attachmentsReadOnly">
+                        <i class="attach-action-sep"></i>
+                        <a ng-click="removeExistingAttachment(attachment.attachmentId)">
+                            <i class="icon delete-attach" title="Remove attachment"></i>
+                        </a>
+                    </span>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-switch-when="false">
+        <!--Uploading Table-->
+       <div class="scrollable-container" ng-show="uploadingAttachments.length > 0">
+           <table class="table uploading-files">
+              <!--  <colgroup>
+                    <col style="width: 25%"/>
+                    <col/>
+                    <col/>
+                    <col style="width: 30px"/>
+                </colgroup>-->
+                <tbody>
+                <!--Uploading Item-->
+                <tr ng-repeat="attachment in uploadingAttachments"
+                    ng-class="attachment.isUploading && 'uploading-file' || 'queue-item'">
+                    <td>
+                        <span ng-bind="attachment.name" class="filename ellipsize"></span>
+                        <!-- Progress bar-->
+                        <div class="progress-bar active" ng-show="attachment.isUploading">
+                            <div ng-style="{width: attachment.uploadProgress + '%'}" class="done-strip"></div>
+                        </div>
+                        <!-- State Info -->
+                        <span class="current-state-info" ng-show="attachment.isUploading">{{attachment.uploadedSize | fileSize}} of {{attachment.size | fileSize}} ({{attachment.uploadSpeed | fileSize}}/s) &nbsp;&nbsp;&nbsp;{{attachment.remainingTime}}&nbsp;remaining</span>
+                    </td>
+                    <td>
+                        <!-- Operations -->
+                        <a ng-click="removeUploadingAttachment($index, attachment)" class="icon delete-attach"
+                           title="Remove item from the list"></a>
+                    </td>
+                </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>

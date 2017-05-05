@@ -1,0 +1,78 @@
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.bar {
+    fill: steelblue;
+}
+
+
+rect.pane {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
+}
+
+.peak-label {
+    fill: #d77;
+    cursor: pointer;
+}
+
+.label-text {
+    stroke: none;
+    font-size: 8.5px;
+    font-family: 'Helvetica Neue', Verdana;
+    font-weight: 100;
+}
+
+.reset-button {
+    float: right;
+    margin-right: 50px;
+}
+
+.files-selector ul {
+    list-style-type: none;
+}
+
+.files-selector li {
+    margin-left: -25px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 10px;
+}
+
+.files-selector li:hover {
+    cursor: pointer;
+}
+
+.files-selector li.even {
+    background: #eaeaea;
+}
+
+.files-selector input[type="radio"]{
+    width: 30px;
+    height: 20px;
+    margin: 3px 0 3px -12px;
+}
+
+.files-selector-toggle {
+    position: absolute;
+    height: 21px;
+    width: 19px;
+    right: 0;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.files-selector-toggle.open-icon {
+    background: #f6f6f6 url(../../img/icon-sprite.png) -73px -124px;
+}
+
+.files-selector-toggle.close-icon {
+    background: #f6f6f6 url(../../img/icon-sprite.png) -23px -64px;
+}

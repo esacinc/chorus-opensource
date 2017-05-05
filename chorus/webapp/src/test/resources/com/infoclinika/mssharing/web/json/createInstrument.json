@@ -1,0 +1,10 @@
+{
+    "model":254,
+    "details":{
+        "name":"New instrument",
+        "serialNumber":"ABC123456",
+        "hplc":"hplc",
+        "peripherals":"printer, scanner",
+        "lockMasses": []
+    }
+}

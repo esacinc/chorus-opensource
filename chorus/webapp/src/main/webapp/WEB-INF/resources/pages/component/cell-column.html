@@ -1,0 +1,7 @@
+<div class="cell {{cellClass}} {{}}" ng-style="cellStyle">
+    <div class="ellipsize" ng-switch="type">
+        <span set-text="value | fileSize" ng-switch-when="size"></span>
+        <span set-text="value | date" ng-switch-when="date"></span>
+        <span set-text="value" set-title="cellTitle" ng-switch-default></span>
+    </div>
+</div>

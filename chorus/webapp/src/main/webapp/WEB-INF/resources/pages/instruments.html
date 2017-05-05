@@ -1,0 +1,138 @@
+<div class="relative"  data-ng-class="{'main-view-holder': total>25}">
+    <div class="dashboard-box instruments-box" resizable-table-columns="instruments-list">
+        <div ng-switch="sort.route">
+            <div class="heading clearfix" ng-switch-when="true">
+                <div class="cell cell-number"><span>&nbsp;</span></div>
+                <div class="cell cell-id" route-sorting="id"><span>ID</span></div>
+                <div class="cell cell-name" route-sorting="name" sort-by-default="asc">Instrument Name</div>
+                <div class="cell cell-vendor" route-sorting="vendor">Vendor</div>
+                <div class="cell cell-model" route-sorting="model">Model</div>
+                <div class="cell cell-serial" route-sorting="serialNumber">Serial Number</div>
+                <div class="cell cell-files" route-sorting="files" sorting-options="{disable: true}">Files</div>
+                <div class="cell cell-access">Access</div>
+            </div>
+            <div class="heading clearfix" ng-switch-default>
+                <div class="cell cell-number"><span>&nbsp;</span></div>
+                <div class="cell cell-id" unroute-sorting="id"><span>ID</span></div>
+                <div class="cell cell-name" unroute-sorting="name">Instrument Name</div>
+                <div class="cell cell-vendor" unroute-sorting="vendor">Vendor</div>
+                <div class="cell cell-model" unroute-sorting="model">Model</div>
+                <div class="cell cell-serial" unroute-sorting="serialNumber">Serial Number</div>
+                <div class="cell cell-files" unroute-sorting="files">Files</div>
+                <div class="cell cell-access">Access</div>
+            </div>
+        </div>
+        <div class="content clearfix">
+            <div class="row clearfix" ng-repeat="(index, instrument) in instruments | filter:page.filter | orderBy:sorting.field:sorting.reverse"
+                 ng-mouseenter="$scope.showDetailsButton = instrument"
+                 ng-mouseleave="$scope.showDetailsButton = null"
+                 right-click-context-menu
+                 data-ng-class="{'active': opened == instrument, 'row-with-details-button': $scope.showDetailsButton}">
+                <div class="row-holder relative clearfix not-select"
+                     ng-dblclick="toggleExpandMenu(instrument);"
+                     switch-class-animated="opened == instrument && 'opened' || ''">
+                    <i class="icon collapsible" title="Double-click to view details"></i>
+                    <div class="cell cell-number">
+                        <span ng-bind="index + 1"></span>
+                    </div>
+                    <div class="cell cell-id">
+                        <div class="ellipsize" set-text="instrument.id" set-title="instrument.id"></div>
+                    </div>
+                    <div class="cell cell-name">
+                        <div class="dropdown context" ng-show="instrument.creator == getUserId() || instrument.access == 'OPERATOR'">
+                            <a button-click-context-menu ng-show="$scope.showDetailsButton" title="More" class="btn table-button"><span class="arrow"></span></a>
+                            <div class="dropdown-menu context-menu hide">
+                                <span class="arrow"></span>
+                                <ul>
+                                    <li>
+                                        <instrument-details eid="{{instrument.id}}" text="'Edit'">
+                                        </instrument-details>
+                                    </li>
+                                    <li class="delete-item"
+                                        ng-show="instrument.access == 'OPERATOR' && instrument.files == 0 && (instrument.creator == getUserId() || isLabHead)">
+                                        <a  title="Remove Instrument"  class=""  ng-click="displayConfirmation(instrument)"><i class="icon delete"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="name ellipsize" ng-class="{'no-context': !(instrument.creator == getUserId() || instrument.access == 'OPERATOR')}"
+                             set-text="instrument.name" set-title="instrument.name"></div>
+                    </div>
+                    <div class="cell cell-vendor">
+                        <div class="ellipsize" set-text="instrument.vendor" set-title="instrument.details.vendor"></div>
+                    </div>
+                    <div class="cell cell-model">
+                        <div class="ellipsize" set-text="instrument.model" set-title="instrument.model"></div>
+                    </div>
+                    <div class="cell cell-serial">
+                        <div class="ellipsize" set-text="instrument.serialNumber" set-title="instrument.serialNumber"></div>
+                    </div>
+                    <div class="cell cell-files">
+                        <div class="ellipsize" set-text="instrument.files"></div>
+                    </div>
+                    <div class="cell cell-access">
+                        <div ng-show="instrument.access == 'NO_ACCESS'">
+                            <a class="btn table-button default-action btn-access" ng-click="$event.stopPropagation(); sendRequest(instrument)">Request</a>
+                        </div>
+                        <div ng-show="instrument.access == 'PENDING'">Waiting for Approval</div>
+                        <div ng-show="instrument.access == 'OPERATOR'">Operator</div>
+                    </div>
+                </div>
+                <div class="info-expand clearfix">
+                    <div class="cell cell-name" ng-switch="instrument.showOperators">
+                        <h3>Laboratory</h3>
+                        <p ng-bind="instrument.details.lab.name"></p>
+                        <div class="cell-item" ng-switch-when="true">
+                            <h3>Operators</h3>
+                            <ul>
+                                <li ng-repeat="operator in instrument.details.operators" ng-bind="operator.email"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="cell cell-serial">
+                        <h3>Type</h3>
+                        <p ng-bind="instrument.details.type"></p>
+                    </div>
+                    <div class="cell cell-files">
+                        <h3>HPLC </h3>
+                        <p ng-bind="instrument.details.hplc"></p>
+                        <p class="none" ng-show="!instrument.details.hplc">No HPLC</p>
+                    </div>
+                    <div class="cell cell-access">
+                        <h3>Peripherals</h3>
+                        <p ng-bind="instrument.details.peripherals"></p>
+                        <p class="none" ng-show="!instrument.details.peripherals">No peripherals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-show="isTableEmpty()" class="empty-table">{{getEmptyTableMessage()}}</span>
+
+    <route-pagination max-items="25" max-shown="7" default-page="1" items="[25, 50, 100, 200]" total-items="total"></route-pagination>
+
+</div>
+
+
+<div id="remove-instrument-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+    <div class="modal-frame">
+        <div class="modal-header">
+            <h3>Remove Instrument?</h3>
+        </div>
+        <div class="modal-body">
+            <p>All related items from trash will be removed.
+                Are you sure you want to remove "{{confirmation.getName()}}" Instrument?</p>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true" ng-click="confirmation.hidePopup()">
+                Cancel
+            </button>
+            <button type="submit"
+                    class="btn btn-primary main-action" ng-click="confirmation.removeItem()">Remove
+            </button>
+        </div>
+    </div>
+    </div>
+</div>

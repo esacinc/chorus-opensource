@@ -1,0 +1,416 @@
+<div class="center-frame relative">
+    <div class="dashboard-box">
+        <div class="info-content" ng-switch="infoContent">
+            <div class="intro center-frame" ng-switch-when="intro">
+                <h2>How Billing in Chorus Works</h2>
+                <img src="../img/work-billing.png" alt="How billing in Chorus Work">
+            <span>
+                <i ng-click="$parent.infoContent = ''" class="icon close"></i>
+            </span>
+            </div>
+        </div>
+
+        <div class="billing-content clearfix">
+
+            <div class="top-margin-15"></div>
+
+            <div ng-show="pendingCharges.length > 0 && showPendingCharges" class="pending-charges-container relative">
+                <div class="pending-time-line"></div>
+                <div class="history-list clearfix">
+                    <div class="history-item selected">
+                        <div class="month-heading clearfix">
+                            <p class="title pull-left">Pending Charges</p>
+                            <div ng-show="history.months.length > 0" class="amount pull-right">
+
+                                <div class="pull-right subscription-info" >
+
+                                    <a data-target="#billing-details" data-toggle="modal" title="Show subscription details info">
+                                        <button class="butt">
+                                            <i class="icon i"></i>
+                                        </button>
+                                    </a>
+                                </div>
+
+                                <div class="pull-right amount-link"><span ng-click="openSubscription()" ng-bind="details.isFree && 'Free' || 'Enterprise'"></span></div>
+                                <div class="pull-right amount-title">Subscription: </div>
+
+                                <div class="pull-right amount-link"><span ng-click="openProcessing()" ng-bind="processingIsOn() && 'On' || 'Off'"></span></div>
+                                <div class="pull-right amount-title">Processing: </div>
+
+                                <div class="pull-right">
+                                    <a class="amount-link" data-target="#billing-storage-usage" data-toggle="modal" title="Show storage usage">Storage Usage</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="month-content clearfix pending-charges">
+                            <div class="amount-heading clearfix">
+                                <div class="cell cell-date">Date</div>
+                                <div class="cell cell-description">Summary</div>
+                                <div class="cell cell-amount text-right">Amount</div>
+                            </div>
+                            <div class="timeline-item clearfix"
+                                 ng-class="{'opened': pendingCharge.showDetails, 'show-details': hasDetails(pendingCharge)}"
+                                 ng-repeat="pendingCharge in pendingCharges | orderBy:'-timestamp'" ng-show="pendingCharge.amount != 0">
+                                <i class="icon collapsible"></i>
+
+                                <div class="item clearfix" ng-click="hasDetails(pendingCharge) && showPendingChargeDetails(pendingCharge)">
+                                    <div class="status">
+                                        <i class="icon daily-usage"></i>
+                                    </div>
+                                    <div class="cell cell-date" set-text="pendingCharge.serverDate"></div>
+                                    <div class="cell cell-description">
+                                        <p ng-init="desc = getPendingChargeDaySummary(pendingCharge)" set-text="desc"></p>
+                                    </div>
+                                    <div class="cell cell-amount text-right" set-text="pendingCharge.amount | price"></div>
+                                </div>
+                                <div class="info-expand" ng-show="pendingCharge.showDetails">
+                                    <charges-table class="history-usage-table" charges="pendingCharge.charges"></charges-table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-list clearfix">
+                <div style="position: absolute;z-index: 999;top: 0px;left: 0px;width: 100%;height: 100%;background-color: #ccc;text-align: center;opacity: 0.65;"
+                     loading>
+                    <img style=" position: absolute;top:0;bottom: 0;left: 0;right: 0;margin: auto;"
+                         src="../img/ajax-loader-transparent.gif" alt=""/>
+                </div>
+
+                <div class="history-item" ng-repeat="month in history.months"
+                     ng-class="{selected: month.selected, 'history-item-with-top-padding': $index > 0}">
+                    <div class="month-heading clearfix">
+                        <button class="btn btn-open-close" ng-click="month.lines.length && openMonth(month)">
+                            <i class="icon icon-open-close"></i>
+                        </button>
+                        <p class="title pull-left">{{month.monthYear | formatMonth}}</p>
+                        <span ng-show="!month.lines.length">
+                            Usages are archived. You can download history for the selected month as .csv files
+                            <a class="btn secondary-action" ng-click="downloadHistory(month)">Download history</a>
+                        </span>
+                        <div class="history-filter clearfix" ng-show="$index == 0">
+                            <div class="filter-holder clearfix">
+                                <div class="pull-left">
+                                    <span>Filter by:</span>
+                                </div>
+                                <ul>
+                                    <li ng-class="{active:activeFilter.filter == ''}"><a ng-click="activeFilter.filter = '';">All</a></li>
+                                    <li ng-class="{active:activeFilter.filter == 'Feature usage'}"><a ng-click="activeFilter.filter = 'Feature usage'">Feature usage</a></li>
+                                    <li ng-class="{active:activeFilter.filter == 'Top up balance'}"><a ng-click="activeFilter.filter = 'Top up balance'">Top up balance</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div ng-show="$index == 0" class="amount">
+                            <div class="pull-right pp-button-holder">
+                                <!-- Andrey's button -->
+                                <!--  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                      <input type="hidden" name="cmd" value="_s-xclick">
+                                      <input type="hidden" name="custom" value="{{labId}}">
+                                      <input type="hidden" name="hosted_button_id" value="Z2FZ3JC4NQ9CQ">
+                                      <button class="btn main-action" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                                          <i class="icon pp"></i>
+                                          Top Up Balance
+                                      </button>
+                                  </form>-->
+
+                                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                    <input type="hidden" name="cmd" value="_s-xclick">
+                                    <input type="hidden" name="custom" value="{{labId}}">
+                                    <input type="hidden" name="encrypted"
+                                           value="-----BEGIN PKCS7-----MIIICQYJKoZIhvcNAQcEoIIH+jCCB/YCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYClWSgs/fb/PoYTFulCf7eNs9atGPLheUigp9UbINpbBgkUGfGLDeAIrnu9x0h92imY/SlUcRw+Bhqc16vRx2SxQVwDiRp92zRAy36FJkBf1Yv/6bjdKksA4RBudTuH6cY7tgVSGeR/2clH+GV1mp1fLHp8KQKGlfcHKH1//kfYxzELMAkGBSsOAwIaBQAwggGFBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECMEycyuGCH8dgIIBYBvvaO3Hn682PUN4JphF2ilyQmoIM7kgPmfz+1grSBSvSdNNYygERy3T14NHjrqk0LArrU9IIrR4cmSX6dqsvP86HILPkEresGRjpBVXS3kpIANCA+UJnEpEDOYRiOEYNQIaQ9gjOep8NcfW1w4GP6esCgAW6+PfM+rvb/5EcLcNHJyE/B1BZqquKn2aVFMH7GqWk/W/lp65LKiVxAURCDnigozf+bbMyLSVXRMYF5svZDTPjxIxvZW+La6Vna5XarDa7EtWIkDXWA37jDcJs1l7FGRRVWivz2VI5rI9x3rEp23+AuNkimoeP2zr2vCmr2V4UVJFQbsvi574kgNH0cjGSNZYVoWOb6MSXAYDmxypQZ4ugytRRbLBfLxWk8oS1sy0+XmGv6PL6/9UPz5BO08sXY2CwpXRFFJduIDnpqO3/+bp7V3riP234NlsxqdhLOnvqkVIKesCt0Tktde/Eb6gggOHMIIDgzCCAuygAwIBAgIBADANBgkqhkiG9w0BAQUFADCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wHhcNMDQwMjEzMTAxMzE1WhcNMzUwMjEzMTAxMzE1WjCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMFHTt38RMxLXJyO2SmS+Ndl72T7oKJ4u4uw+6awntALWh03PewmIJuzbALScsTS4sZoS1fKciBGoh11gIfHzylvkdNe/hJl66/RGqrj5rFb08sAABNTzDTiqqNpJeBsYs/c2aiGozptX2RlnBktH+SUNpAajW724Nv2Wvhif6sFAgMBAAGjge4wgeswHQYDVR0OBBYEFJaffLvGbxe9WT9S1wob7BDWZJRrMIG7BgNVHSMEgbMwgbCAFJaffLvGbxe9WT9S1wob7BDWZJRroYGUpIGRMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbYIBADAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4GBAIFfOlaagFrl71+jq6OKidbWFSE+Q4FqROvdgIONth+8kSK//Y/4ihuE4Ymvzn5ceE3S/iBSQQMjyvb+s2TWbQYDwcp129OPIbD9epdr4tJOUNiSojw7BHwYRiPh58S1xGlFgHFXwrEBb3dgNbMUa+u4qectsMAXpVHnD9wIyfmHMYIBmjCCAZYCAQEwgZQwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tAgEAMAkGBSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xNDAzMDMwOTA2MTRaMCMGCSqGSIb3DQEJBDEWBBQSW/sHCY/QX3k3J/6zOkwW0Pt8/zANBgkqhkiG9w0BAQEFAASBgH7GZi0d3FLjGy50iRCCxL/FvohIt3V2g1nOYEJLKQBc5Z6kgX/R13yGzZ9JnX+N9HVR3RRT+5MVs7+tGqeuuZJWC99tvDAABaoSiQ3+dGihXTLfpROGfKLKX2ucei0ktImB5r6rjv6TYcQ0hXUFvItOODV/j1bod7EWNLTvez/v-----END PKCS7----- ">
+                                    <button border="0" name="submit"
+                                            alt="PayPal - The safer, easier way to pay online!">
+                                        <span ng-bind="history.storeBalance | price"></span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="pull-right amount-title pp-icon-holder"><i class="icon pp"></i>Balance:</div>
+                            <div ng-show="$index == 0 && !showPendingCharges" class="amount pull-right">
+
+                                <div class="pull-right subscription-info" >
+
+                                    <a data-target="#billing-details" data-toggle="modal" title="Show subscription details info">
+                                        <button class="butt">
+                                            <i class="icon i"></i>
+                                        </button>
+                                    </a>
+                                </div>
+
+                                <div class="pull-right amount-link"><span ng-click="openSubscription()" ng-bind="details.isFree && 'Free' || 'Enterprise'"></span></div>
+                                <div class="pull-right amount-title">Subscription: </div>
+
+                                <div class="pull-right amount-link"><span ng-click="openProcessing()" ng-bind="processingIsOn() && 'On' || 'Off'"></span></div>
+                                <div class="pull-right amount-title">Processing: </div>
+
+                                <div class="pull-right">
+                                    <a class="amount-link" data-target="#billing-storage-usage" data-toggle="modal" title="Show storage usage">Storage Usage</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="month-content clearfix" ng-init="month.selected = true;"
+                         ng-show="month.selected && month.lines.length ">
+                        <div class="amount-heading clearfix">
+                            <div class="cell cell-date">Date</div>
+                            <div class="cell cell-description">Summary</div>
+                            <div class="cell cell-amount text-right">Amount</div>
+                            <div class="cell cell-balance text-right">Balance</div>
+                            <!--<div class="cell cell-total">Total to pay</div>-->
+                        </div>
+                        <div class="timeline-item clearfix"
+                             ng-class="{'show-details':line.type == 'USAGE' && line.amount > 0, 'timeline-passive': line.passive, 'opened': line.showDetails}"
+                             ng-repeat="line in month.lines | filter:filterByDescription | orderBy:'-date'">
+
+                            <i class="icon collapsible" title="Double-click to view details"></i>
+
+                            <div class="item clearfix" ng-click="line.type == 'USAGE' && line.amount > 0 && showDetails(line)">
+                                <div class="status">
+                                    <i class="icon charge-from-card"
+                                       set-if="line.description == 'Charge from credit card'"></i>
+                                    <i class="icon charge-from-balance"
+                                       set-if="line.description == 'Charge from balance'"></i>
+                                    <i class="icon top-up-balance" set-if="line.description == 'Top up balance'"></i>
+                                    <i class="icon daily-usage" set-if="line.description == 'Feature usage'"></i>
+                                    <i class="icon block-feature" set-if="line.description.indexOf('Block')==0"></i>
+                                    <i class="icon unblock-feature" set-if="line.description.indexOf('Unblock')==0"></i>
+                                    <i class="icon subscribe-feature"
+                                       set-if="line.description.indexOf('Subscribe')==0"></i>
+                                    <i class="icon unsubscribe-feature"
+                                       set-if="line.description.indexOf('Unsubscribe')==0"></i>
+                                </div>
+                                <div class="cell cell-date" set-text="line.serverDay"></div>
+                                <div class="cell cell-description">
+                                    <p set-text="line.description"></p>
+                                    <!--   <p ng-show="line.invoice != null && !line.showDetails">
+                                           <a ng-click="showDetails(line)">Show details</a></p>
+                                       <p ng-show="line.invoice != null && line.showDetails">
+                                           <a ng-click="showDetails(line)">Hide details</a></p>-->
+                                </div>
+                                <div class="cell cell-amount text-right" set-text="line.amount | price"></div>
+                                <div class="cell cell-balance text-right" set-text="line.balance | price"></div>
+                            </div>
+                            <div class="info-expand" ng-show="line.invoice != null && line.showDetails">
+                                <usage-table class="history-usage-table" invoice="line.invoice" line="line"
+                                             is-admin="false"></usage-table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="center-text" ng-switch="currentHistoryItem.hasNext">
+                    <!-- TODO: Uncomment when billing DB will be fixed-->
+                    <button ng-switch-default="" ng-click="loadMoreHistory()" class="btn more-history"
+                            ng-disabled="loadingHistory">
+                        <span ng-show="!loadingHistory">Load more history</span>
+                        <span ng-show="loadingHistory">Loading...</span>
+                    </button>
+                    <button ng-switch-when="false" ng-hide="currentMonth && !currentMonth.hasNext"
+                            ng-click="loadHistoryReference()" class="btn more-history">
+                        <span>Load more history</span>
+                    </button>
+
+                    <!-- <a data-target="#historyDisalbedModal" data-toggle="modal" class="btn more-history">
+                         <span ng-show="!loadingHistory">Load more history</span>
+                         <span ng-show="loadingHistory">Loading...</span>
+                     </a>-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div id="historyDisalbedModal" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>"Load More History" is Temporarily Unavailable</h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container">
+                    <div class="table">
+                        <div class="control-group clearfix">
+                            <div>
+                                Due to technical issues "Load More History" is unavailable at the moment.
+                                Don't worry, all your history data will be available soon.
+                                Contact <strong><a
+                                    href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#064;&#099;&#104;&#111;&#114;&#117;&#115;&#112;&#114;&#111;&#106;&#101;&#099;&#116;&#046;&#111;&#114;&#103;">support@chorusproject.org</a></strong>
+                                for more details.
+                                <br/>
+                                Thank You for understanding.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button type="submit" class="btn secondary-action"
+                        data-dismiss="modal"
+                        ng-show="popups.translationStatusPopup.canDelete"
+                        ng-click="popups.translationStatusPopup.remove()">
+                    Delete
+                </button>
+                <button type="submit"
+                        ng-show="popups.translationStatusPopup.canTranslate"
+                        ng-bind="popups.translationStatusPopup.status == 'FAILURE' && 'Re-Translate' || 'Translate'"
+                        data-dismiss="modal"
+                        class="btn btn-primary main-action"
+                        ng-click="popups.translationStatusPopup.translate()">
+                    Translate
+                </button>
+                <a class="btn btn-primary main-action" target="_blank"
+                   ng-show="popups.translationStatusPopup.canView"
+                   data-dismiss="modal"
+                   ng-click="openChartWindow(popups.translationStatusPopup.item.msChartsUrl)">
+                    View
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="billing-details" class="modal hide billing-details-dialog" tabindex="-1" role="dialog" ng-controller="billingDetailsController">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Billing Details</h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#how-it-works" aria-controls="home" role="tab" data-toggle="tab">How it Works</a></li>
+                        <li role="presentation"><a href="#prices" aria-controls="profile" role="tab" data-toggle="tab">Prices</a></li>
+                        <li role="presentation"><a href="#plans-comparison" aria-controls="messages" role="tab" data-toggle="tab">Plans Comparison</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="how-it-works" class="tab-pane active fade in" >
+                            <img src="../img/work-billing.png" alt="How billing in Chorus Work">
+                        </div>
+
+                        <div id="prices" class="tab-pane fade">
+                            <div class="pricing-frame">
+                                <div class="col2-1">
+                                    <h3>Feature</h3>
+
+                                    <p>Active Data Storage</p>
+
+                                    <p>Archive Data Storage</p>
+
+                                    <p>Support for Processing Services</p>
+
+                                    <p>CPU Costs to Run Pipelines Managed on Chorus</p>
+                                </div>
+
+                                <div class="col2-2">
+                                    <h3>Unit Size</h3>
+
+                                    <p>500 GB</p>
+
+                                    <p>500 GB</p>
+
+                                    <p>Per Lab</p>
+
+                                    <p>Per CPU Hour</p>
+
+
+                                </div>
+
+                                <div class="col2-3">
+                                    <h3>Price</h3>
+
+                                    <p>{{prices['Storage'] | price}} / month</p>
+
+                                    <p>{{prices['Archive storage'] | price}} / month</p>
+
+                                    <p>{{prices['Processing'] | price}} / month</p>
+
+                                    <p>Variable Depending on Pipeline</p>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="plans-comparison" class="tab-pane fade">
+                            <div class="plans-comparison">
+
+                                <h3>Free Storage Account:</h3>
+
+                                <p>It's a great choice if you don't have big data.
+                                    You can place up to 100 GB of data into Chorus Active Storage ,
+                                    share it with collaborators or make it public, all for free! </p>
+
+                                <h3>Enterprise Storage Account:</h3>
+
+                                <p>This choice will work best for you if you have more than 100 GB of data.
+                                    We want to help you keep all this data safe.
+                                    You can also archive your data files in Chorus to save storage space and money. </p>
+
+                                <h3>Processing Account:</h3>
+
+                                <p>Users of free or enterprise storage accounts can pay to use the protein search and
+                                    translation.
+                                    Chorus provides powerful tools that help you quickly process your data.</p>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="billing-storage-usage" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame width500">
+            <div class="modal-header">
+                <h1>Storage Usage</h1>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container">
+                    <div>
+                        <div>
+                            <div class="clearfix">
+                                <div class="pull-left"><h5>Active Storage Data</h5></div>
+                                <div class="pull-right"><h5 ng-bind="(storageUsage.rawFilesSize + storageUsage.translatedFilesSize + storageUsage.searchResultsFilesSize) | storageVolumeSize"></h5></div>
+                            </div>
+                            <div class="clearfix margin-left-20">
+                                <div class="pull-left">Raw</div>
+                                <div class="pull-right" ng-bind="storageUsage.rawFilesSize | storageVolumeSize"></div>
+                            </div>
+                            <div class="clearfix margin-left-20">
+                                <div class="pull-left">Translation</div>
+                                <div class="pull-right" ng-bind="storageUsage.translatedFilesSize | storageVolumeSize"></div>
+                            </div>
+                            <div class="clearfix margin-left-20">
+                                <div class="pull-left">Search Results</div>
+                                <div class="pull-right" ng-bind="storageUsage.searchResultsFilesSize | storageVolumeSize"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-margin-15">
+                        <div>
+                            <div class="pull-left margin-bottom-10"><h5>Archive Storage Data</h5></div>
+                            <div class="pull-right"><h5 ng-bind="storageUsage.archivedFilesSize | storageVolumeSize"></h5></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn secondary-action">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

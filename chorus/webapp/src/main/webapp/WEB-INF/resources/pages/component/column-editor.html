@@ -1,0 +1,17 @@
+<div class="modal-body">
+    <div class="control-group clearfix" id="sortable">
+        <ul ui-sortable ui-options="sortableOptions" ng-model="cm.currentColumns">
+            <li ng-repeat="column in cm.currentColumns" data-ng-class="{'ui-state-disabled': !column.hideable}">
+                <label>
+                    <span class="arrow"></span>
+                    <input type="checkbox" ng-model="column.visible" ng-disabled="!column.hideable" ng-selected="!column.hideable"/>{{column.text || column.name}}
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="modal-footer btn-holder">
+    <button class="btn main-action float-left" ng-disabled="!cm.isAllLoaded() || cm.isDefault()" ng-click="cm.restoreDefault()">Restore default</button>
+    <button class="btn secondary-action" data-dismiss='modal' ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary main-action" ng-disabled="!cm.isAllLoaded() || !cm.isDirty()" ng-click="cm.save()">Save</button>
+</div>

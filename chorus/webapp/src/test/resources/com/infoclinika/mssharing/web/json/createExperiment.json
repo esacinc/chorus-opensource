@@ -1,0 +1,24 @@
+{
+    "info":{
+        "name":"Global Experiment",
+        "description":"It is about all the people on Earth",
+        "experimentType":17,
+        "specie":19
+    },
+    "restriction":{
+        "instrumentModel":"7",
+        "instrument":"1"
+    },
+    "project":3,
+    "billLab":1,
+    "ownerEmail": "pavel@example.com",
+    "files":[
+        {
+            "id":7,
+            "factorValues":[]
+        },
+        {
+            "id":12
+        }
+    ]
+}

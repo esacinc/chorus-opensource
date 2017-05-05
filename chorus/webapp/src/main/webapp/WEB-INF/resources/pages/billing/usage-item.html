@@ -1,0 +1,75 @@
+<div class="heading clearfix">
+    <div class="cell cell-name sortable active" ng-click="changeUserOrder()">
+        <i class="icon icon-chevron-up"
+           ng-class="{'icon-chevron-up':userOrder, 'icon-chevron-down': !userOrder}"></i>
+        Name
+    </div>
+    <div class="cell cell-storage">Used Files</div>
+    <div class="cell cell-storage">Size</div>
+    <!--<div class="cell cell-amount">Amount</div>-->
+</div>
+<div class="content clearfix">
+    <div class="row clearfix"
+         ng-repeat="byUser in bill.usageByUsers | orderBy:'userName':userOrder">
+        <div class="row-holder relative clearfix not-select"
+             ng-dblclick="byUser.usageLines.length > 0 && toggleExpandMenu(byUser);"
+             switch-class-animated="opened == byUser && 'opened' || ''">
+            <i class="icon collapsible" title="Double-click to view details"></i>
+
+            <div class="cell cell-name" set-text="byUser.userName"></div>
+            <div class="cell cell-storage" set-text="byUser.filesCount"></div>
+            <div class="cell cell-storage" set-text="byUser.totalUsedFeatureValue | fileSize"></div>
+            <!--<div class="cell cell-amount" set-text="'-' + byUser.totalPrice | price "></div>-->
+        </div>
+        <!-- todo enable expanding when implementation will be ready -->
+<!--        <div class="info-expand clearfix" ng-show="false">
+            <div ng-switch="bill.type">
+                <div class="heading clearfix" ng-switch-when="Protein ID Search">
+                    <div class="cell cell-name sortable active"
+                         ng-click="changeUsageItemOrder()">
+                        <i class="icon icon-chevron-up"
+                           ng-class="{'icon-chevron-up':usageItemOrder, 'icon-chevron-down': !usageItemOrder}"></i>
+                        Experiment Name
+                    </div>
+                    <div class="cell cell-days" set-show="showTime">Days</div>
+                    <div class="cell cell-size">Size</div>
+                   &lt;!&ndash; <div>
+                        <div class="cell cell-amount">Amount</div>
+                    </div>&ndash;&gt;
+                </div>
+                <div class="heading clearfix no-padding" ng-switch-default="">
+                    <div class="cell cell-name sortable active"
+                         ng-click="changeUsageItemOrder()">
+                        <i class="icon icon-chevron-up"
+                           ng-class="{'icon-chevron-up':usageItemOrder, 'icon-chevron-down': !usageItemOrder}"></i>
+                        File Name
+                    </div>
+                    <div class="cell cell-instrument-wide" set-class="{'cell-instrument-wide': !showTime, 'cell-instrument-normal': showTime}">Instrument</div>
+                    <div class="cell cell-days" set-if="showTime">Days</div>
+                    <div class="cell cell-size">Size</div>
+                    &lt;!&ndash;<div>
+                        <div class="cell cell-amount">Amount Per File</div>
+                    </div>&ndash;&gt;
+                </div>
+
+            </div>
+            <div class="content clearfix" set-class="{'with-scroll':byUser.usageLines.length>10 }">
+                <div class="row clearfix"
+                     ng-repeat="usageItem in byUser.usageLines | orderBy:'fileName':usageItemOrder | orderBy:'experimentName':usageItemOrder">
+                    <div class="cell cell-name sortable" set-text="usageItem.fileName || usageItem.experimentName"></div>
+                    <div class="cell cell-instrument-wide" set-if="usageItem.instrument" set-class="{'cell-instrument-wide': !showTime, 'cell-instrument-normal': showTime}" set-text="usageItem.instrument"></div>
+                    <div class="cell cell-days" set-if="showTime" set-text="usageItem.hours | toDays"></div>
+                    <div class="cell cell-size" set-text="usageItem.usedFeatureValue | fileSize"></div>
+                    &lt;!&ndash;<div class="cell cell-amount" set-text="' -' + usageItem.price | filePrice"></div>&ndash;&gt;
+                </div>
+            </div>
+        </div>-->
+    </div>
+    <div class="row no-files clearfix"
+         ng-show="bill.usageByUsers.length==0">
+        <div class="cell">
+            No usages
+        </div>
+    </div>
+
+</div>

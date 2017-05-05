@@ -1,0 +1,109 @@
+<script type="text/javascript" src="../script/initProjectUi.js"></script>
+<script type="text/javascript" src="../script/message.js"></script>
+<style>
+</style>
+
+<div class="project-dialog" id="project-create-dialog" modal-dialog>
+    <div class="modal-holder">
+    <div class="modal-frame">
+    <form name="createProjectForm" novalidate>
+
+        <div class="modal-header">
+            <a id="createProjectClose" class='close' data-dismiss='modal'>&nbsp;</a>
+
+            <h3 id="createProjectLabel">Create Project</h3>
+        </div>
+        <div class="modal-body">
+            <ul id="createTabs" class="nav nav-tabs">
+                <li class="active">
+                    <a href="#generalCreate" ng-click="sharingTab = true" data-toggle="tab">General
+                    <span data-ng-class="{'tab-error': createProjectForm.$error.inputValidator || isProjectNameDuplicated() || (generalTab && createProjectForm.$invalid)}"></span></a>
+                </li>
+                <li><a href="#sharingCreate" data-toggle="tab" ng-click="generalTab = true">Sharing
+                    <span></span>
+                </a></li>
+            </ul>
+
+            <div id="createTabsContent" class="tab-content">
+                <div class="tab-pane fade active in" id="generalCreate">
+					<!--Files drop area-->
+					<div class="attachment-drop-area" style="display:none;" ng-include="'templates/drag-and-drop-area.html'"></div>
+
+                    <div class="table create-project">
+                        <div class="control-group clearfix" data-ng-class="{error: createProjectForm.name.$error.inputValidator || isProjectNameDuplicated() || (generalTab && createProjectForm.name.$invalid)}">
+                            <label for="createProjectName">Project Name</label>
+                            <input class="dialog-text-input dont-hide" name="name" id="createProjectName" maxlength="255" ng-model="project.name" input-validator/>
+                            <span class="error-message" ng-show="createProjectForm.name.$invalid">Field Project Name is required</span>
+                            <span class="error-message" ng-show="isProjectNameDuplicated()">You already have project with this name</span>
+                        </div>
+                        <div class="control-group clearfix" data-ng-class="{error: createProjectForm.lab.$error.uiSelect2Validator || (generalTab && createProjectForm.lab.$invalid)}">
+                            <label for="labs">Laboratory</label>
+                            <select id="labs" name="lab" ui-select2 class="dialog-select lab-select" ng-model="project.lab" data-placeholder="-- Select One --" ui-select2-validator>
+                                <option></option>
+                                <option value="{{lab.id}}" ng-repeat="lab in labs" ng-selected="lab.id==project.lab">
+                                    {{lab.name}}
+                                </option>
+                            </select>
+                            <span class="error-message">Field Laboratory is required</span>
+                        </div>
+                        <div class="control-group clearfix"  data-ng-class="{error: createProjectForm.area.$error.inputValidator || (generalTab && createProjectForm.area.$invalid)}">
+                            <label for="createProjectAreaOfResearch">Area of Research</label>
+                            <input class="dialog-text-input dont-hide" name="area" id="createProjectAreaOfResearch" maxlength="255" ng-model="project.areaOfResearch" input-validator/>
+                            <span class="error-message">Field Area Of Research is required</span>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label>Enable Blog</label>
+
+                            <div class="item">
+                                <input type="checkbox" ng-model="project.blogEnabled"/>
+                            </div>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label class="optional" for="createProjectDescription">Description&nbsp;<small class="optional-string">(optional)</small></label>
+                            <textarea class="dialog-text-area dont-hide" id="createProjectDescription" ng-model="project.description"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Attachments -->
+                    <div class="control-group">
+                        <div class="control-group">
+                            <!--Attachments Holder-->
+                            <div ng-include="'component/attachments.html'"/>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="tab-pane fade sharing" id="sharingCreate">
+                    <div class="sharing-table table">
+
+                        <div class="control-group clearfix">
+                            <label class="control-label">
+                                <span ng-show="shared.accessLevel == 'PUBLIC'"><i class="icon public" title="Public Project"></i>Public Project</span>
+                                <span ng-show="shared.accessLevel == 'PRIVATE'"><i class="icon private" title="Private Project"></i>Private Project</span>
+                                <span ng-show="shared.accessLevel == 'SHARED'"><i class="icon shared" title="Shared Project"></i>Shared Project</span>
+                            </label>
+                            <sharing-selector users="users" groups="groups" selected-users="shared.sharedUsers"
+                                              selected-groups="shared.sharedGroups"
+                                              invited-users="shared.invitedUsers"
+                                              exclude-emails="excludeEmails"
+                                              email-notification="shared.withEmailNotification"
+                                              invite-handler="shared.inviteHandler"></sharing-selector>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary main-action" type="submit" ng-disabled="isAttachmentsUploading() || isFormInvalid() || createProjectForm.$invalid ||
+                        (policy == 'shared' && (shared.sharedUsers.length + shared.sharedGroups.length) == 0) || isProjectNameDuplicated()" ng-click="!buttonPressed && save(); modalReturnUrl = 'projects/my'">Create</button>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>
+<confirm-action-for-unregistered confirm-action="saveProjectSharedWithUnregisteredUsers"
+                                         plain-action="saveProject"
+                                         dialog-messages="saveWithUnregisteredUsersDialogMessages"></confirm-action-for-unregistered>

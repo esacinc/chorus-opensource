@@ -1,0 +1,11 @@
+{
+  "Type" : "Notification",
+  "MessageId" : "18fdee23-5144-5e8b-a5c7-a0ce8c13f6ed",
+  "TopicArn" : "arn:aws:sns:us-east-1:312091580521:chorus-production-email-bounces",
+  "Message" : "{\"notificationType\":\"Bounce\",\"bounce\":{\"bounceSubType\":\"General\",\"bounceType\":\"Permanent\",\"reportingMTA\":\"dsn; a8-24.smtp-out.amazonses.com\",\"bouncedRecipients\":[{\"emailAddress\":\"herman.zamua@gmail.com\",\"status\":\"5.1.1\",\"diagnosticCode\":\"smtp; 550-5.1.1 The email account that you tried to reach does not exist. Please try\\n550-5.1.1 double-checking the recipient's email address for typos or\\n550-5.1.1 unnecessary spaces. Learn more at\\n550 5.1.1  https://support.google.com/mail/answer/6596 a97si15572493qkh.49 - gsmtp\",\"action\":\"failed\"}],\"timestamp\":\"2015-12-18T10:08:23.556Z\",\"feedbackId\":\"00000151b48fd38d-c65327a4-5136-4839-a803-66ec8b4248fe-000000\"},\"mail\":{\"timestamp\":\"2015-12-18T10:08:22.000Z\",\"source\":\"support@chorusproject.org\",\"messageId\":\"00000151b48fd0fb-4375397c-2f23-4780-92cd-c5d6b4f115fe-000000\",\"destination\":[\"herman.zamua@gmail.com\"],\"sendingAccountId\":\"312091580521\",\"sourceArn\":\"arn:aws:ses:us-east-1:312091580521:identity/support@chorusproject.org\"}}",
+  "Timestamp" : "2015-12-18T10:08:23.613Z",
+  "SignatureVersion" : "1",
+  "Signature" : "VmXZ5uIs/q3r+mYo1IIPi4Hjvu3S7unKbaoaQpJ6ct8WfAb7a4Ln1t9S39OfmEjdK/wJVI3euxtGZ9DpYl7WGgOke5inM6w9XCVlFct7kyCreYrrLBcuRO1OiSzOYsU/3kFh3t2cvv8WqopaFovAyMKwWqIECrlHTEA0aT0Oi2H2zkQrZGmGL6ERc1NhJAlDKHf3xgCPY/UStXeazaYFKa/BjbXHtpPeA9teHUl9br+liYk8VSBdGV30rA3Rd7WlJU2MdfT3H1SdS6aGFYJ2bLBWluu/08foOHsgaZdIArc9jkLPVaPGCIbuEu3mJ/JBCxQZvovOskqAt1GRBirVGA==",
+  "SigningCertURL" : "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-bb750dd426d95ee9390147a5624348ee.pem",
+  "UnsubscribeURL" : "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:312091580521:chorus-production-email-bounces:d04210ed-dee3-4148-ad19-5ebca6e2520b"
+}

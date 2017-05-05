@@ -1,0 +1,17 @@
+<div class="features-info clearfix" ng-cloak>
+
+    <div>
+        <div class="feature-item" data-ng-class="{selected: itemSelected}"
+             ng-repeat="charge in charges | orderBy:'feature'" ng-show="charge.charge != 0">
+            <div class="feature-heading clearfix">
+                <span class="value" title="Amount" set-text="(charge.charge | price)"></span>
+                <div >
+                    <small class="small-price" ng-init="itemDescription = getChargeItemDescription(charge);" ng-bind="itemDescription"></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+

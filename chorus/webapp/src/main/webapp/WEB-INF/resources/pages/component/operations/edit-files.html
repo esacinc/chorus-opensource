@@ -1,0 +1,52 @@
+<div id="bulk-update-labels-dialog">
+
+    <div class="body">
+        <div>
+            <p><label style="display: inline-table">
+                <input type="checkbox" ng-model="model.editLabels">
+                Edit Labels
+            </label>
+                <span ng-show="!model.canEditAllLabels">(can't edit labels of the some selected files - you aren't an operator of instruments of them)</span>
+            </p>
+
+            <div class="edit-labels-content">
+                <p>Please choose a way to update file labels:</p>
+                <ul>
+                    <li>
+                        <label for="labels-append-radio">
+                            <input id="labels-append-radio" type="radio" ng-model="model.appendLabels" value="true"
+                                   ng-disabled="!model.editLabels">
+                            Append existing labels
+                        </label>
+                    </li>
+                    <li>
+                        <label for="labels-replace-radio">
+                            <input id="labels-replace-radio" type="radio" ng-disabled="!model.editLabels"
+                                   ng-model="model.appendLabels" value="false">
+                            Replace labels</label>
+                    </li>
+                </ul>
+                <label for="edit-labels-area">Enter new labels</label>
+                <textarea id="edit-labels-area" ng-disabled="!model.editLabels" ng-model="model.newLabels"></textarea>
+            </div>
+        </div>
+        <div>
+            <p><label style="display: inline-table">
+                <input type="checkbox" ng-disabled="model.disableEditSpecies" ng-model="model.editSpecies">
+                Edit Species
+            </label>
+                <span ng-show="model.disableEditSpecies">(can't be edited - all the selected files are used in experiments or you aren't operator of instruments of them)</span>
+                <span ng-show="!model.disableEditSpecies && !model.canEditAllSpecies">(can't edit all species - some of the selected files are used in experiments, or you aren't an operator of instruments of them)</span>
+            </p>
+        </div>
+        <div class="edit-species-content">
+            <label for="specie">Set New Value</label>
+            <select ui-select2 ng-model="model.newSpecie" ng-disabled="!model.editSpecies"
+                    id="specie" class="dialog-select">
+                <option value="{{specie.id}}" ng-repeat="specie in model.species">
+                    {{specie.name}}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,706 @@
+<div class="relative" data-ng-class="{'main-view-holder': total>25}">
+    <div class="dashboard-box experiments-box" resizable-table-columns="experiments" ng-style="viewStyle">
+        <div class="heading clearfix">
+            <div class="cell cell-number not-resizable">
+                <span>&nbsp;</span>
+            </div>
+            <div ng-repeat="column in displayedColumnNames" ng-switch="column.sortable" class="cell column-head-cell"
+                 ng-style="column.style">
+                <div ng-switch-when="true" set-text="column.title" class="ellipsize"
+                     route-sorting="{{column.modelViewName}}"></div>
+                <div ng-switch-when="false" class="ellipsize" set-text="column.title"></div>
+            </div>
+        </div>
+        <div class="content clearfix">
+            <div class="row clearfix graf-icons row-with-icons" ng-repeat="experiment in experiments"
+                 ng-mouseenter="$scope.showDetailsButton = experiment"
+                 ng-mouseleave="$scope.showDetailsButton = null;"
+                 set-title="!experiment.downloadAvailable && 'Experiment files are on archive storage' || ''"
+                 right-click-context-menu
+                 data-ng-class="{
+                     'active': opened == experiment, 'row-with-details-button': $scope.showDetailsButton,
+                     'with-icon-analyzes' : experiment.proteinSearchEnabled,
+                     'archived' : !experiment.downloadAvailable
+                 }">
+                <div class="row-holder relative clearfix not-select"
+                     ng-dblclick="toggleExpandMenu(experiment);"
+                     switch-class-animated="opened == experiment && 'opened' || ''">
+                    <i class="icon collapsible" title="Double-click to view details"></i>
+
+                    <div class="cell cell-number not-resizable">
+                        <span set-text="$index + 1 + (pageSize * pageNumber)"></span>
+                    </div>
+                    <div class="cell cell-id" ng-style="getStyle(0)">
+                        <div class="ellipsize" set-text="experiment.id" set-title="experiment.id"></div>
+                    </div>
+                    <div class="cell cell-name" ng-style="getStyle(1)">
+                        <div class="dropdown context">
+                            <a ng-show="$scope.showDetailsButton" button-click-context-menu title="More"
+                               class="btn table-button"><span class="arrow"></span></a>
+
+                            <div class="dropdown-menu context-menu hide">
+                                <span class="arrow"></span>
+                                <ul>
+                                    <li class="menu-option disabled"
+                                        ng-show="isFeatureAvailable(LabFeatures.PROTEIN_ID_SEARCH)"
+                                        ng-click="showAnalysisWizard(experiment)">
+                                        <a title="Create new Processing Run"
+                                            non-clickable="true">
+                                            <i class="icon id-search"></i>
+                                            Process
+                                            <i ng-show="!canProcessExperiment(experiment)"
+                                               title="Feature is disabled"
+                                               class="icon blocked"></i>
+                                        </a>
+                                    </li>
+                                    <li ng-show="experiment.isOwner || loggedInUser.id == experiment.lab.labHead">
+                                        <experiment-details eid="{{experiment.id}}"
+                                                            text="'Edit'"></experiment-details>
+                                    </li>
+                                    <li ng-show="experiment.files > 0 && isBillingFeatureAvailable(BillingFeatures.DOWNLOAD)">
+                                        <a title="Download files" class=" " ng-click="downloadExperiment(experiment)"><i
+                                                class="icon download"></i>Download</a>
+                                    </li>
+                                    <li ng-show="experiment.accessLevel != 'PRIVATE' && isBillingFeatureAvailable('DOWNLOAD') || experiment.accessLevel == 'PUBLIC'">
+                                        <span ng-switch="experiment.downloadAvailable">
+                                            <a title="Share link" ng-switch-when="true" class=" " ng-click="showPermanentLink(experiment)"><i
+                                                  class="icon public"></i>Share link</a>
+                                            <a title="Share link" ng-switch-when="false" class=" " ng-click="showRequestDownloadPopup(experiment)"><i
+                                                  class="icon public"></i>Share link</a>
+                                        </span>
+                                    </li>
+
+                                    <li set-if="experiment.files > 0">
+                                        <a title="Translation" class=" " ng-click="showViewerStatus(experiment)"><i
+                                                class="icon status"></i>Translation</a>
+                                    </li>
+
+                                    <li set-if="experiment.proteinSearchEnabled">
+                                        <a title=">Processing Runs"  href="/error/404.html"><i
+                                                class="icon processing-runs"></i>Processing Runs</a>
+                                    </li>
+
+                                    <li class="menu-option"
+                                        ng-class="{'disabled': !canArchiveFiles(experiment)}"
+                                        ng-click="showArchiveExperimentConfirmation(experiment)">
+                                        <a title="Archive Experiment" class=" "
+                                           non-clickable="!canArchiveFiles(experiment)">
+                                            <i class="icon archive"></i>
+                                            Archive
+                                            <i ng-show="!canArchiveFiles(experiment) && !archivingAvailable(experiment)" title="Only for enterprise labs." class="icon blocked"></i>
+                                        </a>
+                                    </li>
+
+                                    <li ng-show="canUnarchiveFiles(experiment)">
+                                        <a title="Unarchive Experiment" class=" "
+                                           ng-click="showUnarchiveExperimentConfirmation(experiment)"><i class="icon unarchive"></i>Unarchive</a>
+                                    </li>
+
+                                    <li ng-show="experiment.isAvailableForCopying">
+                                        <a title="Copy experiment" class=" "
+                                           ng-click="copyExperiment(experiment)"><i class="icon copy"></i>Copy</a>
+                                    </li>
+                                    <li class="delete-item" ng-show="experiment.isOwner || loggedInUser.id == experiment.lab.labHead">
+                                        <a title="Delete experiment" class=" "
+                                           ng-click="displayConfirmation(experiment)"><i class="icon delete"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="name ellipsize">
+                            <a href="/error/404.html"><i class="icon experiment-status translation-status {{ experiment.statusObject.class }}"
+                                                         title="{{ experiment.statusObject.title }}"></i></a>
+                            <i ng-show="experiment.accessLevel == 'PUBLIC'" class="icon public"
+                               title="Public Experiment"></i>
+                            <i ng-show="experiment.accessLevel == 'PRIVATE'" class="icon private"
+                               title="Private Experiment"></i>
+                            <i ng-show="experiment.accessLevel == 'SHARED'" class="icon shared"
+                               title="Shared Experiment"></i>
+                            <span ng-switch="experiment.accessLevel == 'PUBLIC' || isBillingFeatureAvailable(BillingFeatures.DOWNLOAD)">
+                                <i ng-switch-when="false" class="icon slowDownload"
+                                   title="Experiment download is not available"></i>
+                                <i ng-switch-default="" class="icon {{iconDetails.getIconStyleClass(experiment)}}"
+                                   set-title="iconDetails.getDownloadTitle(experiment)" ng-click="downloadExperiment(experiment)"></i>
+                            </span>
+                            <a href="/error/404.html"><i ng-show="experiment.proteinSearchEnabled"
+                               class="icon analyzes" ng-class="{'disabled':experiment.analyzesCount == 0}"
+                               set-title="iconDetails.getAnalyzesTitle(experiment)"></i></a>
+                            <experiment-name eid="experiment.id" name="experiment.name"
+                                             set-title="experiment.name"></experiment-name>
+                        </div>
+                    </div>
+                    <cell-column ng-repeat="column in hidableColumns"
+                                 type="column.dataType"
+                                 value="getCellValue($index, experiment)"
+                                 cell-title="getCellTitle($index, experiment)"
+                                 cell-style="getStyle($index + 2)"
+                                 cell-class="res = (column.name | spaceToUnderscore) + '_gen'">
+                    </cell-column>
+                </div>
+                <div class="info-expand clearfix">
+                    <div class="cell cell-description">
+                        <h3>Species</h3>
+
+                        <p ng-bind="experiment.details.species"></p>
+
+                        <p class="none" ng-show="experiment.details.species.length == 0">No species</p>
+
+                        <h3>Description</h3>
+
+                        <p ng-bind="experiment.details.description"></p>
+
+                        <p class="none" ng-show="experiment.details.description.length == 0">No description</p>
+
+                        <h3>Attachment<span ng-show="experiment.attachments.length != 1">s</span></h3>
+
+                        <p class="none" ng-show="experiment.attachments.length == 0">No attachments</p>
+                        <ul class="attacmments-list">
+                            <li ng-repeat="attachment in experiment.attachments"
+                                class="attachment-item {{attachment.type}}">
+                                <span class="attachment-type" ng-bind="attachment.type"></span>
+                                <span class="name ellipsize" ng-bind="attachment.name"></span>
+                                <span class="size" ng-bind="attachment.size | fileSize"></span>
+                                <a ng-click="downloadAttachment(attachment.attachmentId); $event.stopPropagation()"><i
+                                        class="icon download-attach" title="Download file"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="cell cell-files">
+                        <h3>Samples</h3>
+
+                        <div class="limit-table">
+                            <div class="table factor-table">
+                                <div class="row-head clearfix">
+                                    <div class="name-cell">Sample</div>
+                                    <div class="condition-cell sortable active" sorting="condition.name"
+                                         sort-by-default="asc"><i class="icon icon-chevron-up"></i>Condition
+                                    </div>
+                                </div>
+                                <div class="row-content">
+                                    <div class="row-cell"
+                                         ng-repeat="sample in experiment.details.experimentSamplesList | orderBy:sorting.field:sorting.reverse">
+                                        <div class="name-cell">
+                                            <div class="ellipsize" set-text="sample.name" set-title="sample.name"></div>
+                                        </div>
+                                        <div class="condition-cell">
+                                            <div ng-bind="sample.condition.name"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-show="isTableEmpty()" class="empty-table" ng-bind="getEmptyTableMessage()"></span>
+</div>
+
+<div id="remove-experiment-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Remove Experiment?</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove "{{confirmation.getName()}}" Experiment?</p>
+                <p>Selected experiment will be moved to Trash or you can remove it permanently.</p>
+
+                <div class="control-group clearfix">
+                    <label for="remove-permanently" style="float: left; width: 140px">Remove permanently</label>
+                    <input type="checkbox" class="dont-hide" ng-model="confirmation.removePermanently" style="width: 15px; height: 15px;" id="remove-permanently">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                        ng-click="confirmation.hidePopup()">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="btn btn-primary main-action" ng-click="confirmation.removeItem()">Remove
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="experimentDownloadConfirm" title="" class="hidden"></div>
+<div id="experimentTranslationIsInProgressConfirm" title="" class="hidden"></div>
+<div id="experimentTranslationFinishedWithErrorsConfirm" title="" class="hidden"></div>
+<div id="experimentTranslationResultsIsNotAvailableConfirm" title="" class="hidden"></div>
+
+<route-pagination max-items="25" max-shown="7" default-page="1" items="[25, 50, 100, 200]"
+                  total-items="total"></route-pagination>
+
+<div id="experiment-viewer-status" class="modal hide experiment-viewer-status" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal" ng-click="experimentViewer.hidePopup()" href="">&nbsp;</a>
+
+                <h3>Experiment Translation</h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container">
+                    <div class="table">
+
+                        <div class="control-group clearfix">
+                            <label>Status</label>
+
+                            <div class="item">
+                                <span class="static-value" ng-bind-html-unsafe="experimentViewer.getStatus()"></span>
+                            </div>
+                        </div>
+
+                        <div class="control-group clearfix" ng-show="experimentViewer.isTranslateAvailable() || experimentViewer.isRetranslateAvailable()">
+                            <label for="labSelector" style="width:350px">Translation content will be available and charged for Lab:</label>
+                            <div ng-show="experimentViewer.availableLabs.length>1">
+                            <select ui-select2 ng-model="experimentViewer.selectedLab"
+                                    id="labSelector" class="dialog-select">
+                                <option value="{{lab.id}}" ng-repeat="lab in experimentViewer.availableLabs">
+                                    {{lab.name}}
+                                </option>
+                            </select>
+                            </div>
+                            <div ng-show="experimentViewer.availableLabs.length==1" class="static-value" style="clear:both; padding: 0"
+                                  ng-bind="experimentViewer.availableLabs[0].name"></div>
+                        </div>
+
+                        <div class="control-group clearfix">
+                            <label class="control-label">Last Translated</label>
+
+                            <div class="item width370">
+                                <span class="static-value">{{experimentViewer.translationDate | date}}</span>
+                            </div>
+                        </div>
+
+                        <p>
+
+                        </p>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button class="btn secondary-action" data-dismiss="modal">Close</button>
+
+                <button class="btn main-action" ng-click="experimentViewer.retranslate()"
+                        ng-show="experimentViewer.isRetranslateAvailable()">
+                    Re-translate
+                </button>
+
+                <button class="btn main-action" ng-click="experimentViewer.translate()"
+                        ng-show="experimentViewer.isTranslateAvailable()">
+                    Translate
+                </button>
+
+                <button class="btn secondary-action" ng-click="experimentViewer.remove()"
+                        ng-disabled="experimentViewer.usedInSearches"
+                        title="{{experimentViewer.usedInSearches && 'Experiment used in searches' || ''}}"
+                        ng-show="experimentViewer.deleteAvailable">
+                    Delete
+                </button>
+
+                <button class="btn main-action" ng-click="experimentViewer.showCharts()"
+                        ng-show="experimentViewer.viewAvailable">
+                    View
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="experiment-download-permalink" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a ng-click="permanentLinkPopup.hidePopup()" class='close' data-dismiss='modal'>&nbsp;</a>
+
+                <h3>Share Link</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix" ng-click="permanentLinkPopup.selectCurrentInput()">
+                    <label>Experiment Link</label>
+
+                    <div class="item">
+                        This link is private and it can be accessed in case user has a Chorus account and this
+                        experiment has been shared to him
+                    </div>
+                    <div class="item">
+                        <input readonly="true" class="static-value" type="text"
+                               value="{{permanentLinkPopup.downloadLink}}">
+                    </div>
+                    <div class="ctrl-c">Press Ctrl+C to copy this link</div>
+                </div>
+
+
+                <div class="alternative-line">
+                    <div class="or">
+                        OR
+                    </div>
+                </div>
+
+                <div>
+                    <div class="email-this-link">
+                        <label>
+                            Email this link
+                        </label>
+                    </div>
+                    <form name="EmailForm" class="control-group clearfix">
+                        <div>
+                            <sharinglink-selector users="users"
+                                                  id="email"
+                                                  selected-users="permanentLinkPopup.sharedUsers"
+                                                  exclude-emails="permanentLinkPopup.excludeEmails"
+                                                  invite-handler="permanentLinkPopup.inviteHandler"
+                                                  email-notification="false"
+                                                  only-registered-users="true"></sharinglink-selector>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="inline-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button class="btn main-action"
+                        ng-click="permanentLinkPopup.emailLink()"
+                        ng-disabled="permanentLinkPopup.sharedUsers.length == 0">
+                    Email link
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="public-experiment-download-permalink" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a ng-click="permanentLinkPopup.hidePopup()"  class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3>Share Link</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix" ng-click="permanentLinkPopup.selectCurrentInput()">
+                    <label>Experiment Link</label>
+
+                    <div class="item">
+                        This link is public and it can be accessed by everyone without having a Chorus account
+                    </div>
+                    <div class="item">
+                        <input readonly="true" class="static-value" type="text"
+                               value="{{permanentLinkPopup.downloadLink}}">
+                    </div>
+                    <div class="ctrl-c">Press Ctrl+C to copy this link</div>
+                </div>
+
+                <div class="alternative-line">
+                    <div class="or">
+                        OR
+                    </div>
+                </div>
+
+                <div class="email-this-link"> <!--add class error-->
+                    <label>
+                        Email this link
+                    </label>
+
+                    <form name="EmailForm" class="control-group clearfix">
+                        <div class="item">
+                        <span>
+                            <input class="dialog-text-input"
+                                   name="email" type="email"
+                                   id="email2"
+                                   ng-model="permanentLinkPopup.email">
+
+                            <button class="btn main-action email-link"
+                                    ng-show="!permanentLinkPopup.emailLinkClicked"
+                                    ng-click="permanentLinkPopup.emailLink()"
+                                    ng-disabled="!permanentLinkPopup.email">
+                                Email link
+                            </button>
+
+                             <button class="btn main-action emailed"
+                                     ng-show="permanentLinkPopup.emailLinkClicked">
+                                 <i class="icon"></i>
+                                 Emailed
+                             </button>
+                        </span>
+                        </div>
+                        <div class="ctrl-c">One email is supported</div>
+                    </form>
+
+                </div>
+
+
+            </div>
+            <div class="inline-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="archive-experiment" class="modal hide" role="dialog">
+    <div class="modal-holder" ng-switch="archivePopup.item.hasFilesInAnotherExperiments">
+        <div class="modal-frame" ng-switch-when="false">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+
+                <h3>Archive Experiment Files</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix">
+                    <div class="dialog-container">
+                        Archive "{{archivePopup.item.name}}" experiment files?
+                        <p>
+                            <strong>NOTE:</strong> After that no new Protein ID searches or charts can be run for these
+                            files and experiments.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button class="btn main-action"
+                        ng-click="archivePopup.ok()">
+                    Archive
+                </button>
+            </div>
+        </div>
+        <div class="modal-frame" ng-switch-when="true">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+
+                <h3>Cannot Archive Experiment Files</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix">
+                    <div class="dialog-container">
+                        Cannot archive "{{archivePopup.item.name}}" experiment files.
+                        <p>
+                            Some of the files in the selected experiment are used in other experiments.
+                        </p>
+                        <div>
+                            <label> Problem files: </label>
+                            <ul>
+                                <li ng-repeat="file in archivePopup.item.filesUsedInOtherExperiments" ng-bind="file.name"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button ng-show="!archivePopup.item.hasFilesInAnotherExperiments" class="btn main-action"
+                        ng-click="archivePopup.ok()">
+                    Archive
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="unarchive-experiment" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+
+                <h3>Unarchive Experiment Files</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix">
+                    <div class="dialog-container">
+                        <p> The files of the "{{unarchivePopup.item.name}}" experiment will be moved to Analysable
+                            Storage.
+                        </p>
+
+                        <p>After that new Protein ID searches or charts can be run for these
+                            files and experiments.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button class="btn main-action"
+                        ng-click="unarchivePopup.ok()">
+                    Unarchive
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="translate-experiment-files" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+
+                <h3>Translate Not Translated Experiment Files</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix">
+                    <p class="dialog-container">
+                    Not translated files files of experiment "{{translateExperimentPopup.item.name}}" will be translated.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button class="btn main-action"
+                        ng-click="translateExperimentPopup.ok()">
+                    Translate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="retranslate-experiment-files" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+
+                <h3>Re-Translate Experiment Files</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix">
+                    <div class="dialog-container">
+                    <p> All files of the experiment "{{retranslateExperimentPopup.item.name}}" will be re-translated.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button class="btn main-action"
+                        ng-click="retranslateExperimentPopup.ok()">
+                    Re-Translate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="remove-experiment-files-translation-data" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+
+                <h3>Delete Experiment Files Translation Data?</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix" ng-switch="removeTranslatedDataConfirmation.item.countOfOwnedFilesTranslationData == removeTranslatedDataConfirmation.item.files">
+                    <div class="dialog-container" ng-switch-when="true">
+                    <p> All translation data of files of the experiment "{{removeTranslatedDataConfirmation.item.name}}" will be deleted.</p>
+                    </div>
+                    <div class="dialog-container" ng-switch-when="false">
+                        <p> The translation data of files of the experiment "{{removeTranslatedDataConfirmation.item.name}}" will be deleted.</p>
+                        <p>NOTE: You are not owner of the some translation data of selected experiment files.
+                            This data will not be deleted.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button class="btn main-action"
+                        ng-click="removeTranslatedDataConfirmation.ok()">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="request-experiment-download-popup" class="modal hide" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' data-dismiss='modal'>&nbsp;</a>
+                <h3>Cannot Share Link</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group clearfix">
+                    <div class="dialog-container">
+                        <p>Some files in the experiment are archived.
+                            To share this experiment you should request temporary unarchiving of archived experiment files.
+                            You will receive notification when all files will be ready.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-action" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button class="btn main-action"
+                        ng-click="requestDownloadPopup.ok()">
+                    Request Unarchiving
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="downloadSharedExperimentPopup" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Select Laboratory to Send Billing for Shared Files Download</h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container" ng-switch="labs.length">
+                    <div ng-switch-when="0">
+                        You must be a member at least one lab to download experiment files.
+                    </div>
+                    <div class="control-group clearfix" ng-switch-default="">
+                        <p>
+                            Please select laboratory to send billing for download of the selected experiment files.
+                        </p>
+                        <p>
+                            <label class="control-group clearfix" for="labs">Select Laboratory</label>
+                            <select id="labs" ui-select2="" ng-model="$parent.downloadSharedExperimentPopup.selectedLab"
+                                    class="dialog-select" data-placeholder="-- Select Lab --">
+                                <option value=""></option>
+                                <option value="{{lab.id}}" ng-repeat="lab in labs"
+                                        ng-bind="lab.name"></option>
+                            </select>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                        >Cancel
+                </button>
+                <button type="submit" class="btn btn-primary main-action" ng-disabled="!downloadSharedExperimentPopup.selectedLab"
+                        ng-click="downloadSharedExperimentPopup.ok()">
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

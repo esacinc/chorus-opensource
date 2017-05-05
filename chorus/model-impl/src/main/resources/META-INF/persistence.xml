@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="mssharing" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>com.infoclinika.mssharing.model.internal.entity.restorable.ActiveExperiment</class>
+        <class>com.infoclinika.mssharing.model.internal.entity.User</class>
+        <class>com.infoclinika.mssharing.model.internal.entity.Group</class>
+        <class>com.infoclinika.mssharing.model.internal.entity.Instrument</class>
+        <class>com.infoclinika.mssharing.model.internal.entity.UserPreferences</class>
+        <class>com.infoclinika.mssharing.model.internal.entity.payment.LabPaymentAccount</class>
+        <class>com.infoclinika.mssharing.platform.entity.UserLabMembership</class>
+        <class>com.infoclinika.mssharing.platform.entity.UserInvitationLink</class>
+        <class>com.infoclinika.mssharing.platform.entity.UserProjectAccess</class>
+        <class>com.infoclinika.mssharing.platform.entity.Vendor</class>
+        <class>com.infoclinika.mssharing.platform.entity.InstrumentType</class>
+        <class>com.infoclinika.mssharing.platform.entity.InstrumentStudyType</class>
+        <class>com.infoclinika.mssharing.platform.entity.InstrumentModel</class>
+        <class>com.infoclinika.mssharing.platform.entity.VendorExtension</class>
+        <class>com.infoclinika.mssharing.platform.entity.PendingOperator</class>
+        <class>com.infoclinika.mssharing.platform.entity.Species</class>
+        <class>com.infoclinika.mssharing.platform.entity.Attachment</class>
+        <class>com.infoclinika.mssharing.platform.entity.ProjectUserCollaborator</class>
+        <class>com.infoclinika.mssharing.platform.entity.ProjectGroupCollaborator</class>
+        <class>com.infoclinika.mssharing.platform.entity.OutboxMessageTemplate</class>
+        <class>com.infoclinika.mssharing.platform.entity.InboxMessageTemplate</class>
+        <class>com.infoclinika.mssharing.platform.entity.LabCreationRequestTemplate</class>
+        <class>com.infoclinika.mssharing.platform.entity.UserLabMembershipRequestTemplate</class>
+        <class>com.infoclinika.mssharing.platform.entity.Condition</class>
+        <class>com.infoclinika.mssharing.platform.entity.WorkflowType</class>
+        <class>com.infoclinika.mssharing.platform.entity.ExperimentType</class>
+        <class>com.infoclinika.mssharing.platform.entity.ProjectSharingRequestTemplate</class>
+        <class>com.infoclinika.mssharing.platform.entity.ChangeEmailRequest</class>
+        <class>com.infoclinika.mssharing.platform.model.impl.entities.AnnotationDefault</class>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <!--<property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>-->
+            <property name="hibernate.hbm2ddl.auto" value="${hibernate.hbm2ddl.auto}"/>
+            <property name="hibernate.search.default.directory_provider" value="ram"/>
+            <property name="hibernate.search.enable_dirty_check" value="false"/><!--
+            <property name="org.hibernate.envers.revision_on_collection_change" value="false"/>
+            <property name="org.hibernate.envers.store_data_at_delete" value="true"/>
+            <property name="hibernate.listeners.envers.autoRegister" value="false"/>-->
+        </properties>
+    </persistence-unit>
+</persistence>
+

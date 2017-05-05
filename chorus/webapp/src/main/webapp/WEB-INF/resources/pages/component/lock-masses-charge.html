@@ -1,0 +1,40 @@
+<div class="lock-masses-selector">
+    <div class="scrollable-container">
+        <table class="table table-striped">
+            <colgroup>
+                <col class="lock-masses-column"/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr ng-repeat="item in values">
+                <td class="width90p">
+                    <div class="ellipsize">
+                        <span ng-bind="item.lockMass"></span>
+                        <span ng-bind="item.charge | chargeFormatted"></span>
+                    </div>
+                </td>
+                <td class="width3p"></td>
+                <td>
+                    <i ng-click="removeValue($index)" class="icon item-delete"></i>
+                </td>
+                <td class="width3p"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="empty-lock-masses" ng-show="values.length == 0">There are no values of Mz</div>
+    </div>
+    <div class="add-lock-mass-holder">
+        <button class="btn secondary-action" ng-disabled="!value.lockMass || !value.charge" ng-click="addValue(value); value='';">Add</button>
+        <input id="lockMassInput" set-focus="!value" can-be-negative="false" double-value-validation="true"
+                                          placeholder="Enter lock mass" type="text" ng-model="value.lockMass">
+        <select ui-select2 data-placeholder="Select charge" class="dialog-select" ng-model="value.charge" on-enter="addValue(value); value=''">
+            <option></option>
+            <option value="-3">-3</option>
+            <option value="-2">-2</option>
+            <option value="-1">-1</option>
+            <option value="1">+1</option>
+            <option value="2">+2</option>
+            <option value="3">+3</option>
+        </select>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<script type="text/javascript" src="../script/controller/groups-front.js"></script>
+<script type="text/javascript" src="../script/message.js"></script>
+
+<div modal-dialog tabindex="-1" role="dialog" aria-labelledby="groupDetailsLabel"
+     aria-hidden="true" class="create-sharing-group">
+    <div class="modal-holder">
+    <div class="modal-frame">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">?</button>
+        <h3 id="createGroupLabel">Create Sharing Group</h3>
+    </div>
+    <form  name="createGroupForm" novalidate>
+
+        <div class="modal-body">
+            <div class="dialog-container">
+                <div class="row-fluid">
+                    <div class="control-group" data-ng-class="{error: createGroupForm.name.$error.inputValidator || isNameDuplicated()}">
+                        <label class="control-label" for="createGroupName">Name <span class="error-message" ng-show="createGroupForm.name.$invalid">is required</span>
+                            <span class="error-message" ng-show="isNameDuplicated()">is already taken</span></label>
+                        <input id="createGroupName" name="name" class="span12 dialog-text-input dont-hide" maxlength="255" ng-model="group.name" input-validator required/>
+                    </div>
+                </div>
+                <div class="clearfix" data-ng-class="{error: (members.length == 0) && buttonPressed}">
+                    <label class="control-label">{{getCountOfMembers()}}</label>
+                    <group-selector users='users' selected-users="members"
+                                    invite-handler="inviteHandler"
+                                    exclude-emails="excludeEmails"/>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary main-action" type="submit" ng-disabled="createGroupForm.$invalid || members.length == 0" ng-click="save(createGroupForm.$invalid || members.length == 0); modalReturnUrl = '/groups'">Create</button>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>

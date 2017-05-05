@@ -1,0 +1,443 @@
+<link rel="stylesheet" href="../css/validation.css" xmlns="http://www.w3.org/1999/html">
+<div class="create-experiment" id="experiment-modal-dialog" modal-dialog={{returnUrl}} data-ng-class="{'experiment-expanded': expanded}">
+<div class="modal-holder">
+<div class="modal-frame">
+    <div class="modal-header">
+        <a data-dismiss="modal" class="close">&times;</a>
+        <a ng-model="expanded" class="wizard-expanded" ng-click="expanded=!expanded" data-ng-class="{'expanded': expanded}">full screen</a>
+        <h3 ng-bind="page.title">Create Experiment</h3>
+    </div>
+    <div class="modal-body" ng-cloak>
+        <ng-switch on='viewMode'>
+            <div class="step-headers" ng-switch-when="false">
+     			<div class="steps-line"></div>
+                <div class="step-holder steps-count-7" ng-class="{active: step == 1}">
+	     			<div class="number">1</div>
+	     			<div class="title">General Info</div>
+     			</div>
+                <div class="step-holder steps-count-7" ng-class="{active: step == 2}">
+                    <div class="number">2</div>
+                    <div class="title">Analysis</div>
+                </div>
+     			<div class="step-holder steps-count-7" ng-class="{active: step == 3}">
+	     			<div class="number">3</div>
+	     			<div class="title">File Selection</div>
+     			</div>
+                <div class="step-holder steps-count-7" ng-class="{active: step == 4, skip: shouldSkipFourthStep()}">
+                    <div class="number">4</div>
+                    <div class="title">File-to-Prep</div>
+                </div>
+                <div class="step-holder steps-count-7" ng-class="{active: step == 5, skip: shouldSkipFifthStep()}">
+                    <div class="number">5</div>
+                    <div class="title">Sample-to-Prep</div>
+                </div>
+     			<div class="step-holder steps-count-7" ng-class="{active: step == 6}">
+	     			<div class="number">6</div>
+	     			<div class="title">Experiment Design</div>
+     			</div>
+                <div class="step-holder steps-count-7" ng-class="{active: step == 7}">
+	     			<div class="number">7</div>
+	     			<div class="title">Confirm</div>
+     			</div>
+            </div>
+        </ng-switch>
+        <div class="dialog-container" ng-switch="step" style="margin-top: -20px"><!--enormous gap between steps and its content because of long titles-->
+            <div ng-switch-when="1" style="position:relative;" ng-hide='viewMode'  ng-controller="exposeFormToParentScope">
+                <div class="step-description">
+                    <i class="icon details"></i>
+                    <label>This wizard guides you through the steps necessary to define your experiment.</label>
+                </div>
+                <form name="form" novalidate>
+                    <!--Files drop area-->
+                    <div class="attachment-drop-area" style="display:none;" ng-include="'templates/drag-and-drop-area.html'"></div>
+                    <div class="row-fluid">
+                        <div class="control-group" data-ng-class="{error: form.name.$error.inputValidator || isExperimentNameDuplicated()}">
+                            <label class="control-label" for="name">Experiment Name
+                                <span class="error-message" ng-show="form.name.$invalid">is required</span>
+                                <span class="error-message" ng-show="form.name.$valid">is already taken</span>
+                            </label>
+                            <input id="name" type="text" name="name" class="span12 dialog-text-input dont-hide" maxlength="255" ng-model="experiment.info.name" input-validator required/>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="control-group span6" data-ng-class="{error: form.project.$error.uiSelect2Validator}">
+                            <label class="control-label" for="project">Project <span class="error-message">is required</span></label>
+                            <select check-ui-selection ui-select2="{formatResult: formatExperimentProject}" data-placeholder="-- Select One --" ui-select2-validator ng-model="experiment.project"
+                                    id="project" class="dialog-select span12" name="project" required>
+                                <option></option>
+                                <option value="{{project.id}}" ng-repeat="project in projects" title="Owner: {{project.creator}} <{{project.creatorEmail}}>">
+                                    {{project.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="control-group span6" data-ng-class="{error: form.species.$error.uiSelect2Validator}">
+                            <label class="control-label" for="species">Species <span class="error-message"> is required</span></label>
+                            <select check-ui-selection ng-disabled="!species.length" data-placeholder="{{!species.length && 'Loading...' || '-- Select One --'}}"
+                                    ui-select2  name="species" id="species" class="dialog-select"
+                                    ng-model="experiment.info.specie" ui-select2-validator="" required>
+                                <option></option>
+                                <option value="{{specie.id}}" ng-repeat="specie in species">
+                                    {{specie.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="control-group" ng-switch="createMode"  data-ng-class="{error: form.lab.$error.uiSelect2Validator}">
+                            <label class="control-label" for="labs">Laboratory <span class="error-message">is required</span></label>
+                            <div ng-switch-when='true'>
+                                <div class="all-labs"><label><input type="checkbox" ng-model="confirmSelectAllLabs" ng-change="selectAllLabs(confirmSelectAllLabs)"/>Look through all labs</label></div>
+                            <select name="lab" check-ui-selection ui-select2 ui-select2-validator="" data-placeholder="-- Select One --" id="labs" class="dialog-select lab-select" ng-model="experiment.lab"
+                                    ng-disabled="confirmSelectAllLabs" required>
+                                <option></option>
+                                <option value="{{lab.id}}" ng-repeat="lab in labs">
+                                    {{lab.name}}
+                                </option>
+                            </select>
+                            </div>
+                            <label class="control-label read-only-value" ng-switch-when='false'><span ng-bind="getLabName(experiment.lab)"></span>&nbsp;</label>
+                        </div>
+                    </div>
+                    <div class="row-fluid" ng-switch="isFeatureAvailable(LabFeatures.BILLING) && confirmSelectAllLabs">
+                        <div class="control-group" ng-switch-when="true" data-ng-class="{error: form.billLab.$error.uiSelect2Validator}">
+                            <div ng-switch="labsWithEnabledBilling.length > 1">
+                                <div ng-switch-when="true">
+                                    <label class="control-label" for="billLab">Laboratory to Send Billing <span class="error-message">is required</span></label>
+                                    <select name="billLab" check-ui-selection ui-select2 ui-select2-validator="" data-placeholder="-- Select One --" id="billLab"
+                                            class="dialog-select lab-select" ng-model="experiment.billLab" required>
+                                        <option></option>
+                                        <option value="{{lab.id}}" ng-repeat="lab in labsWithEnabledBilling">
+                                            {{lab.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-switch-when="false">
+                                    <label class="control-label read-only-value" set-if="!experiment.billLab" ng-bind="getBillLabLabName(experiment.billLab=labsWithEnabledBilling[0].id)"></label>
+                                    <label class="control-label read-only-value" set-if='experiment.billLab' ng-bind="getBillLabLabName(experiment.billLab)"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="control-group span6" data-ng-class="{error: form.project.$error.uiSelect2Validator || (form.technologyType.$invalid)}">
+                            <label class="control-label" for="technology-type">Technology Type <span class="error-message">is required</span></label>
+                            <select check-ui-selection ui-select2 data-placeholder="-- Select One --" ui-select2-validator
+                                    ng-model="experiment.restriction.technologyType"
+                                    id="technology-type" class="dialog-select span12" name="technologyType" required>
+                                <option></option>
+                                <option value="{{technologyType.id}}" ng-repeat="technologyType in technologyTypes"
+                                        ng-bind="technologyType.name">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="control-group span6" data-ng-class="{error: form.vendor.$error.uiSelect2Validator || (form.vendor.$invalid)}">
+                            <label for="vendor">Vendor</label> <span class="error-message">is required</span>
+                            <select id="vendor" ui-select2 name="vendor"
+                                    ng-model="experiment.restriction.vendor" data-placeholder="-- Select One --" class="dialog-select" ui-select2-validator >
+                                <option></option>
+                                <option value="{{vendor.id}}" ng-repeat="vendor in vendors"
+                                        ng-bind="vendor.name">
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="control-group ">
+                            <label class="control-label optional" for="description">Description&nbsp;<small class="optional-string">(optional)</small></label>
+                            <textarea class="span12 dialog-text-area" rows="5" id="description" ng-model="experiment.info.description" ></textarea>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="control-group">
+                            <!--Attachments Holder-->
+                            <div ng-include="'component/attachments.html'"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <div ng-show="step==2" ng-controller="exposeFormToParentScope"  on-content-load="correctModalHeight()">
+                <div class="step-description">
+                    <i class="icon details"></i>
+                    <label>Specify experiment type for data processing and analysis.</label>
+                </div>
+                <form name="form" novalidate>
+                    <experiment-wizard-analysis-step configuration="analysisStepConfiguration"></experiment-wizard-analysis-step>
+                </form>
+            </div>
+
+            <div ng-switch-when="3" class="relative"  on-content-load="correctModalHeight()">
+                <div class="step-description">
+                    <i class="icon details"></i>
+                    <label>Select files that are part of the experiment. Scroll down to load more.</label>
+                </div>
+                <div class="relative">
+                    <label class="filter-label control-label">Filter</label>
+                </div>
+                <div class="well row-fluid files-filter">
+                    <div class="contains-filter row-fluid">
+                        <div class="control-group input-append">
+                            <label class="control-label" for="fromDateInput">Name contains</label>
+                            <input class="filter-checker" type="checkbox" ng-model="filesFilter.containsEnabled" />
+                            <input id="contains-input" type="text" class="contains-input" type="text"
+                                   ng-model="filesFilter.contains"
+                                   ng-disabled="!filesFilter.containsEnabled"/>
+                        </div>
+                    </div>
+                    <div class="date-filter row-fluid">
+                        <div class="control-group input-append">
+                            <label class="control-label" for="fromDateInput">Uploaded from</label>
+                            <input class="filter-checker" type="checkbox" ng-model="filesFilter.fromEnabled" />
+                            <input id="fromDateInput" type="text" class="calendar-picker" type="text" input-validator
+                                   ng-model="filesFilter.fromDate"
+                                   chorus-start-datepicker="filesFilter.toDate"
+                                   chorus-start-datepicker-from-today="false" ng-disabled="!filesFilter.fromEnabled"/>
+                            <label for="fromDateInput" class="add-on"><i class="icon-calendar"></i>
+                            </label>
+                        </div>
+
+                        <div class="control-group input-append">
+                            <label class="control-label" for="toDateInput">Uploaded before</label>
+                            <input class="filter-checker" type="checkbox" ng-model="filesFilter.toEnabled"/>
+                            <input id="toDateInput" type="text" class="calendar-picker" type="text" input-validator
+                                   ng-model="filesFilter.toDate"
+                                   chorus-end-datepicker="filesFilter.fromDate"
+                                   chorus-start-datepicker-from-today="false" ng-disabled="!filesFilter.toEnabled"/>
+                            <label for="toDateInput" class="add-on"><i class="icon-calendar"></i>
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="date-checker" class="control-label" for="applyFilterBtn">&nbsp;</label>
+                            <button class="btn secondary-action"
+                                    ng-disabled="!filesFilter.fromEnabled && !filesFilter.toEnabled && !filesFilter.containsEnabled"
+                                    id="applyFilterBtn" ng-click="applyFilesFilter()">Apply</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="relative">
+
+                    <label class="control-label loaded-files-label">Files Loaded: <span ng-bind="files.length + ' of ' + totalFileItems"></span>
+                    </label>
+
+                    <label class="control-label uploaded-files-label" data-ng-class="{error: buttonPressed && (!isFilesSelected() || !haveSameSpecies)}">Select Files (selected: <span ng-bind="selectedFilesLength"></span>)
+                        <span class="error-message" ng-show="!isFilesSelected()">- select at least one file</span>
+                        <span class="error-message" ng-show="!haveSameSpecies">- specie of all files should match previously selected specie</span>
+                    </label>
+
+                </div>
+                <!--TODO: Replace with ng-if when migrate to newer version of angularjs-->
+               <div ng-switch="createFromFilesMode">
+                   <div class="limit-table limit-table-body select-files-table" ng-switch-when="true">
+                       <table class="table table-hover factor-table">
+                           <thead>
+                           <tr>
+                               <th class="cell-check" sorting="selected" ng-show="createFromFilesMode" style="width: 35px" sort-by-default="asc"><input type="checkbox" ng-model="allFilesSelected" ng-change="selectAll(allFilesSelected, items)"/></th>
+                               <th class="cell-name" sorting="name" ng-show="createFromFilesMode">File Name</th>
+                               <th class="cell-date" sorting="uploadDate">Date</th>
+                               <th class="cell-label">
+                                   Labels
+                                        <span class="labels-filter">
+                                            <i class="icon filter"></i>
+                                            <input class="filter-input" type="text" ng-model="labelsFilter.labels"/>
+                                        </span>
+                               </th>
+                           </tr>
+                           </thead>
+                           <tbody infinite-scroll='loadNextFilesPage()' infinite-scroll-disabled='filesInfiniteScrollDisable' infinite-scroll-delta="7">
+                           <tr ng-show="filesLoaded" ng-repeat="file in (items = ( files | filter:labelsFilter | orderBy:sorting.field:sorting.reverse))">
+                               <td class="cell-check"><input type="checkbox" ng-checked="file.selected" ng-click="changeSelection(file)"/></td>
+                               <td class="cell-name" title="{{file.name}}">
+                                   <div class="name ellipsize" title="{{file.name}}" ng-bind="file.name"></div>
+                               </td>
+                               <td class="cell-date" ng-bind="file.uploadDate | date"></td>
+                               <td class="cell-label">
+                                   <div class="labels ellipsize" ng-bind="file.labels | labels"></div>
+                               </td>
+                           </tr>
+                           </tbody>
+                       </table>
+                   </div>
+                   <div class="limit-table limit-table-body select-files-table" ng-switch-default="">
+                       <table class="table table-hover factor-table">
+                           <thead>
+                           <tr ng-click="restoreFilesOrdering()">
+                               <th class="cell-check" sorting="selected"><input type="checkbox" ng-model="allFilesSelected" ng-change="selectAll(allFilesSelected, items)"/></th>
+                               <th class="cell-name" sorting="name" sort-by-default="asc">
+                                   File Name
+                               </th>
+                               <th class="cell-date" sorting="uploadDate">Date</th>
+                               <th class="cell-label">
+                                   Labels
+                                        <span class="labels-filter">
+                                            <i class="icon filter"></i>
+                                            <input class="filter-input" type="text" ng-model="labelsFilter.labels"/>
+                                        </span>
+                               </th>
+                           </tr>
+                           </thead>
+                           <tbody infinite-scroll='loadNextFilesPage()' infinite-scroll-disabled='filesInfiniteScrollDisable' infinite-scroll-delta="7">
+                           <!-- ng repeat behaviour was overrode in experiment-front.js -->
+                           <tr ng-show="filesLoaded" ng-repeat="file in (items = ( files | filter:labelsFilter | orderBy:sorting.field:sorting.reverse:ignoreFilesOrdering:'experimentFiles'))" ng-click="changeSelection(file)">
+                               <td class="cell-check"><input type="checkbox" ng-checked="file.selected"/></td>
+                               <td class="cell-name" title="{{file.name}}">
+                                   <div class="name ellipsize" title="{{file.name}}" ng-bind="file.name"></div>
+                               </td>
+                               <td class="cell-date" ng-bind="file.uploadDate | date"></td>
+                               <td class="cell-label">
+                                   <div class="labels ellipsize" ng-bind="file.labels | labels"></div>
+                               </td>
+                           </tr>
+                           </tbody>
+                       </table>
+                   </div>
+                   <span ng-hide="filesLoaded" class="empty-table empty-table-w ng-binding empty-files-table">Loading...</span>
+                   <span ng-show="files.length <= 0 && filesLoaded" class="empty-table empty-table-w ng-binding empty-files-table">No files found.</span>
+               </div>
+            </div>
+
+            <div ng-show="step==4">
+                <div class="step-description">
+                    <i class="icon details"></i>
+                    <div ng-hide="!experiment.mixedSamplesCount && !experiment.is2dLc">
+                        <ul>
+                            <li><label>Specify Prep Name<span ng-show="experiment.is2dLc"> and Fraction Number</span> for each file. Prep is a mix of one or more samples that are<span ng-show="experiment.is2dLc"> fractionated and</span> run through a mass spec instrument.</label></li>
+                            <li><label>Use Autofill assist to select parts of the file name to fill Prep Name column and Fraction Number.</label></li>
+                            <li><label>Use Reset button to clear Prep Name column.</label></li>
+                        </ul>
+                    </div>
+                    <div ng-show="!experiment.mixedSamplesCount && !experiment.is2dLc">
+                        <label>
+                            Specify Prep Name<span ng-show="experiment.is2dLc"> and Fraction Number</span> for each file. Prep is a mix of one or more samples that are<span ng-show="experiment.is2dLc"> fractionated and</span> run through a mass spec instrument.<br>
+                        </label>
+                    </div>
+                </div>
+                <form name="form" novalidate>
+                    <experiment-wizard-file-to-prep-assignment-step configuration="fileToPrepAssignmentStepConfiguration"></experiment-wizard-file-to-prep-assignment-step>
+                </form>
+            </div>
+
+            <div ng-show="step==5">
+                <div class="step-description">
+                    <i class="icon details"></i>
+                    <label>
+                        Specify Biological Samples to Prep Samples. Technical replicates should have the same values in the SAMPLE NAME column and biological replicates different.
+                    </label>
+                </div>
+                <form name="form" novalidate>
+                    <experiment-wizard-sample-assignment-step configuration="sampleAssignmentStepConfiguration"></experiment-wizard-sample-assignment-step>
+                </form>
+            </div>
+
+            <div ng-show="step==6">
+                <div class="step-description">
+                    <i class="icon details"></i>
+                    <ul>
+                        <li><label>Specify Experiment Design</label></li>
+                        <li><label>Add factors as a stable columns and fill factor levels as column values to assign biological samples to biological condition (treatment group).</label></li>
+                    </ul>
+                </div>
+                <experiment-wizard-sample-to-factors-step configuration="sampleToFactorsStepConfiguration"></experiment-wizard-sample-to-factors-step>
+                <annotation-attachments-upload id="annotation-attachments" experiment="experiment"
+                                               existing-attachments="existingAnnotationAttachmentModel.existingAttachments"
+                        removed-attachments="existingAnnotationAttachmentModel.removedAttachments"></annotation-attachments-upload>
+            </div>
+
+            <div ng-switch-when="7">
+                <div class="step-description">
+                    <i class="icon details"></i>
+                    <label>
+                        Verify experiment design.
+                    </label>
+                </div>
+                <table class="table read-only">
+                	<colgroup>
+                        <col class="prop-name">
+                        <col class="prop-value">
+                    </colgroup>
+                    <thead>
+
+                    </thead>
+	                <tbody>
+		                <tr>
+                            <td>
+                                <i ng-show="experiment.accessLevel == 'PUBLIC'" class="icon public"
+                                   title="Public Experiment"></i>
+                                <i ng-show="experiment.accessLevel == 'SHARED'" class="icon shared"
+                                   title="Shared Experiment"></i>
+                                <label>Name</label>
+                            </td>
+                            <td>
+                                <span ng-bind="experiment.info.name"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Project</label></td>
+                            <td><span ng-bind="findById(projects, experiment.project).name"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label>Laboratory</label></td>
+                            <td><span ng-bind="getLabName(experiment.lab)"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label>Species</label></td>
+                            <td><span ng-bind="findById(species, experiment.info.specie).name"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label>Files</label></td>
+                            <td><span ng-bind="selectedFilesLength"></span></td>
+                        </tr>
+
+	                </tbody>
+                </table>
+
+
+                <h4 ng-show="experiment.factors.length!=0">Experiment Design</h4>
+                <div class="limit-table limit-table-body">
+                    <table class="table table-hover factor-table fixed-index column3" ng-show="selectedFilesLength!=0" >
+                        <thead>
+                        <tr>
+                            <th>Row</th>
+                            <th class="fixed-sample-cell"><div class="name-cell">Sample Name</div></th>
+                            <th sorting="value" sort-by-default="asc" class="fixed-name-cell">Condition</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="condition in conditions | orderBy:sorting.field:sorting.reverse">
+                                <td ng-bind="$index+1"></td>
+                                <td ng-bind="condition.sample.name" title="{{condition.sample.name}}" class="ellipsize fixed-sample-cell"></td>
+                                <td ng-bind="condition.value" title="{{condition.value}}" class="ellipsize fixed-name-cell"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ng-switch on="viewMode">
+                    <div class="row-fluid" ng-switch-when="true">
+                        <div class="control-group">
+                            <!--Attachments Holder-->
+                            <div ng-include="'component/attachments.html'"></div>
+                        </div>
+                    </div>
+                </ng-switch>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <span class="no-files no-models-warning" ng-show="noInstrumentModels()"><i class="icon warning-uploads"></i>
+            <p>No instrument model for selected Technology Type and Vendor. Request a new model from Administrator.</p>
+        </span>
+        <span class="no-files" ng-show="showFileError()"><i class="icon warning-uploads"></i> No files for selected instrument and species</span>
+        <span class="proteinSearchWillBeRemoved" ng-show="bProteinSearchesWillBeRemoved"><i class="icon warning-uploads"></i> All Searches will be deleted</span>
+        <button class="btn secondary-action" data-dismiss="modal" ng-bind='closeWizardActionCaption'></button>
+        <button id="back" class="btn secondary-action back" ng-click="back()" ng-show="step > 1 && !viewMode"><span class="left-tail"></span>Back</button>
+        <button id="next" class="btn main-action next" ng-click="next(isFormInvalid(step))" ng-disabled="isFormInvalid(step) || (step == 1 && isAttachmentsUploading())" ng-show="step < 7 && !viewMode">Next<span class="right-tail"></span></button>
+        <button class="btn btn-primary main-action " ng-click="confirmAndFinish();" ng-show="step == 7 && !viewMode" ng-disabled="disableFinishButton || step != 7 || isAnyFormInvalid()" ng-bind="'Confirm and ' + actionCaption"></button>
+    </div>
+</div>
+</div>
+</div>

@@ -1,0 +1,25 @@
+<div class="pagination-box clearfix">
+    <div class="center-frame" ng-show="totalItems > showCount">
+        <div class="pagination-holder clearfix">
+            <a href ng-click="scrollTop()" class="go-top">go to top</a>
+            <ul class="items-list"><span>Items per page: &nbsp;</span>
+                <li ng-repeat="item in items" ng-class="{active: maxItems == item}"><a ng-click="setMaxItems(item)"
+                                                                                       ng-bind="item"></a></li>
+            </ul>
+            <div ng-show="maxPages > 1">
+                <label>Page <input type="text" ng-model="pageNumber" ui-keypress="{'enter': 'setCurrentPage(pageNumber)'}"> of {{maxPages}}</label>
+                <div class="paging" ng-show="maxPages > 1">
+                    <a href ng-click="back()" class="btn-prev">prev</a>
+                    <ul>
+                        <li ng-repeat="n in range(getMinShown(), getMaxShown())"
+                            ng-class="{active: n == currentPage - 1}"
+                            ng-click="setPage()">
+                            <a ng-bind="n + 1">1</a>
+                        </li>
+                    </ul>
+                    <a href class="btn-next" ng-click="next()">next</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<style>
+    .duplicate-script-dialog .modal-body {
+        height: 100px !important;
+    }
+</style>
+
+<div id="duplicate-script-dialog" class="duplicate-script-dialog modal hide" >
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a data-dismiss="modal" class="close">&times;</a>
+
+                <h3>
+                    <span>Duplicate Script</span>
+                </h3>
+            </div>
+
+            <form name="form" novalidate>
+                <div class="modal-body">
+                    <div class="tab-content">
+                        <div class="table">
+                            <div class="control-group clearfix">
+                                <label for="lab">Laboratory</label>
+                                <select ng-model="lab" ui-select2=""
+                                        id="lab"
+                                        data-placeholder="-- Select Laboratory --"
+                                        class="dialog-select" required="">
+                                    <option></option>
+                                    <option ng-repeat="lab in userLabs" value="{{lab.id}}">{{lab.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary main-action"
+                            ng-disabled="isFormInvalid()"
+                            ng-click="duplicate()">
+                        Duplicate
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

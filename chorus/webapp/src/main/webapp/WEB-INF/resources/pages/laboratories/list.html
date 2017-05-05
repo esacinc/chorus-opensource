@@ -1,0 +1,72 @@
+ <div class="relative">
+    <div class="dashboard-box laboratories-box" resizable-table-columns="laboratories-list">
+        <div class="heading clearfix">
+            <div class="cell cell-number">
+                <span>&nbsp;</span>
+            </div>
+            <div class="cell cell-id" unroute-sorting="id">
+                <span>ID</span>
+            </div>
+            <div class="cell cell-name" unroute-sorting="name">Name</div>
+            <div class="cell cell-url" unroute-sorting="institutionUrl">Institution URL</div>
+            <div class="cell cell-head" unroute-sorting="laboratoryHeadName">Laboratory Head</div>
+            <div class="cell cell-date" unroute-sorting="modified">Modified</div>
+        </div>
+        <div class="content clearfix">
+            <div class="row clearfix" ng-repeat="laboratory in laboratories | filter:page.filter | orderBy:sorting.field:sorting.reverse"
+                 ng-mouseenter="$scope.showDetailsButton = laboratory"
+                 ng-mouseleave="$scope.showDetailsButton = null"
+                 right-click-context-menu
+                 data-ng-class="{'active': opened == laboratory}">
+                <div class="row-holder relative clearfix not-select"
+                     ng-dblclick="toggleExpandMenu(laboratory);"
+                     switch-class-animated="opened == laboratory && 'opened' || ''">
+                    <i class="icon collapsible" title="Double-click to view details"></i>
+                    <div class="cell cell-number">
+                        <span ng-bind="$index + 1"></span>
+                    </div>
+                    <div class="cell cell-id">
+                        <div class="ellipsize" ng-bind="laboratory.id"></div>
+                    </div>
+                    <div class="cell cell-name">
+                        <div class="dropdown context">
+                            <a button-click-context-menu ng-show="$scope.showDetailsButton" title="More" class="btn table-button"><span class="arrow"></span></a>
+                            <div class="dropdown-menu context-menu hide">
+                                <span class="arrow"></span>
+                                <ul>
+                                    <li>
+                                        <laboratory-details text="'Edit'" eid="{{laboratory.id}}"></laboratory-details>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="name ellipsize">
+                            <a ng-click="showLaboratoryDetails(laboratory)" set-text="laboratory.name" set-title="laboratory.name" class="table-link" ></a>
+                        </div>
+                    </div>
+                    <div class="cell cell-url">
+                        <div class="ellipsize" set-text="laboratory.institutionUrl" set-title="laboratory.institutionUrl"></div>
+                    </div>
+                    <div class="cell cell-head">
+                        <div class="ellipsize" set-text="laboratory.laboratoryHeadName" set-title="laboratory.laboratoryHeadName"></div>
+                    </div>
+                    <div class="cell cell-date">
+                        <div class="ellipsize" set-text="laboratory.modified | date"></div>
+                    </div>
+                </div>
+                <div class="info-expand clearfix">
+                    <div class="cell cell-name">
+                        <h3>Laboratory Head email</h3>
+                        <p ng-bind="laboratory.details.headEmail"></p>
+                    </div>
+                    <div class="cell cell-url">
+                        <h3>Members</h3>
+                        <p ng-bind="laboratory.details.membersCount"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-show="isTableEmpty()" class="empty-table">{{getEmptyTableMessage()}}</span>
+</div>
+

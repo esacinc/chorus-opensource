@@ -1,0 +1,98 @@
+<div class="breadcrumbs-holder clearfix">
+    <div class="center-frame">
+        <ul class="breadcrumbs">
+            <li>
+                <span class="ellipsize">
+                    <a href="#">Blogs</a>
+                </span>
+                <span class="icon breadcrumbs-sep"></span>
+            </li>
+            <li>
+                <i class="icon my-project"></i>
+                <a href="#/{{ post.blog.id }}" class="ellipsize" ng-bind="post.blog.name"></a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="post-comment-box clearfix">
+    <div class="post-full clearfix">
+        <div class="center-frame">
+            <div class="twocolumns clearfix">
+                <div class="content">
+                    <div class="post">
+                        <h2 ng-bind="post.title" ng-hide="!post.title"></h2>
+                        <div class="date-holder">
+                            <span class="date">Posted on {{ post.date | date }} by {{ post.author.name }}</span>
+                            <span class="date" ng-show="post.lastEdited">; Last edited on {{ post.lastEdited | date }}</span>
+                        </div>
+                        <a class="btn main-action" ng-show="access.write"
+                           ng-href="#/{{ post.blog.id }}/edit/{{ post.id }}">Edit</a>
+                        <a class="btn main-action" ng-show="access.write" data-toggle="modal" ng-click="removeConfirmationDialog.showConfirmation()">Remove</a>
+                        <div class="post-content" ng-bind-html-unsafe="post.content" ng-hide="!post.content"></div>
+                    </div>
+                </div>
+                <div class="aside" ng-include="'blog/project-info.html'"/>
+            </div>
+        </div>
+    </div>
+
+    <div id="remove-post-confirmation" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-holder">
+            <div class="modal-frame">
+                <div class="modal-header">
+                    <h3>Remove Post?</h3>
+                </div>
+                <div class="modal-body" style="padding: 10px 30px">
+                    <p>Are you sure you want to remove selected post?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn main-action" data-dismiss="modal" aria-hidden="true" ng-click="removeConfirmationDialog.hideConfirmation()">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary main-action" ng-click="removeConfirmationDialog.remove()">Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="comment-box clearfix">
+        <div class="center-frame">
+            <div class="holder">
+                <div class="heading">
+                    <h3>Comments</h3>
+                    <span class="subscribers"><ng-pluralize
+                            count="post.subscribersCount"
+                            when="{'one': '1 subscriber', 'other': '{} subscribers'}"/></span>
+                    <a class="icon subscribe" ng-show="access.subscribe" ng-click="subscribe()"></a>
+                    <a class="icon subscribe selected" ng-show="access.unsubscribe" ng-click="unsubscribe()"></a>
+                </div>
+                <div class="comment-holder">
+                    <div class="comment-item clearfix" ng-repeat="comment in comments" after-comments-rendering="">
+                        <i class="icon commented"></i>
+                        <div class="comment-info">
+                            <h4>{{ comment.author.name }} <span class="date">{{ comment.date | date }}</span></h4>
+                            <div class="comment-content" ng-bind-html-unsafe="comment.content"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="paging clearfix" ng-show="false">
+                    <a href="#" class="btn-prev">Previous posts</a>
+                    <ul>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                    </ul>
+                    <a href="#" class="btn-next">Next posts</a>
+                </div>
+                <div class="comment-form">
+                    <i class="icon add-comment"></i>
+                    <form id="commentForm" name="commentForm">
+                        <textarea class="dialog-text-area" ng-model="newComment.content" required placeholder="Leave a comment..."></textarea>
+                        <div class="btn-holder">
+                            <button class="btn main-action" ng-click="newComment.$save(updateComments)" ng-disabled="commentForm.$invalid">Post comment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

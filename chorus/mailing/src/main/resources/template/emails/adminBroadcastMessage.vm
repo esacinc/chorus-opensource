@@ -1,0 +1,4 @@
+Chorus: ${title}
+Hello, ${user}!
+
+${body}

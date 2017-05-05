@@ -1,0 +1,20 @@
+<div class="main-toolbar-holder clearfix" ng-controller="navigation">
+    <div class="center-frame relative">
+        <ul ng-show="lab != null" class="breadcrumbs">
+            <li>
+                <span class="ellipsize">
+                    <a ng-click="showButtons.onBack()" href="" title="Billing">Billing</a>
+                </span>
+                <span class="icon breadcrumbs-sep"></span>
+            </li>
+        </ul>
+        <ul ng-show="lab == null" class="breadcrumbs"><li><span>&nbsp;</span></li></ul>
+        <h3 class="subHeaderURL">
+            <div class="minwidth260">
+                <span class="ellipsize breadcrumbs-ellipsize">
+                    <span ng-bind="labName" title="{{labName}}"></span>
+                </span>
+            </div>
+        </h3>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+Chorus: Translation Error Occured
+Hello,
+
+We want to inform you that during files translation at "${experimentName}" experiment the error is occured.
+
+Here is the details of this error:
+Experiment: ${experimentName}
+Author: ${authorEmail}
+#if(${fileName})
+File:${fileName}
+#end
+Date, when error occured:${formattedDate}
+
+Detailed Exception:
+${errorMessage}
+
+Thank you!
+
+

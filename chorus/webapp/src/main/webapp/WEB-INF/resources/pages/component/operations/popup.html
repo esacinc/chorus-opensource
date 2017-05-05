@@ -1,0 +1,20 @@
+<div id="operation-popup" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a class='close' ng-click="options.cancel.handler(model)" data-dismiss='modal'>&nbsp;</a>
+                <h3 ng-bind="options.title"></h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container" ng-include="options.bodyMessageUrl"></div>
+            </div>
+            <div class="modal-footer" ng-switch="options.type">
+                <div ng-switch-when="dialog">
+                    <button class="btn secondary-action" data-dismiss="modal" ng-click="options.cancel.handler(model)">Cancel</button>
+                    <button class="btn btn-primary main-action" ng-click="options.success.handler(model)" data-dismiss="modal" ng-bind="options.success.caption">Ok</button>
+                </div>
+                <button ng-switch-default="" class="btn btn-primary main-action" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

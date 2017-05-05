@@ -1,0 +1,6 @@
+${projectTitle}: Project Copy
+Hello, ${newOwner}!
+
+${oldOwner} has created a copy of ${project} project for you. You own this copy now.
+
+Thank you!

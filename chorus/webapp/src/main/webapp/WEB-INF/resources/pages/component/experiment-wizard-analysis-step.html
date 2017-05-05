@@ -1,0 +1,341 @@
+<span class="experiment-wizard-analysis-step">
+        <style>
+            .experiment-wizard-analysis-step .selectedLabels .labelsButtonsHolder {
+                margin-left: -24px;
+                margin-top: 35px;
+                float: left;
+            }
+
+            .experiment-wizard-analysis-step .selectedLabels .labelsButtonsHolder button {
+                width: 20px;
+                padding-left: 5px;
+            }
+
+            .experiment-wizard-analysis-step .noLabelsSelectionMockHolder {
+                height: 354px;
+            }
+
+            .experiment-wizard-analysis-step .wholeHeight {
+                height: 270px;
+            }
+
+            .experiment-wizard-analysis-step .halfHeight {
+                height: 121px;
+            }
+
+            .experiment-wizard-analysis-step .thirdHeight {
+                height: 72px;
+            }
+
+            .create-experiment .modal-body .experiment-wizard-analysis-step .control-group {
+                padding-bottom: 0;
+                padding-top: 3px;
+            }
+
+            .experiment-wizard-analysis-step .labelsSelectionHolder .dialog-select {
+                background-image: none;
+                border: 1px solid #ccc;
+                padding-left: 5px !important;
+                padding-top: 3px !important;
+            }
+        </style>
+    
+     <div class="row-fluid " ng-show="vm.isMicroArray()">
+         <div class="control-group span12"
+              data-ng-class="{error: form.instrumentModel.$error.uiSelect2Validator}">
+             <label class="control-label" for="instrument-type">Array Type <span
+                     class="error-message">is required</span></label>
+             <select check-ui-selection ui-select2-validator="" ui-select2 name="instrumentModel"
+                     data-placeholder="{{!vm.instrumentTypes.length && 'Loading...' || '-- Select One --'}}"
+                     ng-model="vm.selected.instrumentType"
+                     id="instrument-type" class="dialog-select" required>
+                 <option></option>
+                 <option value="{{instrumentType.id}}" ng-repeat="instrumentType in vm.instrumentTypes"
+                         ng-selected="vm.selected.instrumentType==instrumentType.id">
+                     {{instrumentType.name}}
+                 </option>
+             </select>
+         </div>
+     </div>
+
+     <div class="row-fluid">
+        <div class="control-group span6"
+             data-ng-class="{error: form.instrumentModel.$error.uiSelect2Validator}">
+            <label class="control-label" for="instrument-model" ng-hide="vm.isMicroArray()">Instrument Model <span class="error-message">is required</span></label>
+            <label class="control-label" for="instrument-model" ng-show="vm.isMicroArray()">Chip Design <span class="error-message">is required</span></label>
+            <select check-ui-selection ui-select2-validator="" ui-select2 name="instrumentModel"
+                    data-placeholder="{{!vm.instrumentModels.length && vm.isInstrumentsPresents && 'Loading...' || !vm.isInstrumentsPresents && 'No Instrument Models Yet' || '-- Select One --'}}"
+                    ng-model="vm.selected.instrumentModel"
+                    ng-disabled="!configuration.lab && vm.createMode() || !vm.instrumentModels.length"
+                    id="instrument-model" class="dialog-select" required>
+                <option></option>
+                <option value="{{instrumentModel.id}}" ng-repeat="instrumentModel in vm.instrumentModels"
+                        ng-selected="vm.selected.instrumentModel==instrumentModel.id">
+                    {{instrumentModel.name}}
+                </option>
+            </select>
+        </div>
+        <div class="control-group span6" data-ng-class="{warning: showFileError}"
+             on-content-load="correctModalHeight()">
+            <label class="control-label" for="instrument">Instrument </label>
+            <select ui-select2="{formatResult: formatInstrument}"
+                    ng-model="vm.selected.instrument"
+                    data-placeholder="{{!vm.selected.instrumentModel && 'Select instrument model first' || !vm.instrumentsByLab.length && vm.isInstrumentsPresents && 'Loading...' || '-- Select One --'}}"
+                    id="instrument" class="dialog-select"
+                    ng-disabled="!vm.selected.instrumentModel" required>
+                <option></option>
+                <option value="-1"
+                        ng-selected="vm.selected.instrumentModel && !createMode() && vm.selected.instrument == -1">All</option>
+                <option value="{{instrument.id}}" ng-repeat="instrument in  vm.instrumentsByLab "
+                        ng-selected="instrument.id == vm.selected.instrument"
+                        title="{{vm.getInstrumentSN(instrument)}}">
+                    {{instrument.name}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <!-- If Mass Spectrometry -->
+    <div ng-show="vm.isMs()">
+
+        <div class="row-fluid ">
+            <div class="control-group span6" data-ng-class="{error: form.experimentType.$error.uiSelect2Validator}">
+                <label class="control-label" for="experimentType">Experiment Type <span
+                        class="error-message">is required</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.experimentType"
+                        ng-change="vm.changedExperimentType()"
+                        name="experimentType"
+                        id="experimentType" class="dialog-select" data-placeholder="-- Select One --"
+                        ui-select2-validator=""
+                        required>
+                    <option></option>
+                    <option value="{{experimentType.id}}" ng-repeat="experimentType in vm.experimentTypes">
+                        {{experimentType.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="control-group span6" data-ng-class="{error: form.is2dLc.$error.uiSelect2Validator}">
+                <label class="control-label" for="labeledYesNo">2D/LC<span
+                        class="error-message">is required to fill</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.is2dLc" name="is2dLc" style="width:70px"
+                        id="is2dLc" class="dialog-select" ng-disabled="vm.dlcTypes.length == 1"
+                        data-placeholder="-- Select One --" ui-select2-validator=""
+                        required>
+                    <option></option>
+                    <option value="{{dlcType.id}}" ng-repeat="dlcType in vm.dlcTypes">
+                        {{dlcType.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- if labeled-->
+        <div class="row-fluid">
+            <div class="control-group span6" data-ng-class="{error: form.labeledYesNo.$error.uiSelect2Validator}">
+                <label class="control-label" for="labeledYesNo">Labeled <span
+                        class="error-message">is required to fill</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.labeledYesNo" name="labeledYesNo"
+                        style="width:70px"
+                        id="labeledYesNo" class="dialog-select" ng-disabled="vm.labeledYesNoTypes.length == 1"
+                        data-placeholder="-- Select One --" ui-select2-validator=""
+                        required>
+                    <option></option>
+                    <option value="{{label.id}}" ng-repeat="label in vm.labeledYesNoTypes">
+                        {{label.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="control-group span6" ng-show="vm.selected.labeledYesNo == 1">
+                <label class="control-label" for="groupSpecificParametersType">Group Specific Parameters Type<span
+                        class="error-message">is required to fill</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.groupSpecificParametersType"
+                        ng-change="vm.changedGroupSpecificParametersType()"
+                        name="groupSpecificParametersType"
+                        id="groupSpecificParametersType" class="dialog-select"
+                        required>
+                    <option value="{{groupSpecificParametersType.id}}"
+                            ng-repeat="groupSpecificParametersType in vm.allGroupSpecificParametersTypes">
+                        {{groupSpecificParametersType.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!-- if labeled-->
+        <div class="row-fluid">
+            <div class="control-group span6" ng-show="vm.selected.labeledYesNo == 1" style="margin-left: 0;">
+                <label class="control-label" for="labelYesTypes">Label Type
+                    <span class="error-message">required</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.labelYesType"
+                        ng-change="vm.changedLabelYesType()"
+                        name="labelYesTypes"
+                        id="labelYesTypes" class="dialog-select"
+                        data-placeholder="-- Select One --" ui-select2-validator=""
+                        required>
+                    <option></option>
+                    <option value="{{labelYesType.id}}" ng-repeat="labelYesType in vm.labelYesTypes">
+                        {{labelYesType.name}} (Max. {{labelYesType.maxSamples}} samples)
+                    </option>
+                </select>
+            </div>
+
+            <div class="control-group span6" ng-show="vm.selected.labeledYesNo == 1"
+                 data-ng-class="{error: form.mixedSampleTypes.$error.uiSelect2Validator}">
+                <label class="control-label" for="mixedSampleTypes">{{vm.mixedSampleTypesLabel}}<span
+                        class="error-message">is required</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.mixedSampleType"
+                        ng-change="vm.changedMixedSampleType()"
+                        name="mixedSampleTypes"
+                        id="mixedSampleTypes" class="dialog-select" style="width:70px"
+                        data-placeholder="-- Select One --" ui-select2-validator=""
+                        required>
+                    <option></option>
+                    <option value="{{mixedSampleType.id}}" ng-repeat="mixedSampleType in vm.mixedSampleTypes">
+                        {{mixedSampleType.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!-- Labels component-->
+
+        <div class="row-fluid labelsSelectionHolder"
+             ng-show="vm.selected.labeledYesNo == 1 && vm.selected.groupSpecificParametersType == 1">
+            <div class="control-group span6 wholeHeight">
+                <label class="control-label" for="allAvailableLabels">Label</label>
+                <select ng-model="vm.selected.labelsSelectedToAdd"
+                        name="allAvailableLabels"
+                        id="allAvailableLabels" class="dialog-select wholeHeight"
+                        multiple>
+                    <option value="{{availableLabel.id}}"
+                            ng-repeat="availableLabel in vm.availableSamples | orderBy: 'name'">
+                        {{availableLabel.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="selectedLabels">
+                <div class="control-group span6" style="display: none"></div>
+                <!--just for layout to make first node to be hided-->
+                <div class="control-group span5" ng-show="vm.specialLabelType">
+                    <label class="control-label" for="specialLabels">Selected Labels</label>
+                    <select name="singleLabels" ng-model="vm.selected.selectedSpecialLabels"
+                            id="specialLabels" class="dialog-select wholeHeight" multiple>
+                        <option value="{{specialLabel.id}}"
+                                ng-repeat="specialLabel in vm.selected.specialLabels | orderBy: 'name'">
+                            {{specialLabel.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="control-group span6" ng-show="!vm.specialLabelType">
+                    <div class="labelsButtonsHolder">
+                        <button ng-click="vm.addLabels(vm.selected.singleLabels, vm.selected.labelsSelectedToAdd)"
+                                title="Add to Light Labels">></button>
+                        <br/>
+                        <button ng-click="vm.removeLabels(vm.selected.singleLabels, vm.selected.selectedSingleLabels)"
+                                title="Remove from Light Labels">
+                            <
+                        </button>
+                    </div>
+                    <label class="control-label" for="singleLabels">Light Labels</label>
+                    <select name="singleLabels" ng-model="vm.selected.selectedSingleLabels"
+                            data-ng-class="{'thirdHeight': vm.selected.mixedSampleType == 3, 'halfHeight':  vm.selected.mixedSampleType == 2, 'wholeHeight': vm.selected.mixedSampleType == 1}"
+                            id="singleLabels" class="dialog-select" multiple>
+                        <option value="{{singleLabel.id}}"
+                                ng-repeat="singleLabel in vm.selected.singleLabels | orderBy: 'name'">
+                            {{singleLabel.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="control-group span6" ng-show="!vm.specialLabelType && vm.selected.mixedSampleType == 3">
+                    <div class="labelsButtonsHolder">
+                        <button ng-click="vm.addLabels(vm.selected.mediumLabels, vm.selected.labelsSelectedToAdd)"
+                                title="Add to Intermediate Labels">></button>
+                        <br/>
+                        <button ng-click="vm.removeLabels(vm.selected.mediumLabels, vm.selected.selectedMediumLabels)"
+                                title="Remove from Medium Labels">
+                            <
+                        </button>
+                    </div>
+                    <label class="control-label" for="mediumLabels">Intermediate Labels</label>
+                    <select name="mediumLabels" ng-model="vm.selected.selectedMediumLabels"
+                            id="mediumLabels" class="dialog-select thirdHeight" multiple>
+                        <option value="{{mediumLabel.id}}"
+                                ng-repeat="mediumLabel in vm.selected.mediumLabels | orderBy: 'name'">
+                            {{mediumLabel.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="control-group span6"
+                     ng-show="!vm.specialLabelType && (vm.selected.mixedSampleType == 2 || vm.selected.mixedSampleType == 3)"
+                     style=" float: left; ">
+                    <div class="labelsButtonsHolder">
+                        <button ng-click="vm.addLabels(vm.selected.heavyLabels, vm.selected.labelsSelectedToAdd)"
+                                title="Remove from Heavy Labels">></button>
+                        <br/>
+                        <button ng-click="vm.removeLabels(vm.selected.heavyLabels, vm.selected.selectedHeavyLabels)"
+                                title="Remove from Heavy Labels">
+                            <
+                        </button>
+                    </div>
+                    <label class="control-label" for="heavyLabels">Heavy Labels</label>
+                    <select name="heavyLabels" ng-model="vm.selected.selectedHeavyLabels"
+                            id="heavyLabels" class="dialog-select" multiple
+                            data-ng-class="{'thirdHeight': vm.selected.mixedSampleType == 3, 'halfHeight':  vm.selected.mixedSampleType == 2}">
+                        <option value="{{heavyLabel.id}}"
+                                ng-repeat="heavyLabel in vm.selected.heavyLabels | orderBy: 'name'">
+                            {{heavyLabel.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid noLabelsSelectionMockHolder" ng-show="!vm.specialLabelType && vm.selected.labeledYesNo == 2">
+        </div>
+
+    </div>
+
+    <!-- If NGS -->
+    <div ng-show="vm.isNGS()">
+        <div class="row-fluid ">
+            <div class="control-group span6" data-ng-class="{error: form.ngsExperimentType.$error.uiSelect2Validator}">
+                <label class="control-label" for="ngs-experiment-type">Experiment Type <span
+                        class="error-message">is required</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.ngsRelatedInfo.experimentType"
+                        ng-change="vm.changedExperimentType()"
+                        name="ngsExperimentType"
+                        id="ngs-experiment-type" class="dialog-select" data-placeholder="-- Select One --"
+                        ui-select2-validator=""
+                        required>
+                    <option value="DNA_SEQ">DNAseq</option>
+                    <option value="RNA_SEQ">RNAseq</option>
+
+                 <!--   <option value="{{experimentType.id}}" ng-repeat="experimentType in vm.experimentTypes">
+                        {{experimentType.name}}
+                    </option>-->
+                </select>
+            </div>
+            <div class="control-group span6" data-ng-class="{error: form.multiplexing.$error.uiSelect2Validator}">
+                <label class="control-label" for="labeledYesNo">Multiplexing<span
+                        class="error-message">is required to fill</span></label>
+                <select check-ui-selection ui-select2 ng-model="vm.selected.ngsRelatedInfo.multiplexing" name="multiplexing" style="width:70px"
+                        id="multiplexing" class="dialog-select"
+                        data-placeholder="-- Select One --" ui-select2-validator=""
+                        required>
+                <!--    <option value="{{true}}">Yes</option>
+                    <option value="{{false}}">No</option>-->
+                    <option value="{{multiplexingType.id}}" ng-repeat="multiplexingType in vm.multiplexingTypes">
+                        {{multiplexingType.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div ng-show="vm.isMultiplexing()">
+             <div class="row-fluid ">
+                <div class="control-group span6" data-ng-class="{error: form.technologyType.$error.uiSelect2Validator}">
+                    <label class="control-label" for="number-of-samples">Number of Samples<span
+                            class="error-message">is required</span></label>
+                    <input id="number-of-samples" ng-model="vm.selected.ngsRelatedInfo.samplesCount" type="number"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</span>

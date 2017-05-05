@@ -1,0 +1,105 @@
+<div class="post-dashboard">
+    <div class="center-frame">
+        <div class="title-info clearfix">
+            <div class="title-holder clearfix">
+                <h2>Blogs</h2>
+                <ul ng-show="false">
+                    <li class="active"><a href="#">All Blogs</a></li>
+                    <li><a href="#">My Subscriptions</a></li>
+                </ul>
+            </div>
+            <h3>Most Recent Posts</h3>
+        </div>
+        <div class="row clearfix" ng-repeat="row in recentPosts">
+            <!--<div ng-class="$parent.$index == 0 && 'span6' || 'span3'" class="post post-empty" ng-show="false">-->
+            <!--</div>-->
+            <div ng-repeat="post in row" ng-class="($parent.$index == 0 && 'span6' || 'span3') + ((post == null) && ' post-empty' || '')" class="post" ng-show="true">
+                <div class="box" ng-show="!post">There are no added posts</div>
+                <div ng-show="post">
+                    <h3>
+                        <i class="icon my-project"></i>
+                        <a href="#/{{ post.blog.id }}" ng-bind="post.blog.name" class="link ellipsize"></a>
+                        <a ng-show="accessBlogs[post.blog.id]['subscribe']" ng-click="subscribeBlog(post.blog)" class="icon subscribe"></a>
+                        <a ng-show="accessBlogs[post.blog.id]['unsubscribe']" ng-click="unsubscribeBlog(post.blog)" class="icon subscribe selected"></a>
+                    </h3>
+                    <div class="project-details clearfix">
+                        <a href="dashboard.html#/projects/all/{{ post.blog.id }}" class="link">Project Details</a>
+                        <p><ng-pluralize
+                                count="post.blog.subscribersCount"
+                                when="{'one': '1 subscriber', 'other': '{} subscribers'}"/></p>
+                    </div>
+                    <div class="box">
+                        <div class="box-holder">
+                            <h4>
+                                <a href="#/{{ post.blog.id }}/{{ post.id }}" ng-bind="post.title"></a>
+                            </h4>
+                            <div class="details">
+                                <p><ng-pluralize
+                                        count="post.subscribersCount"
+                                        when="{'one': '1 subscriber', 'other': '{} subscribers'}"/></p>
+                            </div>
+                            <div class="photo" ng-show="post.content | firstImageUrl">
+                                <div class="photo-holder">
+                                    <img ng-src="{{ post.content | firstImageUrl }}" />
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <p ng-bind="post.content | firstParagraph | dehtml"></p>
+                            </div>
+                            <div class="shadow"></div>
+                        </div>
+                        <div class="meta clearfix">
+                            <span class="date" ng-bind="post.date | date"></span>
+                            <div class="comment">
+                                <i class="icon arrow"></i>
+                                <ng-pluralize count="post.commentsCount" when="{ '0': '0', 'one': '1', 'other': '{}'}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="all-blogs">
+        <div class="center-frame">
+            <div class="title-info clearfix">
+                <h3>All Blogs</h3>
+            </div>
+            <div class="dashboard-box post-table">
+                <div class="heading clearfix">
+                    <div class="cell cell-name" unroute-sorting="blog.name">Project Name</div>
+                    <div class="cell cell-post" unroute-sorting="content | dehtml">Post</div>
+                    <div class="cell cell-date" unroute-sorting="date">Post Date</div>
+                    <div class="cell cell-subscribers" unroute-sorting="blog.subscribersCount">Subscrs</div>
+                </div>
+                <div class="content clearfix">
+                    <div class="row clearfix ng-scope" ng-repeat="post in recentBlogs | orderBy:sorting.field:sorting.reverse">
+                        <div class="cell cell-name">
+                            <div class="ellipsize">
+                                <a href="#/{{ post.blog.id }}" ng-bind="post.blog.name"></a>
+                            </div>
+                        </div>
+                        <div class="cell cell-post">
+                            <div class="ellipsize">
+                                <a href="#/{{ post.blog.id }}/{{ post.id }}">
+                                    <strong ng-bind="post.title"></strong> <span ng-bind="post.content | dehtml"></span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="cell cell-date">
+                            <div class="ellipsize" ng-bind="post.date | date"></div>
+                        </div>
+                        <div class="cell cell-subscribers">
+                            <span ng-bind="post.blog.subscribersCount"/>
+                            <a ng-show="accessBlogs[post.blog.id]['subscribe']" ng-click="subscribeBlog(post.blog)" class="icon subscribe"></a>
+                            <a ng-show="accessBlogs[post.blog.id]['unsubscribe']" ng-click="unsubscribeBlog(post.blog)" class="icon subscribe selected"></a>
+                        </div>
+                    </div>
+                    <div class="row row-empty clearfix" ng-show="recentBlogs.length == 0">
+                        <p>There are no added blogs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+Chorus: Experiment Data Access Approved
+Hello, ${requester}!
+
+Your request for accessing the experiment data has been approved. Now the "${project}" project is shared to you.
+
+Please feel free to download requested experiment data via the link:
+#foreach ($link in $experimentLinks)
+<a href="$link">$link</a>
+#end
+

@@ -1,0 +1,92 @@
+<div modal-dialog>
+    <div class="modal-holder">
+    <div class="modal-frame">
+    <form  ng-submit="save()" name="fileDetailsForm">
+        <div class="modal-header">
+            <a id="fileDetailsClose" class='close' data-dismiss='modal'>?</a>
+
+            <h3 id="fileDetailsLabel">File Details</h3>
+        </div>
+        <div class="modal-body">
+            <div id="detailsContent" class="tab-content">
+                <table class="table">
+                    <colgroup>
+                        <col class="prop-name"/>
+                        <col class="prop-value"/>
+                    </colgroup>
+                    <thead>
+                    </thead>
+                    <tbody>
+3
+
+                    <tr>
+                        <td><label class="control-label">File Name</label></td>
+                        <td><span class="static-value">{{details.name}}</span></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Size</label></td>
+                        <td><span class="static-value" ng-bind="details.sizeInBytes | fileSize"></span></td>
+                    </tr>
+
+                    <tr>
+                        <td><label class="control-label">Instrument</label></td>
+                        <td><span class="static-value">{{details.instrumentName}}</span></td>
+                    </tr>
+                    <tr>
+                        <td><label class="control-label">Laboratory</label></td>
+                        <td><span class="static-value">{{details.labName}}</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><label class="control-label">Species</label></td>
+                        <td>
+                            <span class="static-value" ng-show="details.specieName != null">{{details.specieName}}</span>
+                            <span class="static-value" ng-show="details.specieName == null">Unspecified</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><label class="control-label">Owner</label></td>
+                        <td><span class="static-value">{{details.owner}}</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><label class="control-label">Upload date</label></td>
+                        <td>
+                            <span class="static-value" ng-show="details.contentId != null || details.archiveId != null">{{details.uploadDate | date}}</span>
+                            <span class="static-value" ng-show="details.contentId == null && details.archiveId == null">Finalizing upload...</span>
+                        </td>
+                    </tr>
+
+                    <tr ng-show="showConditions">
+                        <td class="top-aligned"><label class="control-label">Conditions</label></td>
+                        <td>
+                            <div class="static-value" style="height: auto" ng-bind='details.conditions'></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="top-aligned"><label class="control-label">Labels</label></td>
+                        <td>
+                            <!--<input class="dialog-text-input" type="text" name="login" ng-model='details.labels' required>-->
+                            <ng-switch on='viewMode'>
+                                <textarea ng-switch-when='false' class="dialog-text-area" name="login" ng-model='details.labels' required></textarea>
+                                <div class="area-message" ng-switch-when='true' ng-bind='details.labels'></div>
+                            </ng-switch>
+                            </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary-action" data-dismiss="modal">Close</button>
+            <button class="btn btn-primary main-action" type="submit" ng-click="save()" ng-hide='viewMode'
+                    ng-disabled="fileDetailsForm.$invalid">
+                Save
+            </button>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>

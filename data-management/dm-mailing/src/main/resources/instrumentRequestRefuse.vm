@@ -1,0 +1,10 @@
+${projectTitle}: Instrument Request Rejected
+Hello, ${user}!
+
+Unfortunately your request for an access to the instrument ${instrument} has been rejected by current instrument operators. Here is the rejection comment:
+
+${comment}
+
+Perhaps, you may try to contact them directly and then repeat your request.
+
+Thank you for your patience!

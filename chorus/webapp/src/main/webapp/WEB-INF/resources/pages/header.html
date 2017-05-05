@@ -1,0 +1,71 @@
+<div class="header clearfix" ng-controller="header-controller">
+    <div class="center-frame">
+        <div class="logo-holder">
+            <h1><a href="index.html" ng-cloak>
+                <img src="../img/{{appearance.logo || 'chorus-logo.png'}}" alt="Chorus Logo"/>
+            </a></h1>
+        </div>
+        <ul id="menu">
+            <li ng-class="{active: activePage == 'news'}" ng-show="appearance.showNewsLink"><a href="news.html">News</a></li>
+            <li ng-class="{active: activePage == 'blog'}" ng-show="appearance.showBlogsLink"><a href="blog.html">Blogs</a></li>
+            <li ng-class="{active: activePage == 'dashboard'}"><a href="dashboard.html">Application</a></li>
+            <li ng-class="{active: activePage == 'about'}" ng-show="appearance.showAboutLink"><a href="about.html">About</a></li>
+            <li ng-class="{active: activePage == 'support'}"><a href="support.html">Support</a></li>
+            <li><forum-url><span class="forum-url">Forum</span><span class="icon external"></span></forum-url></li>
+        </ul>
+        <div ng-switch="isDashboard">
+            <div ng-switch-when="true">
+                <div class="search-area" ng-show="activePage == 'dashboard'">
+                    <div class="input-append" ng-controller="search-input">
+                        <span class="icon search-icon" ng-click="search()"></span>
+                        <input class="main-search" id="inputIcon"
+                               ng-type="text" ng-model="page.query"
+                               type="text"
+                               placeholder="Search" on-enter="search()">
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-default>
+
+            </div>
+        </div>
+
+        <div ng-switch="showAccountArea">
+            <div ng-switch-when="false">
+
+            </div>
+            <div ng-switch-default>
+                <div class="account-area" ng-controller="security">
+                    <div class="user-name" ng-show="loggedInUser == null">
+                        <a href="dashboard.html">Sign In</a>
+                    </div>
+                    <div class="user-name" ng-show="loggedInUser != null">
+                        <div class="btn-group">
+                            <a class="u-name" data-toggle="dropdown" href="#" title="{{loggedInUser.firstName + ' ' + loggedInUser.lastName}}">
+                                <span ng-bind="loggedInUser.firstName"></span>&nbsp;<span ng-bind="loggedInUser.lastName"></span>
+                                <i class="icon triangle"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- dropdown menu links -->
+                                <li class="email">
+                                    <span class="name"><span ng-bind="loggedInUser.firstName"></span>&nbsp;<span ng-bind="loggedInUser.lastName"></span></span>
+                                    <span class="mail" ng-bind="loggedInUser.username"></span>
+                                </li>
+                                <li ng-show="showBilling"><a title="Billing details" HREF="../pages/billing.html#/list">Billing</a></li>
+                                <li ng-show="showAdminBilling"><a title="Billing details" HREF="../pages/billing.html#/labInvoices">Admin Billing</a></li>
+                                <li><a title="Account details" profile-dialog-link>My Profile</a></li>
+                                <li><a title="Click to report issue" href="mailto:support@infoclinika.com">
+                                    Report Issue
+                                </a></li>
+                                <li><a title="User Preferences" href="../pages/dashboard.html#/preferences">Interface Preferences</a></li>
+                                <li><a title="Clients API Token" href="../pages/dashboard.html#/client-token">Clients API Token</a></li>
+                                <li><a id="logout" href="../j_spring_security_logout" title="Click to sign out">Sign out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

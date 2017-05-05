@@ -1,0 +1,42 @@
+<div id="copy-project-confirm" modal-dialog="/requests/inbox/all" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Approve a Copy Project Confirmation</h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container" ng-switch="labs.length">
+                    <div ng-switch-when="0">
+                        You must be a member at least one lab to approve a copy project
+                    </div>
+                    <div ng-switch-when="1">
+                        All files will be charged as the files of "<span ng-init="$parent.selectedLab = labs[0]" ng-bind="labs[0].name"></span>" laboratory.
+                    </div>
+                    <div class="control-group clearfix" ng-switch-default="">
+                        <p>
+                            Please select laboratory to send billing for files in the copied project.
+                        </p>
+                        <p>
+                            <label class="control-group clearfix" for="labs">Select Laboratory</label>
+                            <select id="labs" ui-select2="" ng-model="$parent.selectedLab.id" class="dialog-select" data-placeholder="-- Select Lab --">
+                                <option value=""></option>
+                                <option value="{{lab.id}}" ng-repeat="lab in labs" ng-bind="lab.name"></option>
+                            </select>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                        >Cancel
+                </button>
+                <button class="btn  secondary-action" data-dismiss="modal"
+                        ng-click="refuse()">Refuse
+                </button>
+                <button type="submit" class="btn btn-primary main-action" ng-disabled="!selectedLab.id" ng-click="approve()">
+                    Approve
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div ng-show="videos.length != 0">
+    <div class="how-box clearfix">
+        <div class="text">
+            <div class="item" ng-repeat="videoItem in videos">
+                <a href="" title="{{videoItem.snippet.title}}" ng-click="showVideo($index)">
+                    <img src="{{videoItem.snippet.thumbnails.high.url}}" alt="videoItem.snippet.title" />
+                    <span class="btn-play">Play it</span>
+                    <span class="title" ng-bind="videoItem.snippet.title"></span>
+                    <span class="overlay"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<h3 ng-show="videos.length == 0" class="message">For this topic there are no Videos yet</h3>
+<div ng-show="forumProperties.enabled && videos.length != 0">
+    <h3>Still have questions?</h3>
+    <p><a href="{{forumProperties.url}}">Post to our on-line forum questions</a> and we'll get back to you as soon as we can.</p>
+</div>

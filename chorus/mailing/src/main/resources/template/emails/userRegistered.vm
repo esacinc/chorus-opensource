@@ -1,0 +1,10 @@
+Chorus: Confirm Your Email
+Hello, ${user}!
+
+Thank you for registering for Chorus project!
+
+Please complete your registration by confirming your email via this link:
+
+<a href="${verificationUrl}">${verificationUrl}</a>
+
+Thank you!

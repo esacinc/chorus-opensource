@@ -1,0 +1,51 @@
+<div class="laboratory-list-holder">
+    <div class="scrollable-container laboratory-list">
+        <span ng-show="isTableEmpty()" class="dialog-empty-table">{{emptyTableMessage()}}</span>
+        <table class="table table-striped width100p">
+            <tbody>
+            <tr ng-repeat="item in selected()">
+                <td>
+                    <div class="relative">
+                        <i data-ng-class="{'icon laboratory':!item.isRemove, 'icon laboratory-delete': item.isRemove}">&nbsp;</i>
+                        <i data-ng-class="{'icon hidden':!item.isRemove && !item.isAdded, 'icon minus': item.isRemove, 'icon plus' : item.isAdded}">&nbsp;</i>
+                    </div>
+                </td>
+                <td>
+                    <span ng-bind="laboratoryName(item)"> </span>
+                    <span class="float-right" ng-show='isPendingMembership(item)'>pending...</span>
+                </td>
+                <!-- "removeHandler(item)"><i class="icon delete"></i>{{item.isRemove && 'Cancel' || 'Leave'}}s-->
+                <td class="width40" ng-switch="canBeRemoved(laboratoryName(item))">
+                    <span ng-switch-when='false' ng-hide='isPendingMembership(item)' ng-click="removeHandler(item)" class="m-btn">
+                        <a ng-switch="item.isRemove" class="removefromcart" packageid="2" title="Remove">
+                            <i ng-switch-when='false' class="icon delete">&nbsp;</i>
+                            <i ng-switch-when='true' class="icon return">&nbsp;</i>
+                        </a>
+                    </span>
+                    <span ng-switch-when='true' ng-click="removeItem(item)" class="m-btn">
+                        <a class="removefromcart" packageid="2" title="Remove">
+                            <i class="icon delete">&nbsp;</i>
+                        </a>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <table class="table add-lab-holder">
+        <tr>
+            <td>
+                <label class="small-label" ng-bind="addActionText()"> </label>
+
+                <div class="clearfix">
+                    <input select-lab-with-auto-complete
+                           ng-model="toAdd"
+                           name="add-selection"
+                           placeholder="{{addPlaceHolderText()}}" class="dialog-text-input dont-hide add-lab">
+                </div>
+                <a class="link" href="laboratory-request.html">Can't find your laboratory in the list?</a>
+            </td>
+        </tr>
+    </table>
+</div>

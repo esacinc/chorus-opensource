@@ -1,0 +1,59 @@
+<div id="client-token-dialog" class="client-token-dialog" modal-dialog={{returnUrl}}>
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <a ng-click="close()" class="close">&times;</a>
+
+                <h3>
+                    <span>Client Token</span>
+                </h3>
+            </div>
+
+            <form name="form" novalidate>
+                <div class="modal-body">
+                    <div class="dialog-container">
+                        <div id="chartsRangeTabContent">
+                            <div class="well range-description">
+                                <label>Client API token uses for authenticate desktop clients.</label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" ng-click="generateClientToken()">Generate</button>
+                        <input class="token-text" type="text" ng-model="token" readonly/>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <span class="save-token-warning inline" ng-show="token"><i class="icon warning-uploads"></i>If You close the window, you won't be able to restore your token.<br>
+                        <span class="tab-line">You may only generate a new token. Please, make sure that you have copied it.</span></span>
+                    <button class="btn secondary-action inline" ng-click="close()">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="close-token-window-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Close Client Token?</h3>
+            </div>
+            <div class="modal-body">
+                <div class="dialog-container">
+                    <p>Are you sure that you want to close client token window?</p>
+
+                    <p><b>You won't be able to restore your token. You may only generate a new token.</b></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true"
+                        ng-click="confirmation.hidePopup()">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="btn btn-primary main-action" ng-click="confirmation.success()">Yes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

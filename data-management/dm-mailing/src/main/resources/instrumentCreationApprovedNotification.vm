@@ -1,0 +1,9 @@
+${projectTitle}: Instrument Creation Approved
+Hello, ${user}!
+
+Your request of instrument creation has just been approved. Please find the details below:
+
+Laboratory: ${laboratory};
+Instrument: ${instrument};
+
+Thanks!

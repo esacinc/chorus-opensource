@@ -1,0 +1,8 @@
+${projectTitle}: Instrument Access Request
+Hello, ${operatorName}!
+
+${requesterName} (${requesterEmail}) has just requested an access to the ${instrumentName} instrument.
+
+Please feel free to login into your account and make your decision on instrument access approval.
+
+Thanks!

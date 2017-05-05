@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:http="http://cxf.apache.org/transports/http/configuration" xmlns:cxf="http://cxf.apache.org/core"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs-client"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+       http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://cxf.apache.org/jaxrs-client http://cxf.apache.org/schemas/jaxrs-client.xsd">
+    <context:component-scan base-package="com.infoclinika.mssharing.model"/>
+    <bean id="encoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+    <bean id="ruleValidator" name="validator, ruleValidator" class="com.infoclinika.mssharing.model.internal.RuleValidatorImpl"/>
+
+    <import resource="persistence.cfg.xml"/>
+    <import resource="workflow.cfg.xml"/>
+    <import resource="classpath*:platform.cfg.xml"/>
+    <import resource="classpath*:fileserver.cfg.xml"/>
+
+    <bean id="storedObjectPaths" class="com.infoclinika.mssharing.model.helper.StoredObjectPaths"/>
+
+    <bean id="serverTimezone" class="java.util.TimeZone" factory-method="getTimeZone">
+        <constructor-arg value="${billing.server.timezone}"/>
+    </bean>
+
+    <alias name="defaultProjectSharingRequestManagement" alias="projectSharingRequestManagement"/>
+
+    <bean id="detailsTransformers" class="com.infoclinika.mssharing.model.internal.read.DetailsTransformersImpl"/>
+    <bean id="transformers" class="com.infoclinika.mssharing.model.internal.read.Transformers"/>
+
+    <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+
+    <!-- Enable asyncronous processing -->
+    <task:executor id="emailSendingExecutor" pool-size="15"/>
+
+    <task:executor id="defaultExecutor" pool-size="50"/>
+
+    <task:executor id="fileTranslatorExecutor" keep-alive="360000" pool-size="50"/>
+
+    <task:executor id="fileAccessLogExecutor" keep-alive="60" pool-size="50"/>
+
+    <task:annotation-driven executor="defaultExecutor"/>
+
+    <context:property-placeholder ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"
+                                  location="classpath*:application.properties,
+                                  file:${user.home}/messaging.properties,
+                    file:${user.home}/application.properties"/>
+
+    <!-- todo[tymchenko]: does not work now. See Translator class for manual setting of the timeout -->
+    <http:conduit name="*.http-conduit">
+        <http:client ReceiveTimeout="0"/>
+    </http:conduit>
+
+
+    <jaxrs:client id="billingService"
+                  address="${billing.service.url}"
+                  serviceClass="com.infoclinika.mssharing.services.billing.rest.api.BillingService"
+                  inheritHeaders="true">
+        <!-- Logging is turned off to increase performance and reduce log file size -->
+        <jaxrs:features>
+        <cxf:logging/>
+        </jaxrs:features>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+        </jaxrs:providers>
+        <jaxrs:headers>
+            <entry key="Accept" value="application/json"/>
+        </jaxrs:headers>
+    </jaxrs:client>
+
+
+</beans>

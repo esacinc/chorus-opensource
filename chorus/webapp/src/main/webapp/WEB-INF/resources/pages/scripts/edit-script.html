@@ -1,0 +1,77 @@
+<style>
+    .script-dialog .modal-frame {
+        width: 800px !important;
+    }
+    .script-dialog .dialog-text-input[disabled] {
+        background-color: #eee !important;
+        cursor: not-allowed !important;
+    }
+</style>
+
+<div id="new-script-dialog" class="script-dialog" modal-dialog={{returnUrl}}>
+
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <form name="form" role="form" novalidate="">
+
+                <div class="modal-header">
+                    <a id="createScriptClose" class='close' data-dismiss='modal'>&nbsp;</a>
+
+                    <h3 id="createScriptLabel">{{editMode && 'Edit' || 'View' }} Script</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="dialog-container">
+                        <div class="control-group clearfix">
+                            <label for="name">Name</label>
+                            <input ng-model="details.name" type="text" class="dialog-text-input dont-hide" ng-disabled="!editMode"
+                                   id="name"
+                                   required="">
+                        </div>
+                        <div class="control-group clearfix">
+                            <label for="type">Type</label>
+                            <span id="type" ng-bind="details.type | scriptTypeFormatter"></span>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label for="description">Description</label>
+                              <textarea ng-model="details.description"
+                                        ng-disabled="!editMode"
+                                        id="description" class="dialog-text-area dont-hide"></textarea>
+                        </div>
+                        <div class="control-group clearfix">
+                            <label for="text">Script Text </label>
+                                 <textarea id="text" rows="20"
+                                           ng-model="details.text"
+                                           ng-disabled="!editMode"
+                                           class="dialog-text-area dont-hide"
+                                           required=""> </textarea>
+                        </div>
+                        <div class="control-group clearfix" ng-switch="editMode">
+                            <label>Parameters &nbsp;
+                                <a tabindex="0" class="btn-link"
+                                   ip-popover=""
+                                   role="button"
+                                   data-toggle="popover"
+                                   data-trigger="hover focus"
+                                   data-html="true"
+                                   data-title="Description"
+                                   data-content="Parameters are the defined constants in your script. To access the parameter from script you should use &quot;$&quot; symbol.<br>
+                                 Ex: <code>run(&quot;Gaussian Blur...&quot;, &quot;sigma = &quot; + $sigmaBlur);</code>"
+                                        >
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </a>
+                            </label>
+                            <ip-script-parameters edit="editMode" data="details.parameters"></ip-script-parameters>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn secondary-action" data-dismiss="modal">{{editMode && 'Cancel' || 'Close'}}</a>
+                    <button ng-show='editMode' class="btn btn-primary main-action" ng-disabled="form.$invalid" ng-click="save()" data-dismiss="modal">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

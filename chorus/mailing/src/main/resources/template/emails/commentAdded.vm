@@ -1,0 +1,12 @@
+Chorus: ${comment.post.title} - Comment Added
+New comment on blog post you subscribed for!
+
+Project ${comment.post.blog.name}
+
+${comment.post.title}
+
+${comment.content.replaceAll("</?[^>]+/?>", "")}
+
+
+----
+View and comment blog post, unsubscribe here - <a href="${postUrl}">${postUrl}</a>

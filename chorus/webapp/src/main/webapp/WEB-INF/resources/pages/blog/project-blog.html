@@ -1,0 +1,55 @@
+<div class="breadcrumbs-holder clearfix">
+    <div class="center-frame">
+        <ul class="breadcrumbs">
+            <li>
+                <span class="ellipsize">
+                    <a href="#">Blogs</a>
+                </span>
+                <span class="icon breadcrumbs-sep"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="project-blog clearfix">
+    <div class="center-frame">
+        <div class="twocolumns clearfix">
+            <div class="content">
+                <h2><i class="icon my-project"></i><span ng-bind="blog.name"></span></h2>
+                <div class="subscribers clearfix">
+                    <p> <span><ng-pluralize
+                            count="blog.subscribersCount"
+                            when="{'one': '1 subscriber', 'other': '{} subscribers'}"/>
+                        </span>
+                        <a class="icon subscribe" ng-show="access.subscribe" ng-click="blog.$subscribe(refreshAccess)" title="Subscribe"></a>
+                        <a class="icon subscribe selected" ng-show="access.unsubscribe" ng-click="blog.$unsubscribe(refreshAccess)" title="Unsubscribe"></a>
+                    </p>
+                </div>
+                <div class="btn-holder clearfix">
+                    <a class="btn main-action" ng-show="access.write && blog.id" ng-href="#/{{ blog.id }}/post">Add New Post</a>
+                </div>
+                <div ng-repeat="post in posts" class="post">
+                    <h3><a href="#/{{ blog.id }}/{{ post.id }}"ng-bind="post.title" ng-show="blog.id && post.id"></a> &mdash; <span class="date" ng-bind="post.date | date"></span></h3>
+                    <a class="btn secondary-action" ng-show="access.write && blog.id && post.id" ng-href="#/{{ blog.id }}/edit/{{ post.id }}">Edit</a>
+                    <div class="post-content" ng-bind-html-unsafe="post.content"></div>
+                    <div class="meta clearfix">
+                        <div class="comment">
+                            <i class="icon arrow"></i>
+                            {{ post.commentsCount }}
+                        </div>
+                        <a href="#/{{ blog.id }}/{{ post.id }}?action=comment" class="link">Leave a comment</a>
+                    </div>
+                </div>
+                <div class="paging clearfix" ng-show="false">
+                    <a href="#" class="btn-prev">Previous posts</a>
+                    <ul>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                    </ul>
+                    <a href="#" class="btn-next">Next posts</a>
+                </div>
+            </div>
+            <div class="aside" ng-include="'blog/project-info.html'"/>
+        </div>
+    </div>
+</div>

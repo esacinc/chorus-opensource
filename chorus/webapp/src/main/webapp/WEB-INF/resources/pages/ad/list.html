@@ -1,0 +1,98 @@
+<div class="relative">
+    <div class="dashboard-box advertisement-table-box" resizable-table-columns="advertisements">
+        <div class="heading clearfix">
+            <div class="cell cell-number">
+                <span>&nbsp;</span>
+            </div>
+            <div class="cell cell-id" sorting="id" sort-by-default="desc">
+                <span>ID</span>
+            </div>
+            <div class="cell cell-name" sorting="name">Title</div>
+            <div class="cell cell-date" sorting="startDate">Start Date</div>
+            <div class="cell cell-date" sorting="endDate">End Date</div>
+            <div class="cell cell-count" sorting="displayedCount">Impressions</div>
+            <div class="cell cell-count" sorting="clickedCount">Clicks</div>
+        </div>
+        <div class="content clearfix">
+            <div class="row clearfix" ng-repeat="ad in advertisement | orderBy:sorting.field"
+                 ng-mouseenter="$scope.showDetailsButton = ad"
+                 ng-mouseleave="$scope.showDetailsButton = null"
+                 right-click-context-menu
+                 data-ng-class="{'active': opened == ad, 'archived': ad.isEnabled == false || isExpired(ad.endDate)}">
+                <div class="row-holder relative clearfix not-select"
+                     ng-dblclick="toggleExpandMenu(ad);"
+                     switch-class-animated="opened == ad && 'opened' || ''">
+                    <i class="icon collapsible" title="Double-click to view details"></i>
+
+                    <div class="cell cell-number">
+                        <span ng-bind="$index + 1"></span>
+                    </div>
+
+                    <div class="cell cell-id">
+                        <div class="ellipsize" ng-bind="ad.id"></div>
+                    </div>
+
+                    <div class="cell cell-name">
+                        <div class="dropdown context">
+                            <a button-click-context-menu ng-show="$scope.showDetailsButton" title="More"
+                               class="btn table-button"><span class="arrow"></span></a>
+
+                            <div class="dropdown-menu context-menu hide">
+                                <span class="arrow"></span>
+                                <ul>
+                                    <li>
+                                        <advertisement-details text="'Edit'" eid="{{ad.id}}"></advertisement-details>
+                                    </li>
+                                    <li>
+                                        <a ng-click="showRemoveConfirmation(ad)"><i class="icon delete"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="ellipsize" set-text="ad.title" set-title="ads.title"></div>
+                    </div>
+                    <div class="cell cell-date">
+                        <div class="ellipsize" set-text="ad.startDate | date"></div>
+                    </div>
+                    <div class="cell cell-date">
+                        <div class="ellipsize" set-text="ad.endDate | date"></div>
+                    </div>
+                    <div class="cell cell-count">
+                        <div class="ellipsize" set-text="ad.displayedCount" set-title="ad.displayedCount"></div>
+                    </div>
+                    <div class="cell cell-count">
+                        <div class="ellipsize" set-text="ad.clickedCount" set-title="ad.clickedCount"></div>
+                    </div>
+                    <div class="info-expand clearfix">
+                        <div class="cell cell-ad-link">
+                            <h3>Redirect link</h3>
+                            <p ng-bind="ad.redirectLink"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span ng-show="isTableEmpty()" class="empty-table" ng-bind="getEmptyTableMessage()"></span>
+        </div>
+    </div>
+</div>
+
+<div id="remove-advertisement-confirmation" class="modal hide" tabindex="-1" role="dialog">
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <div class="modal-header">
+                <h3>Remove Advertisement?</h3>
+            </div>
+            <div class="modal-body" style="padding: 10px 30px">
+                <p>Are you sure you want to remove "{{confirmation.getName()}}" Advertisement? </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn  secondary-action" data-dismiss="modal" aria-hidden="true" ng-click="confirmation.hidePopup()">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="btn btn-primary main-action" ng-click="confirmation.removeItem()">Remove
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

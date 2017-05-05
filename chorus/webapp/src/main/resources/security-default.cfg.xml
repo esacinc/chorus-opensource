@@ -1,0 +1,116 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+                     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <!--<debug/>-->
+
+    <http pattern="/css/**" security="none" />
+    <http pattern="/fonts/**" security="none" />
+    <http pattern="/img/**" security="none" />
+    <http pattern="/lib/**" security="none" />
+    <http pattern="/script/**" security="none" />
+    <http pattern="/img/favicon.ico" security="none" />
+    <http pattern="/analyze/css/**" security="none" />
+    <http pattern="/analyze/images/**" security="none" />
+    <http pattern="/analyze/scripts/**" security="none" />
+    <!--<http pattern="/common-js/**" security="none" />-->
+
+    <http use-expressions="true" entry-point-ref="authenticationEntryPoint" disable-url-rewriting="false">
+        <intercept-url pattern="/paypal/ipn" access="permitAll" />
+        <intercept-url pattern="/rest/**" access="permitAll" />
+        <intercept-url pattern="/skyline/api/**" access="permitAll" />
+        <intercept-url pattern="/security/labMembership/**" access="permitAll" />
+        <intercept-url pattern="/security/**" access="permitAll" />
+        <intercept-url pattern="/statistics/**" access="permitAll" />
+        <intercept-url pattern="/news/**" access="permitAll" />
+        <intercept-url pattern="/features/**" access="permitAll" />
+        <intercept-url pattern="/appearance/**" access="permitAll" />
+        <intercept-url pattern="/pages/labMembershipMessage.html/**" access="permitAll" />
+        <intercept-url pattern="/pages/authentication.html" access="permitAll" />
+        <intercept-url pattern="/pages/register.html" access="isAnonymous()" />
+        <intercept-url pattern="/pages/user/form.html" access="permitAll" />
+        <intercept-url pattern="/pages/user/login.html" access="permitAll" />
+        <intercept-url pattern="/pages/user/forgot-password.html" access="permitAll" />
+        <intercept-url pattern="/pages/user/email-verification.html" access="permitAll" />
+        <intercept-url pattern="/pages/user/issue-tracker.html" access="permitAll"/>
+        <intercept-url pattern="/pages/unsupported-browser.html" access="permitAll"/>
+        <intercept-url pattern="/pages/component/laboratory-selection.html" access="permitAll" />
+        <intercept-url pattern="/pages/reset-password.html" access="permitAll" />
+        <intercept-url pattern="/pages/laboratory-request.html" access="permitAll" />
+        <intercept-url pattern="/pages/404.html" access="permitAll"/>
+        <intercept-url pattern="/anonymous/**" access="permitAll"/>
+        <intercept-url pattern="/pages/index.html" access="permitAll"/>
+        <intercept-url pattern="/pages/billing.html" access="isAuthenticated()"/>
+        <intercept-url pattern="/pages/about.html" access="permitAll"/>
+        <intercept-url pattern="/pages/privacy-policy.html" access="permitAll"/>
+        <intercept-url pattern="/pages/subscription-agreement.html" access="permitAll"/>
+        <intercept-url pattern="/pages/support.html" access="permitAll"/>
+        <intercept-url pattern="/pages/header.html" access="permitAll"/>
+        <intercept-url pattern="/pages/footer.html" access="permitAll"/>
+        <intercept-url pattern="/pages/support/**" access="permitAll"/>
+        <intercept-url pattern="/pages/news.html" access="permitAll"/>
+        <intercept-url pattern="/pages/admin/**" access="hasRole('ROLE_admin')"/>
+        <intercept-url pattern="/pages/billing.html" access="hasAnyRole('ROLE_labHead', 'ROLE_admin')"/>
+        <intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <form-login login-page="/pages/authentication.html#/login" default-target-url="/pages/dashboard.html"
+                    authentication-success-handler-ref="authenticationSuccessHandlerImpl"
+                    username-parameter="j_username"
+                    password-parameter="j_password"
+                    login-processing-url="/j_spring_security_check"
+                    authentication-failure-url="/pages/authentication.html#/login?login_error=1"/>
+        <logout success-handler-ref="logoutSuccessHandler" invalidate-session="false"
+                logout-url="/j_spring_security_logout"/>     <!-- session will be invalidated manually by custom logout handler-->
+        <remember-me key="chorus-sharing"
+                     remember-me-parameter="_spring_security_remember_me"
+                     remember-me-cookie="SPRING_SECURITY_REMEMBER_ME_COOKIE"/>
+        <csrf disabled="true"/>
+        <session-management>
+            <concurrency-control session-registry-ref="sessionRegistry" max-sessions="1000"/>    <!-- 1000 sessions per user-->
+        </session-management>
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
+    </http>
+
+    <!-- Inspired with http://yoyar.com/blog/2012/06/dealing-with-the-spring-security-ajax-session-timeout-problem/ -->
+    <beans:bean id="authenticationEntryPoint"
+                class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
+        <beans:constructor-arg>
+            <beans:map>
+                <beans:entry key="hasHeader('X-Requested-With','XMLHttpRequest')">
+                    <beans:bean class="com.infoclinika.mssharing.web.security.BasicFilter"/>
+                </beans:entry>
+            </beans:map>
+        </beans:constructor-arg>
+        <beans:property name="defaultEntryPoint">
+            <beans:bean class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+                <beans:constructor-arg value="/pages/authentication.html#/login"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="messageSource"
+                class="org.springframework.context.support.ResourceBundleMessageSource">
+        <beans:property name="basenames">
+            <beans:list>
+                <beans:value>security-messages</beans:value>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="chorusUserProvider" class="com.infoclinika.mssharing.web.security.SpringUserProvider" />
+    <authentication-manager>
+        <authentication-provider user-service-ref="chorusUserProvider">
+            <password-encoder ref="encoder" />
+        </authentication-provider>
+    </authentication-manager>
+
+    <context:component-scan base-package="com.infoclinika.mssharing.web.security" />
+
+
+</beans:beans>   

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="login" class="texture page-error">
+<head>
+    <title>Chorus&nbsp;&ndash;&nbsp;Internal Server Error</title>
+    <link rel="icon" href="../../img/favicon.ico" type="img/x-icon" />
+
+    <script type="text/javascript" src="../../script/util/logging.js"></script>
+    <script src="../../lib/jquery/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../../lib/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../../lib/angularjs/angular-resource.min.js"></script>
+    <script type="text/javascript" src="../../lib/angular-ui/angular-ui.min.js"></script>
+    <script type="text/javascript" src="../../script/error-catcher.js"></script>
+    <script type="text/javascript" src="../../script/validators.js"></script>
+    <script type="text/javascript" src="../../lib/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../lib/detect-js/detect.js"></script>
+    <script type="text/javascript" src="../../script/service/security-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../../script/service/features-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../../script/controller/security-front.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../../script/service/issues-back.js?_version=${static.resources.version}"></script>
+    <script type="text/javascript" src="../../script/components/current-year.directive.js"></script>
+    <link rel="stylesheet" href="../../lib/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="../../css/validation.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="../../fonts/fonts.css">
+
+    <link rel="stylesheet" href="../../css/dialogs.css">
+    <link rel="stylesheet" href="../../css/login-register-common.css">
+    <link rel="stylesheet" href="../../css/register.css">
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-41329240-1', 'chorusproject.org');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+
+<body>
+<div class="page-holder error-page" ng-controller="security">
+    <div class="page-frame">
+        <div class="page-content">
+            <h1 class="main-logo">
+                <a href="../../"><img alt="Chorus Logotype" src="../../img/chorus-logo-big.png"/></a>
+            </h1>
+            <div class="description">
+                <h2>Internal Server Error</h2>
+                <p>Something went wrong on the server. </p>
+                <p>Please contact the application administrator.</p>
+
+                <ul>
+                    <li><a href="../dashboard.html">Back to Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="center-frame footer">
+    <div class=" narrow-footer-wrapper clearfix">
+        <div class="copyright">&copy;&nbsp;<current-year></current-year>&nbsp;<a class="infoclinika" href="http://www.infoclinika.com">Infoclinika</a></div>
+        <ul class="footer-links">
+            <li>
+                <a href="../privacy-policy.html">Privacy Policy</a>
+            </li>
+            <li>
+                <a href="../subscription-agreement.html">Subscription Agreement</a>
+            </li>
+            <li>
+                <a href="../support.html">Support</a>
+            </li>
+            <li>
+                <a href="../about.html">Contact Us</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

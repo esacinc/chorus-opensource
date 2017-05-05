@@ -1,0 +1,37 @@
+<div class="breadcrumbs-holder clearfix ng-scope">
+    <div class="center-frame">
+        <ul class="breadcrumbs">
+            <li>
+                <span class="ellipsize">
+                    <a href="#">Blogs</a>
+                </span>
+                <span class="icon breadcrumbs-sep"></span>
+            </li>
+            <li>
+                <i class="icon my-project"></i>
+                <a href="#/{{ blog.id }}" class="ellipsize" ng-bind="blog.name"></a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="center-frame ng-scope">
+    <div class="twocolumns clearfix">
+        <div class="content">
+            <form name="form" novalidate="" class="post-form ng-pristine ng-invalid ng-invalid-required">
+                <div class="row">
+                    <label for="post-title">Title</label>
+                    <input class="dialog-text-input dont-hide ng-pristine ng-invalid ng-invalid-required" ng-model="post.title" id="post-title" required="">
+                </div>
+                <div class="row textarea">
+                    <label>Content</label>
+                    <textarea ui-tinymce="tinymceOptions" ng-model="post.content" required></textarea>
+                </div>
+                <div class="btn-holder">
+                    <button class="btn main-action" ng-disabled="form.$invalid" ng-click="post.$save(returnToBlog)" disabled="disabled">Save Post</button>
+                    <button class="btn secondary-action" ng-click="returnToBlog()">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div class="aside" ng-include="'blog/project-info.html'"/>
+    </div>
+</div>

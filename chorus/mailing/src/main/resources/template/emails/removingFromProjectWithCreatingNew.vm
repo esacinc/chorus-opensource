@@ -1,0 +1,8 @@
+Chorus: Project Access Revoked
+Hello, ${user}!
+
+Please be informed that the onwer of the ${project} project has just revoked your access rights. It means that unfortunately you will no longer be able to access this project data.
+
+However, we have copied your data from this project so that you are still able to access them. You now have your own project with the same name.
+
+Thank you.

@@ -1,0 +1,81 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:s="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <mvc:resources mapping="pages/**" location="/WEB-INF/resources/pages/"/>
+    <mvc:resources mapping="lib/**" location="/WEB-INF/resources/lib/"/>
+    <mvc:resources mapping="img/**" location="/WEB-INF/resources/img/"/>
+    <mvc:resources mapping="script/**" location="/WEB-INF/resources/script/"/>
+    <mvc:resources mapping="css/**" location="/WEB-INF/resources/css/"/>
+    <mvc:resources mapping="fonts/**" location="/WEB-INF/resources/fonts/"/>
+    <!--<mvc:resources mapping="common-js/**" location="/, classpath:/META-INF/resources/"/>-->
+
+    <mvc:interceptors>
+        <bean id="webContentInterceptor"
+              class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+            <property name="cacheSeconds" value="0"/>
+            <property name="useExpiresHeader" value="true"/>
+            <property name="useCacheControlHeader" value="true"/>
+            <property name="useCacheControlNoStore" value="true"/>
+            <property name="cacheMappings"> <!--one day-->
+                <props>
+
+                    <prop key="/**/*.jpg">86400</prop>
+                    <prop key="/**/*.png">86400</prop>
+                    <prop key="/**/*.gif">86400</prop>
+                    <prop key="/**/*.css">86400</prop>
+                    <prop key="/**/*.js">86400</prop>
+                </props>
+            </property>
+        </bean>
+    </mvc:interceptors>
+
+    <import resource="classpath*:webapp.common.cfg.xml"/>
+
+    <context:component-scan base-package="com.infoclinika.mssharing.web">
+        <context:exclude-filter type="regex" expression="com\.infoclinika\.mssharing\.web\.security\..*"/>
+        <context:exclude-filter type="regex" expression="com\.infoclinika\.mssharing\.web\.services\..*"/>
+    </context:component-scan>
+
+    <s:global-method-security pre-post-annotations="enabled">
+        <s:expression-handler ref="expressionHandler"/>
+    </s:global-method-security>
+
+    <bean id="expressionHandler"
+          class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="modelBasedPermissionEvaluator"/>
+    </bean>
+
+    <mvc:view-controller path="/" view-name="redirect:pages/index.html"/>
+    <mvc:view-controller path="/error/404.html" view-name="redirect:/pages/error/404.html"/>
+    <mvc:view-controller path="/error/500.html" view-name="redirect:/pages/error/500.html"/>
+    <mvc:view-controller path="/error/403.html" view-name="redirect:/pages/error/403.html"/>
+    <mvc:view-controller path="/pages" view-name="redirect:/"/>
+    <mvc:view-controller path="/pages/" view-name="redirect:/"/>
+    <mvc:view-controller path="/favicon.ico" view-name="redirect:/img/favicon.ico"/>
+
+    <context:property-placeholder ignore-resource-not-found="true"
+                                  location="classpath*:application.properties,
+                                  file:${user.home}/messaging.properties,
+                    file:${user.home}/application.properties"/>
+
+    <!-- Enable asyncronous processing -->
+    <task:executor id="taskExecutor" pool-size="50"/>
+    <task:scheduler id="servicesScheduler" pool-size="7"/>
+    <task:annotation-driven executor="defaultExecutor" scheduler="servicesScheduler"/>
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,178 @@
+<script type="text/javascript" src="../script/initProjectUi.js"></script>
+<script type="text/javascript" src="../script/message.js"></script>
+
+<div class="project-dialog" id="project-details-dialog" modal-dialog>
+    <div class="modal-holder">
+        <div class="modal-frame">
+            <form name="detailProjectForm" novalidate>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">?</button>
+                    <h3 id="projectDetailsLabel">
+                        <span ng-switch='editMode'>
+                            <span ng-switch-when="true">Edit Project</span>
+                            <span ng-switch-when="false">Project Details</span>
+                        </span>
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <ng-switch on="editMode">
+                        <ul ng-switch-when="true" id="detailsTabs" class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#general" data-toggle="tab">General
+                                    <span data-ng-class="{'tab-error': detailProjectForm.$invalid && detailProjectForm.$dirty || isProjectNameDuplicated()}"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#sharing" data-toggle="tab">Sharing
+                                </a>
+                            </li>
+                        </ul>
+                    </ng-switch>
+
+
+                    <div id="detailsTabsContent" class="tab-content">
+                        <div class="tab-pane fade active in" id="general">
+                            <!--Files drop area-->
+                            <ng-switch on='editMode'>
+                                <div class="attachment-drop-area" style="display:none;" ng-switch-when="true" ng-include="'templates/drag-and-drop-area.html'"></div>
+                            </ng-switch>
+                            <div class="table create-project">
+                                <div class="control-group clearfix"
+                                     data-ng-class="{error: detailProjectForm.login.$invalid && (buttonPressed || detailProjectForm.login.$dirty) || isProjectNameDuplicated()}">
+                                    <label for="name">Project Name</label>
+                                    <i ng-show="policy == 'public'" class="icon public" title="Public Project"></i>
+                                    <i ng-show="policy == 'shared'" class="icon shared" title="Shared Project"></i>
+
+                                    <div class="item" ng-switch='editMode'>
+                                        <span ng-switch-when="true">
+                                             <input class="dialog-text-input" id="name" type="text" name="login"
+                                                    maxlength="255"
+                                                    ng-model='details.name' ng-readonly='!editMode'
+                                                    data-ng-class="{'disabled-input': !editMode}" required/>
+                                            <span class="error-message" ng-show="detailProjectForm.login.$invalid">Field Project Name is required</span>
+                                            <span class="error-message" ng-show="detailProjectForm.login.$valid">You already have project with this name</span>
+                                        </span>
+                                        <span ng-switch-when="false">
+                                            <span class="static-value" ng-bind="details.name"></span>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div class="control-group clearfix">
+                                    <label>Owner</label>
+
+                                    <div class="item">
+                                        <span class="static-value" ng-bind="details.ownerEmail"></span>
+                                    </div>
+                                </div>
+                                <div class="control-group clearfix">
+                                    <label>Laboratory</label>
+
+                                    <div class="item">
+                                        <span class="static-value" ng-bind="getLabName(details.lab)"></span>
+                                    </div>
+                                    <td>
+                                </div>
+                                <div class="control-group clearfix"
+                                     data-ng-class="{error: detailProjectForm.area.$invalid && (buttonPressed || detailProjectForm.login.$dirty)}">
+                                    <label for="area">Area of Research</label>
+                                    <div class="item" ng-switch='editMode'>
+                                        <span ng-switch-when="true">
+                                            <input id="area" name="area"
+                                                   class="dialog-text-input ng-pristine ng-valid ng-valid-required" type="text"
+                                                   maxlength="255"
+                                                   ng-model="details.areaOfResearch"
+                                                   data-ng-class="{'disabled-input': !editMode}" required
+                                                   ng-readonly='!editMode'/>
+                                        </span>
+                                        <span ng-switch-when="false">
+                                            <span class="static-value" ng-bind="details.areaOfResearch"></span>
+                                        </span>
+                                    </div>
+                                    <span class="error-message">Field Area Of Research is required</span>
+                                </div>
+                                <div class="control-group clearfix">
+                                    <label>Modified</label>
+
+                                    <div class="item">
+                                        <span class="static-value" ng-bind="details.modified | date"> </span>
+                                    </div>
+                                </div>
+                                <div class="control-group clearfix">
+                                    <label>Blog</label>
+                                    <div class="item" ng-switch='editMode'>
+                                        <span ng-switch-when="true">
+                                            <label>
+                                                <input type="checkbox" ng-model="details.blogEnabled" class='blogEnabledCheckbox'>
+                                                <span class="blog-status" data-ng-class="{'blogEnabledCheckboxLabel': details.blogEnabled}" ng-bind="details.blogEnabled && 'Enabled' || 'Enable'"></span>
+                                            </label>
+                                        </span>
+                                        <span ng-switch-when="false">
+                                            <span class="static-value" ng-bind="details.blogEnabled && 'Enabled' || 'Disabled'"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="control-group clearfix" ng-hide="!editMode && !details.descriptionObj.value">
+                                    <label ng-class="{optional: editMode}">Description&nbsp;<small ng-show="editMode" class="optional-string">(optional)</small></label>
+                                    <div class="item texet-area-td" ng-switch='editMode'>
+                                        <textarea ng-switch-when="true" class="dialog-text-area" ng-model="details.descriptionObj.value"></textarea>
+
+                                        <div class="holder dialog-text-block" ng-switch-when="false" ng-bind="details.descriptionObj.value"> </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Attachments -->
+                                <div class="control-group" ng-hide="!editMode && existingAttachments.length == 0 && uploadingAttachments == 0">
+                                    <div class="control-group">
+                                        <!--Attachments Holder-->
+                                        <div ng-include="'component/attachments.html'"/>
+                                    </div>
+                                </div>
+
+                        </div>
+                        <div class="tab-pane fade sharing" id="sharing">
+                            <ng-switch on="editMode">
+                                <div class="sharing-table table" ng-switch-when="true">
+                                    <div>
+                                        <div class="control-group clearfix">
+                                            <label class="control-label">
+                                                <span ng-show="shared.accessLevel == 'PUBLIC'"><i class="icon public" title="Public Project"></i>Public Project</span>
+                                                <span ng-show="shared.accessLevel == 'PRIVATE'"><i class="icon private" title="Private Project"></i>Private Project</span>
+                                                <span ng-show="shared.accessLevel == 'SHARED'"><i class="icon shared" title="Shared Project"></i>Shared Project</span>
+                                            </label>
+                                            <sharing-selector users="users"
+                                                              groups="groups" selected-users="shared.sharedUsers"
+                                                              invited-users="shared.invitedUsers"
+                                                              exclude-emails="excludeEmails"
+                                                              selected-groups="shared.sharedGroups"
+                                                              email-notification="shared.withEmailNotification"
+                                                              invite-handler="shared.inviteHandler"></sharing-selector>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-switch>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" ng-switch='editMode'>
+                    <div ng-switch-when="false">
+                        <button class="btn secondary-action" data-dismiss="modal">Close</button>
+                    </div>
+                    <div ng-switch-when="true">
+                        <button class="btn secondary-action" data-dismiss="modal">Cancel</button>
+                        <button  class="btn btn-primary main-action" type="submit"
+                                ng-disabled="isAttachmentsUploading() || detailProjectForm.$invalid || isProjectNameDuplicated()"
+                                ng-click="!buttonPressed && save(detailProjectForm.$invalid || isProjectNameDuplicated())">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<confirm-action-for-unregistered confirm-action="saveProjectSharedWithUnregisteredUsers"
+                                         plain-action="saveProject"
+                                         dialog-messages="saveWithUnregisteredUsersDialogMessages"></confirm-action-for-unregistered>
+
