@@ -19,6 +19,7 @@
         <deployment.manager.username>admin</deployment.manager.username>
         <deployment.manager.password>password</deployment.manager.password>
         <deployment.path>/</deployment.path>
+        <docker.deployment.path>../../docker/webapp/ROOT.war</docker.deployment.path>
     </properties>
 
     <dependencies>
@@ -302,6 +303,30 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy file="${project.build.directory}/webapp-1.0.war"
+                                              tofile="${docker.deployment.path}"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
@@ -378,23 +403,6 @@
                     <path>${deployment.path}</path>
                     <failOnError>false</failOnError>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <copy file="${project.build.directory}/webapp-1.0.war"
-                                      tofile="../../docker/webapp/ROOT.war"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
