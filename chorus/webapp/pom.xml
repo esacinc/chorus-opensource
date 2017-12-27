@@ -294,8 +294,6 @@
                                         <delete file="${project.build.outputDirectory}/log4j.properties"/>
                                         <copy file="src/main/resources/log4j-production.properties"
                                               tofile="${project.build.outputDirectory}/log4j.properties"/>
-                                        <copy file="target/webapp-1.0.war"
-                                              tofile="target/ROOT.war"/>
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -380,6 +378,23 @@
                     <path>${deployment.path}</path>
                     <failOnError>false</failOnError>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.build.directory}/webapp-1.0.war"
+                                      tofile="../../docker/webapp/ROOT.war"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
