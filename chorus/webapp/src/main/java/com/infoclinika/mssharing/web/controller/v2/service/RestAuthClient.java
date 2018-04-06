@@ -47,8 +47,7 @@ public class RestAuthClient {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(map,
-                requestHeaders);
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(map, requestHeaders);
 
         ResponseEntity<String> result = restTemplate.exchange(authURL, HttpMethod.POST, entity, String.class);
         HttpHeaders respHeaders = result.getHeaders();
@@ -62,7 +61,6 @@ public class RestAuthClient {
                 .map(v->v.substring(0, v.indexOf(';')))
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("Failed to parse response"));
-        LOGGER.info(authcookie.substring(authcookie.indexOf('=') + 1, authcookie.length()));
         return new AuthProxyController.AuthCookieDTO(authcookie.substring(authcookie.indexOf('=') + 1, authcookie.length()));
     }
 }
