@@ -7,6 +7,9 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.google.common.base.Joiner;
+import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
+import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +24,8 @@ import java.net.URL;
 public class AwsConfigService {
 
     private static final Logger LOGGER = Logger.getLogger(AwsConfigService.class);
+
+    private static final String DELIMETER = "/";
 
 
 
@@ -64,6 +69,16 @@ public class AwsConfigService {
         amazonS3Client.getBucketPolicy(bucket);
         return amazonS3Client;
 
+    }
+
+    public CloudStorageItemReference storageItemReference(String contentId){
+        return new CloudStorageItemReference(activeBucket, contentId);
+    }
+
+
+    public NodePath returnStorageTargetFolder(long user, long instrument, String fileName){
+        NodePath nodePath = new NodePath(Joiner.on(DELIMETER).join(targetFolder, user, instrument, fileName));
+        return nodePath;
     }
 
 

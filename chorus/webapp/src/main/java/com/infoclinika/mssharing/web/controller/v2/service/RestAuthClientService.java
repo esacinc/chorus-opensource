@@ -1,7 +1,8 @@
 package com.infoclinika.mssharing.web.controller.v2.service;
 
 
-import com.infoclinika.mssharing.web.controller.v2.AuthProxyController;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -13,20 +14,21 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class RestAuthClient {
+public class RestAuthClientService {
 
-    public static final Logger LOGGER = Logger.getLogger(RestAuthClient.class);
+    public static final Logger LOGGER = Logger.getLogger(RestAuthClientService.class);
 
     @Value("${base.url}")
     private String baseUrl;
 
 
 
-    public AuthProxyController.AuthCookieDTO authenticateGetCookie(String user, String password){
+    public ResponseEntity<AuthCookieDTO> authenticateGetCookie(String user, String password){
         HttpMessageConverter<MultiValueMap<String, ?>> formHttpMessageConverter = new FormHttpMessageConverter();
 
         HttpMessageConverter<String> stringHttpMessageConverternew = new StringHttpMessageConverter();
@@ -61,6 +63,24 @@ public class RestAuthClient {
                 .map(v->v.substring(0, v.indexOf(';')))
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("Failed to parse response"));
-        return new AuthProxyController.AuthCookieDTO(authcookie.substring(authcookie.indexOf('=') + 1, authcookie.length()));
+
+        Date expdate = new Date ();
+        expdate.setTime (expdate.getTime() + (800 * 1000));
+
+        String expiresCookie = authcookie + "; Expires="+expdate+"; Path=/; HTTPOnly";
+
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).header("Set-Cookie", expiresCookie).body(new AuthCookieDTO(authcookie.substring(authcookie.indexOf('=') + 1, authcookie.length())));
+
+    }
+
+    @Data
+    public static class CredentialsDTO {
+        private String user;
+        private String password;
+    }
+
+    @AllArgsConstructor
+    public static class AuthCookieDTO {
+        public String JSESSIONID;
     }
 }

@@ -3,23 +3,17 @@ package com.infoclinika.mssharing.web.controller.v2.service;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.infoclinika.analysis.storage.cloud.CloudStorageFactory;
-import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
 import com.infoclinika.analysis.storage.cloud.CloudStorageService;
 import com.infoclinika.mssharing.model.helper.ExperimentCreationHelper;
-import com.infoclinika.mssharing.model.helper.StoredObjectPaths;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ExtendedShortExperimentFileItem;
 import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
 import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
-import com.infoclinika.mssharing.platform.model.RuleValidator;
 import com.infoclinika.mssharing.platform.model.common.items.DictionaryItem;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
 import lombok.AllArgsConstructor;
@@ -30,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -39,8 +32,6 @@ import java.util.*;
 public class ExperimentService {
 
     private static final Logger LOGGER = Logger.getLogger(ExperimentService.class);
-
-    private static final String DELIMETER = "/";
 
     @Inject
     private AmazonS3 s3Client;
@@ -140,7 +131,7 @@ public class ExperimentService {
                     fileToSamplesDTO.setSampleName(sampleItem.condition.name);
                 }
 
-                final NodePath nodePath = new NodePath(Joiner.on(DELIMETER).join(awsConfigService.getTargetFolder(), user, instrumentId, file.name));
+                final NodePath nodePath = awsConfigService.returnStorageTargetFolder(user, instrumentId, file.name);
 
                 fileToSamplesDTO.setFilePath(generateTemporaryLinkToS3(nodePath.getPath()));
                 list.add(fileToSamplesDTO);
