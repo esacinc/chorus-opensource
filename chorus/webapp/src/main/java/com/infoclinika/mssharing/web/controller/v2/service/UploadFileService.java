@@ -7,7 +7,6 @@ import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
 import com.infoclinika.analysis.storage.cloud.CloudStorageService;
 import com.infoclinika.mssharing.model.write.InstrumentManagement;
 import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
-import lombok.Data;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

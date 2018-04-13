@@ -11,12 +11,14 @@ import com.infoclinika.analysis.storage.cloud.CloudStorageFactory;
 import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
 import com.infoclinika.analysis.storage.cloud.CloudStorageService;
 import com.infoclinika.mssharing.model.helper.ExperimentCreationHelper;
+import com.infoclinika.mssharing.model.read.DashboardReader;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ExtendedShortExperimentFileItem;
 import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
 import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
 import com.infoclinika.mssharing.platform.model.common.items.DictionaryItem;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
+import com.infoclinika.mssharing.platform.model.read.InstrumentModelReaderTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +46,9 @@ public class ExperimentService {
     private DetailsReader detailsReader;
 
     @Inject
+    private DashboardReader dashboardReader;
+
+    @Inject
     private ExperimentCreationHelper experimentCreationHelper;
 
     private static final CloudStorageService CLOUD_STORAGE_SERVICE = CloudStorageFactory.service();
@@ -67,10 +72,10 @@ public class ExperimentService {
         private String projectName;
         private Long laboratory;
         private String vendor;
-        private Long technologyType;
+        private String technologyType;
         private String description;
         private String species;
-        private Long instrumentModel;
+        private String instrumentModel;
         private String instrument;
         private Long experimentType;
         private Map<String, Collection<FileToSamplesDTO>> filesToSamples;
@@ -88,24 +93,25 @@ public class ExperimentService {
         return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
     }
 
-    private ExperimentInfoDTO experimentDetailsToInfoDTO(ExperimentService.ExperimentDetails experimentDetails, ExperimentInfoDTO destination){
+    private ExperimentInfoDTO experimentDetailsToInfoDTO(ExperimentDetails experimentDetails, ExperimentInfoDTO destination){
 
         ExperimentItem experimentItemSource = experimentDetails.getExperimentItem();
         DictionaryItem dictionaryItem = experimentCreationHelper.specie(experimentItemSource.specie);
         DetailsReaderTemplate.ExperimentShortInfo shortInfo = experimentDetails.getExperimentShortInfo();
+        InstrumentModelReaderTemplate.InstrumentModelLineTemplate instrumentModel = dashboardReader.readById(experimentItemSource.labHead, experimentItemSource.instrumentModel);
 
         destination.setName(experimentItemSource.name);
         destination.setLabName(shortInfo.labName);
         destination.setLaboratory(experimentItemSource.lab);
         destination.setDescription(experimentItemSource.description);
         destination.setInstrument(experimentItemSource.instrumentName);
-        destination.setInstrumentModel(experimentItemSource.instrumentModel);
+        destination.setInstrumentModel(instrumentModel.name);
         destination.setVendor(experimentItemSource.instrumentVendor);
         destination.setLabName(experimentItemSource.labName);
         destination.setProjectId(experimentItemSource.project);
         destination.setProjectName(shortInfo.projectName);
         destination.setSpecies(dictionaryItem.name);
-        destination.setTechnologyType(experimentItemSource.technologyType);
+        destination.setTechnologyType(instrumentModel.technologyType.name);
         destination.setExperimentType(experimentItemSource.experimentType);
 
         destination.setFilesToSamples(computeExperimentFileSamples(shortInfo.files, experimentItemSource.labHead, experimentItemSource.instrument.get()));
@@ -143,7 +149,7 @@ public class ExperimentService {
         return map;
     }
 
-    private ExperimentInfoDTO toExperimentInfoDTO(ExperimentService.ExperimentDetails experimentItemSource){
+    private ExperimentInfoDTO toExperimentInfoDTO(ExperimentDetails experimentItemSource){
         return experimentDetailsToInfoDTO(experimentItemSource, new ExperimentInfoDTO());
     }
 
@@ -158,7 +164,7 @@ public class ExperimentService {
 
             if(CLOUD_STORAGE_SERVICE.existsAtCloud(cloudStorageItemReference)){
 
-                java.util.Date expiration = new java.util.Date();
+                Date expiration = new Date();
                 long milliSeconds = expiration.getTime();
                 milliSeconds += 1000 * 60 * 60;
                 expiration.setTime(milliSeconds);
