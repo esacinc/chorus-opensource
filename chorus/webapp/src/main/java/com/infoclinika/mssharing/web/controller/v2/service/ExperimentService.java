@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.collect.ImmutableList;
 import com.infoclinika.analysis.storage.cloud.CloudStorageFactory;
+import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
 import com.infoclinika.analysis.storage.cloud.CloudStorageService;
 import com.infoclinika.mssharing.model.helper.ExperimentCreationHelper;
 import com.infoclinika.mssharing.model.read.DetailsReader;
@@ -150,12 +151,12 @@ public class ExperimentService {
 
     private String generateTemporaryLinkToS3(String key){
 
-        URL url = null;
         String bucket = awsConfigService.getActiveBucket();
+        CloudStorageItemReference cloudStorageItemReference = awsConfigService.storageItemReference(key);
 
         try {
 
-            if(existAtStorage(bucket, key)){
+            if(CLOUD_STORAGE_SERVICE.existsAtCloud(cloudStorageItemReference)){
 
                 java.util.Date expiration = new java.util.Date();
                 long milliSeconds = expiration.getTime();
@@ -166,7 +167,7 @@ public class ExperimentService {
                 generatePresignedUrlRequest.setMethod(HttpMethod.GET);
                 generatePresignedUrlRequest.setExpiration(expiration);
 
-                url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+                URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
                 return url.toString();
             }
@@ -184,16 +185,6 @@ public class ExperimentService {
             LOGGER.warn("Error Message: " + ace.getMessage());
         }
 
-        return "file path does not exist";
+        return "file path does not exists";
     }
-
-    private boolean existAtStorage(String bucket, String key) {
-        try{
-            s3Client.getObjectMetadata(bucket, key);
-        }catch (AmazonServiceException e){
-            return false;
-        }
-        return true;
-    }
-
 }

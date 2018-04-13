@@ -65,9 +65,8 @@ public class RestAuthClientService {
                 .orElseThrow(() -> new RuntimeException("Failed to parse response"));
 
         Date expdate = new Date ();
-        expdate.setTime (expdate.getTime() + (800 * 1000));
-
-        String expiresCookie = authcookie + "; Expires="+expdate+"; Path=/; HTTPOnly";
+        expdate.setTime (expdate.getTime() + (7200 * 1000));
+        String expiresCookie = authcookie + "; Expires="+expdate.toGMTString()+"; Path=/; HTTPOnly";
 
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).header("Set-Cookie", expiresCookie).body(new AuthCookieDTO(authcookie.substring(authcookie.indexOf('=') + 1, authcookie.length())));
 
