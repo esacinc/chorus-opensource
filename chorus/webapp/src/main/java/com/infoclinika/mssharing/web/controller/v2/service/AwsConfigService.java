@@ -50,6 +50,10 @@ public class AwsConfigService {
         return rawFileTargetFolder;
     }
 
+    public BasicAWSCredentials awsCredentialsProvider(){
+        return credentials(accessKeyId, secretAccessKey);
+    }
+
     public BasicAWSCredentials credentials(String accessKeyId, String secretAccessKey){
         final BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
         return basicAWSCredentials;

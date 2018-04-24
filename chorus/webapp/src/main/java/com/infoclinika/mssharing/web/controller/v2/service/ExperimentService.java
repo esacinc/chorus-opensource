@@ -122,7 +122,7 @@ public class ExperimentService {
     private String generateTemporaryLinkToS3(String key){
 
         String bucket = awsConfigService.getActiveBucket();
-        CloudStorageItemReference cloudStorageItemReference = awsConfigService.cloudStorageReference(key);
+        CloudStorageItemReference cloudStorageItemReference = awsConfigService.storageItemReference(key);
 
         try {
 
@@ -137,7 +137,7 @@ public class ExperimentService {
                 generatePresignedUrlRequest.setMethod(HttpMethod.GET);
                 generatePresignedUrlRequest.setExpiration(expiration);
 
-                URL url = awsConfigService.amazonS3Client().generatePresignedUrl(generatePresignedUrlRequest);
+                URL url = awsConfigService.s3Client().generatePresignedUrl(generatePresignedUrlRequest);
 
                 LOGGER.info("Link on the S3 bucket was successfully created !");
                 return url.toString();

@@ -51,7 +51,7 @@ public class UploadFileService {
             File file = convertMultipartToFile(multipartFile);
             boolean processingFileAlreadyExist = processingFileManagement.isProcessingFileAlreadyUploadedToExperiment(experimentId, file.getName());
             final NodePath nodePath = awsConfigService.returnProcessingStorageTargetFolder(experimentId, file.getName());
-            final CloudStorageItemReference itemReference = awsConfigService.cloudStorageReference(nodePath.getPath());
+            final CloudStorageItemReference itemReference = awsConfigService.storageItemReference(nodePath.getPath());
 
             if(!processingFileAlreadyExist && !CLOUD_STORAGE_SERVICE.existsAtCloud(itemReference)){
 
