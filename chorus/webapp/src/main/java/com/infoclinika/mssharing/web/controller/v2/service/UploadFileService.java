@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.*;
 
 @Service
 @Transactional
@@ -41,36 +42,33 @@ public class UploadFileService {
     private ProcessingRunReader processingRunReader;
 
 
-    public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile multipartFile) throws IOException{
+    public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException{
+
+        Map<String, Collection<String>> resultsProcessingFiles = new HashMap();
+        List<String> uploadComplete = new ArrayList();
+        List<String> uploadErrors = new ArrayList();
 
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experimentId);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
 
         if(isUserLabMembership && experimentShortInfo.files.size() > 0){
 
-            File file = convertMultipartToFile(multipartFile);
-            boolean processingFileAlreadyExist = processingFileManagement.isProcessingFileAlreadyUploadedToExperiment(experimentId, file.getName());
-            final NodePath nodePath = awsConfigService.returnProcessingStorageTargetFolder(experimentId, file.getName());
-            final CloudStorageItemReference itemReference = awsConfigService.storageItemReference(nodePath.getPath());
+            if(multipartFiles.length > 0){
+                for (MultipartFile multipartFile: multipartFiles) {
 
-            if(!processingFileAlreadyExist && !CLOUD_STORAGE_SERVICE.existsAtCloud(itemReference)){
+                    File file = convertMultipartToFile(multipartFile);
 
-                CLOUD_STORAGE_SERVICE.uploadToCloud(file, itemReference.getBucket(), itemReference.getKey());
-                final ProcessingFileManagement.ProcessingFileInfo processingFileInfo = new ProcessingFileManagement.ProcessingFileInfo(file.getName(), itemReference.getKey());
-                processingFileManagement.createProcessingFile(experimentId, processingFileInfo);
+                    startUploadFilesToStorage(experimentId, file, resultsProcessingFiles,uploadComplete, uploadErrors);
+                }
 
-                LOGGER.info("Processing file  was uploaded to storage: " + nodePath.getPath());
-                return new ResponseEntity("Upload complete:  " + nodePath.getPath(), HttpStatus.OK);
-
-            }else {
-                LOGGER.info("Processing file with name key: " + nodePath.getPath() + " already exists");
-                return new ResponseEntity("Processing file  with name key: " + nodePath.getPath() + " already exists", HttpStatus.OK);
+                return new ResponseEntity(resultsProcessingFiles.toString(), HttpStatus.OK);
             }
-
-        }else {
-            return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
         }
+        return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
     }
+
+
+
 
     private File convertMultipartToFile(MultipartFile multipartFile) throws IOException{
         File result = new File(multipartFile.getOriginalFilename());
@@ -99,7 +97,29 @@ public class UploadFileService {
     }
 
 
+    private void startUploadFilesToStorage(long experiment, File file, Map<String, Collection<String>> map,List<String> uploadDone, List<String> uploadExists){
 
+        boolean processingFileAlreadyExist = processingFileManagement.isProcessingFileAlreadyUploadedToExperiment(experiment, file.getName());
+        final NodePath nodePath = awsConfigService.returnProcessingStorageTargetFolder(experiment, file.getName());
+        final CloudStorageItemReference itemReference = awsConfigService.storageItemReference(nodePath.getPath());
 
+        if(!processingFileAlreadyExist && !CLOUD_STORAGE_SERVICE.existsAtCloud(itemReference)){
+
+            CLOUD_STORAGE_SERVICE.uploadToCloud(file, itemReference.getBucket(), itemReference.getKey());
+            final ProcessingFileManagement.ProcessingFileInfo processingFileInfo = new ProcessingFileManagement.ProcessingFileInfo(file.getName(), itemReference.getKey());
+            processingFileManagement.createProcessingFile(experiment, processingFileInfo);
+
+            uploadDone.add(file.getName());
+            map.put("uploadComplete", uploadDone);
+
+            LOGGER.info("Processing file  was uploaded to storage: " + nodePath.getPath());
+
+        }else {
+            uploadExists.add(file.getName());
+            map.put("alreadyExists", uploadExists);
+
+            LOGGER.info("Processing file with name key: " + nodePath.getPath() + " already exists");
+        }
+    }
 
 }

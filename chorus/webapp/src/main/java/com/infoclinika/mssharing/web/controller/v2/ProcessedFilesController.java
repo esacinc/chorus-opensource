@@ -31,11 +31,10 @@ public class ProcessedFilesController {
     }
 
     @RequestMapping(value ="", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") MultipartFile multipartFile) throws IOException {
-        if(multipartFile.isEmpty()){
+    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") MultipartFile[] multipartFile) throws IOException {
+        if(multipartFile.length == 0){
             return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
         }
         return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
     }
-
 }
