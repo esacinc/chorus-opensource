@@ -10,15 +10,17 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/v2/upload")
-public class UploadFileController {
+@RequestMapping("/v2/experiment/{experimentId}/processed-files")
+public class ProcessedFilesController {
 
 
     @Inject
+    @Named(value = "uploadFileService")
     private UploadFileService uploadFileService;
 
 
@@ -28,21 +30,12 @@ public class UploadFileController {
 
     }
 
-    @RequestMapping(value ="/{instrumentId}/file", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("instrumentId") long instrumentId, @RequestParam("file") MultipartFile multipartFile) throws IOException {
-
+    @RequestMapping(value ="", method = RequestMethod.POST)
+    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") MultipartFile multipartFile) throws IOException {
         if(multipartFile.isEmpty()){
-            return new ResponseEntity("Please select a file", HttpStatus.OK);
+            return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
         }
-
-        return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), instrumentId, multipartFile);
-
-    }
-
-    @RequestMapping(value ="/{instrumentId}/files", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadFiles(Principal principal, @PathVariable("instrumentId") long instrumentId, @RequestParam("files") MultipartFile multipartFile){
-        return ResponseEntity.ok().body(multipartFile.getName());
-
+        return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
     }
 
 }

@@ -21,7 +21,8 @@
 
     <http use-expressions="true" entry-point-ref="authenticationEntryPoint" disable-url-rewriting="false">
         <intercept-url pattern="/v2/experiments/{experimentsId}" access="permitAll"/>
-        <intercept-url pattern="/v2/upload/{instrumentId}/file" access="permitAll"/>
+        <intercept-url pattern="/v2/experiment/{experimentId}/processed-files" access="permitAll"/>
+        <intercept-url pattern="/v2/experiment/{experimentId}/processing-runs" access="permitAll"/>
         <intercept-url pattern="/v2/auth/cookie" access="permitAll"/>
         <intercept-url pattern="/paypal/ipn" access="permitAll" />
         <intercept-url pattern="/rest/**" access="permitAll" />

@@ -3,9 +3,7 @@ package com.infoclinika.mssharing.web.controller.v2.service;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.collect.ImmutableList;
 import com.infoclinika.analysis.storage.cloud.CloudStorageFactory;
 import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
@@ -19,10 +17,11 @@ import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
 import com.infoclinika.mssharing.platform.model.common.items.DictionaryItem;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
 import com.infoclinika.mssharing.platform.model.read.InstrumentModelReaderTemplate;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.infoclinika.mssharing.web.controller.v2.dto.ExperimentDetails;
+import com.infoclinika.mssharing.web.controller.v2.dto.ExperimentInfoDTO;
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,63 +36,28 @@ public class ExperimentService {
     private static final Logger LOGGER = Logger.getLogger(ExperimentService.class);
 
     @Inject
-    private AmazonS3 s3Client;
-
-    @Inject
     private AwsConfigService awsConfigService;
-
     @Inject
     private DetailsReader detailsReader;
-
     @Inject
     private DashboardReader dashboardReader;
-
+    @Inject
+    private RestAuthClientService restAuthClientService;
     @Inject
     private ExperimentCreationHelper experimentCreationHelper;
 
     private static final CloudStorageService CLOUD_STORAGE_SERVICE = CloudStorageFactory.service();
 
 
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ExperimentDetails {
-        private ExperimentItem experimentItem;
-        private DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo;
+    public ResponseEntity<ExperimentInfoDTO> returnExperimentInfo(long userId, long experimentId){
+        boolean isUserAnLab = restAuthClientService.isUserLabMembership(userId, experimentId);
+        if(isUserAnLab){
+            return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
+        }
+        return new ResponseEntity("User does not have access to lab !", HttpStatus.UNAUTHORIZED);
     }
 
-    @Data
-    @JsonPropertyOrder(alphabetic = true)
-    public static class ExperimentInfoDTO {
-        private String name;
-        private String labName;
-        private Long projectId;
-        private String projectName;
-        private Long laboratory;
-        private String vendor;
-        private String technologyType;
-        private String description;
-        private String species;
-        private String instrumentModel;
-        private String instrument;
-        private Long experimentType;
-        private Map<String, Collection<FileToSamplesDTO>> filesToSamples;
-    }
-
-    @Data
-    public static class FileToSamplesDTO{
-        private String filePath;
-        private String sampleName;
-    }
-
-
-
-    public ExperimentInfoDTO returnExperimentInfo(long userId, long experimentId){
-        return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
-    }
-
-    private ExperimentInfoDTO experimentDetailsToInfoDTO(ExperimentDetails experimentDetails, ExperimentInfoDTO destination){
+    private ResponseEntity<ExperimentInfoDTO> experimentDetailsToInfoDTO(ExperimentDetails experimentDetails, ExperimentInfoDTO destination){
 
         ExperimentItem experimentItemSource = experimentDetails.getExperimentItem();
         DictionaryItem dictionaryItem = experimentCreationHelper.specie(experimentItemSource.specie);
@@ -117,28 +81,28 @@ public class ExperimentService {
         destination.setFilesToSamples(computeExperimentFileSamples(shortInfo.files, experimentItemSource.labHead, experimentItemSource.instrument.get()));
 
 
-        return destination;
+        return new ResponseEntity(destination, HttpStatus.OK);
     }
 
-    private Map<String, Collection<FileToSamplesDTO>> computeExperimentFileSamples(List<? extends DetailsReaderTemplate.ShortExperimentFileItem> files, long user, long instrumentId){
+    private Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> computeExperimentFileSamples(List<? extends DetailsReaderTemplate.ShortExperimentFileItem> files, long user, long instrumentId){
 
-        Map<String, Collection<FileToSamplesDTO>> map = new HashMap<>();
+        Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> map = new HashMap<>();
 
         for(DetailsReaderTemplate.ShortExperimentFileItem file : files){
 
             ExtendedShortExperimentFileItem fileItem = (ExtendedShortExperimentFileItem) file;
-            List<FileToSamplesDTO> list = new ArrayList<>();
+            List<ExperimentInfoDTO.FileToSamplesDTO> list = new ArrayList<>();
 
             if(!map.containsKey(file.name)){
 
                 ImmutableList<ExtendedShortExperimentFileItem.ExperimentShortSampleItem> immutableList = fileItem.samples;
-                FileToSamplesDTO fileToSamplesDTO = new FileToSamplesDTO();
+                ExperimentInfoDTO.FileToSamplesDTO fileToSamplesDTO = new ExperimentInfoDTO.FileToSamplesDTO();
 
                 for (ExtendedShortExperimentFileItem.ExperimentShortSampleItem sampleItem : immutableList){
                     fileToSamplesDTO.setSampleName(sampleItem.condition.name);
                 }
 
-                final NodePath nodePath = awsConfigService.returnStorageTargetFolder(user, instrumentId, file.name);
+                final NodePath nodePath = awsConfigService.returnExperimentStorageTargetFolder(user, instrumentId, file.name);
 
                 fileToSamplesDTO.setFilePath(generateTemporaryLinkToS3(nodePath.getPath()));
                 list.add(fileToSamplesDTO);
@@ -149,7 +113,7 @@ public class ExperimentService {
         return map;
     }
 
-    private ExperimentInfoDTO toExperimentInfoDTO(ExperimentDetails experimentItemSource){
+    private ResponseEntity<ExperimentInfoDTO> toExperimentInfoDTO(ExperimentDetails experimentItemSource){
         return experimentDetailsToInfoDTO(experimentItemSource, new ExperimentInfoDTO());
     }
 
@@ -158,7 +122,7 @@ public class ExperimentService {
     private String generateTemporaryLinkToS3(String key){
 
         String bucket = awsConfigService.getActiveBucket();
-        CloudStorageItemReference cloudStorageItemReference = awsConfigService.storageItemReference(key);
+        CloudStorageItemReference cloudStorageItemReference = awsConfigService.cloudStorageReference(key);
 
         try {
 
@@ -173,8 +137,9 @@ public class ExperimentService {
                 generatePresignedUrlRequest.setMethod(HttpMethod.GET);
                 generatePresignedUrlRequest.setExpiration(expiration);
 
-                URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+                URL url = awsConfigService.amazonS3Client().generatePresignedUrl(generatePresignedUrlRequest);
 
+                LOGGER.info("Link on the S3 bucket was successfully created !");
                 return url.toString();
             }
 
@@ -191,6 +156,8 @@ public class ExperimentService {
             LOGGER.warn("Error Message: " + ace.getMessage());
         }
 
-        return "file path does not exists";
+        LOGGER.warn("File path does not exists");
+
+        return "File path does not exists";
     }
 }

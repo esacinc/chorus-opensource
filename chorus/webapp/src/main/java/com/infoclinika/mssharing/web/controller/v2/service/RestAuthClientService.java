@@ -1,6 +1,9 @@
 package com.infoclinika.mssharing.web.controller.v2.service;
 
 
+import com.infoclinika.mssharing.model.read.DetailsReader;
+import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
+import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.log4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.inject.Inject;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +30,21 @@ public class RestAuthClientService {
     @Value("${base.url}")
     private String baseUrl;
 
+    @Inject
+    private DetailsReader detailsReader;
+    @Inject
+    private ProcessingFileManagement processingFileManagement;
+
+    @Data
+    public static class CredentialsDTO {
+        private String user;
+        private String password;
+    }
+
+    @AllArgsConstructor
+    public static class AuthCookieDTO {
+        public String JSESSIONID;
+    }
 
 
     public ResponseEntity<AuthCookieDTO> authenticateGetCookie(String user, String password){
@@ -72,14 +91,9 @@ public class RestAuthClientService {
 
     }
 
-    @Data
-    public static class CredentialsDTO {
-        private String user;
-        private String password;
+    public boolean isUserLabMembership(long user, long experiment){
+        final ExperimentItem experimentItem = detailsReader.readExperiment(user, experiment);
+        return processingFileManagement.isUserLabMembership(user, experimentItem.lab);
     }
 
-    @AllArgsConstructor
-    public static class AuthCookieDTO {
-        public String JSESSIONID;
-    }
 }

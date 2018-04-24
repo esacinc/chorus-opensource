@@ -1,12 +1,9 @@
 package com.infoclinika.mssharing.web.controller.v2.service;
 
 
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.google.common.base.Joiner;
 import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
 import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
@@ -17,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.net.URL;
 
 @Configuration
 @Service
@@ -27,10 +23,11 @@ public class AwsConfigService {
 
     private static final String DELIMETER = "/";
 
-
+    @Value("${processed.files.target.folder}")
+    private String processedTargetFolder;
 
     @Value("${raw.files.target.folder}")
-    private String targetFolder;
+    private String rawFileTargetFolder;
 
     @Value("${amazon.key}")
     private String accessKeyId;
@@ -45,12 +42,12 @@ public class AwsConfigService {
         return activeBucket;
     }
 
-    public String getTargetFolder(){
-        return targetFolder;
+    public String getProcessedTargetFolder() {
+        return processedTargetFolder;
     }
 
-    public BasicAWSCredentials awsCredentialsProvider(){
-        return credentials(accessKeyId, secretAccessKey);
+    public String getRawFileTargetFolder() {
+        return rawFileTargetFolder;
     }
 
     public BasicAWSCredentials credentials(String accessKeyId, String secretAccessKey){
@@ -68,7 +65,6 @@ public class AwsConfigService {
         final AmazonS3Client amazonS3Client = new AmazonS3Client(credentialsProvider);
         amazonS3Client.getBucketPolicy(bucket);
         return amazonS3Client;
-
     }
 
     public CloudStorageItemReference storageItemReference(String contentId){
@@ -76,8 +72,13 @@ public class AwsConfigService {
     }
 
 
-    public NodePath returnStorageTargetFolder(long user, long instrument, String fileName){
-        NodePath nodePath = new NodePath(Joiner.on(DELIMETER).join(targetFolder, user, instrument, fileName));
+    public NodePath returnProcessingStorageTargetFolder(long experiment, String fileName){
+        NodePath nodePath = new NodePath(Joiner.on(DELIMETER).join(processedTargetFolder, experiment, fileName));
+        return nodePath;
+    }
+
+    public NodePath returnExperimentStorageTargetFolder(long user, long instrumentId, String fileName){
+        NodePath nodePath = new NodePath(Joiner.on(DELIMETER).join(rawFileTargetFolder, user, instrumentId, fileName));
         return nodePath;
     }
 
