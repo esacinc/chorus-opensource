@@ -62,10 +62,10 @@ public class AwsConfigService {
     @Bean
     @Primary
     public AmazonS3 s3Client(){
-        return s3Client(awsCredentialsProvider(), activeBucket);
+        return amazonS3Client(awsCredentialsProvider(), activeBucket);
     }
 
-    public AmazonS3 s3Client(BasicAWSCredentials credentialsProvider, String bucket) {
+    public AmazonS3 amazonS3Client(BasicAWSCredentials credentialsProvider, String bucket) {
         final AmazonS3Client amazonS3Client = new AmazonS3Client(credentialsProvider);
         amazonS3Client.getBucketPolicy(bucket);
         return amazonS3Client;
