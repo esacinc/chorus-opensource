@@ -21,13 +21,6 @@
         <deployment.path>/</deployment.path>
         <docker.deployment.path>../../docker/webapp/ROOT.war</docker.deployment.path>
 
-        <amazon.active.bucket>amazon.active.bucket</amazon.active.bucket>
-        <amazon.secret>amazon.secret</amazon.secret>
-        <amazon.key>amazon.key</amazon.key>
-
-        <amazon.accessKey>amazon.key</amazon.accessKey>
-        <amazon.secretKey>amazon.secret</amazon.secretKey>
-        <amazon.default-bucket>amazon.active.bucket</amazon.default-bucket>
 
     </properties>
 
@@ -362,6 +355,24 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

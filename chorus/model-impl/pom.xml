@@ -144,15 +144,6 @@
         <test.groups/>
         <excluded.test.groups>integration</excluded.test.groups>
 
-
-
-        <amazon.active.bucket>amazon.active.bucket</amazon.active.bucket>
-        <amazon.secret>amazon.secret</amazon.secret>
-        <amazon.key>amazon.key</amazon.key>
-
-        <amazon.accessKey>amazon.key</amazon.accessKey>
-        <amazon.secretKey>amazon.secret</amazon.secretKey>
-        <amazon.default-bucket>amazon.active.bucket</amazon.default-bucket>
     </properties>
 
     <build>
@@ -185,6 +176,22 @@
                 </configuration>
             </plugin>
         </plugins>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -199,21 +206,6 @@
                     <exclude>**/*.properties</exclude>
                 </excludes>
                 <filtering>false</filtering>
-            </resource>
-
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>META-INF/persistence.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>META-INF/persistence.xml</exclude>
-                </excludes>
             </resource>
         </resources>
     </build>
