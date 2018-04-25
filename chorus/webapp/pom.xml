@@ -20,6 +20,15 @@
         <deployment.manager.password>password</deployment.manager.password>
         <deployment.path>/</deployment.path>
         <docker.deployment.path>../../docker/webapp/ROOT.war</docker.deployment.path>
+
+        <amazon.active.bucket>amazon.active.bucket</amazon.active.bucket>
+        <amazon.secret>amazon.secret</amazon.secret>
+        <amazon.key>amazon.key</amazon.key>
+
+        <amazon.accessKey>amazon.key</amazon.accessKey>
+        <amazon.secretKey>amazon.secret</amazon.secretKey>
+        <amazon.default-bucket>amazon.active.bucket</amazon.default-bucket>
+
     </properties>
 
     <dependencies>

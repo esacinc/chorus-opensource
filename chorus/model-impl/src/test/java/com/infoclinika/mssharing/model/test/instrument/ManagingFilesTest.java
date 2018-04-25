@@ -22,6 +22,7 @@ import org.junit.Rule;
 import org.junit.internal.matchers.TypeSafeMatcher;
 import org.junit.matchers.JUnitMatchers;
 import org.junit.rules.TemporaryFolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -43,6 +44,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Herman Zamula
  */
+//TODO: change nmethods for upload and delete files
 public class ManagingFilesTest extends AbstractInstrumentTest {
 
     private static final Logger LOGGER = Logger.getLogger(ManagingFilesTest.class);
@@ -65,7 +67,7 @@ public class ManagingFilesTest extends AbstractInstrumentTest {
         }
     };
 
-    @BeforeClass
+    @BeforeClass(enabled = false)
     private void uploadFileToS3Bucket() throws IOException {
         if(!CLOUD_STORAGE_SERVICE.existsAtCloud(cloudStorageItemReference)){
             File file = getFileWithContents("test content");
@@ -76,7 +78,7 @@ public class ManagingFilesTest extends AbstractInstrumentTest {
 
 
 
-    @AfterClass
+    @AfterClass(enabled = false)
     private void removeFileFromS3Bucket(){
         if(CLOUD_STORAGE_SERVICE.existsAtCloud(cloudStorageItemReference)){
             CLOUD_STORAGE_SERVICE.deleteFromCloud(cloudStorageItemReference);
@@ -186,7 +188,7 @@ public class ManagingFilesTest extends AbstractInstrumentTest {
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void test_check_file_size_consistent(){
         final long bob = uc.createLab3AndBob();
         setFeaturePerLab(ApplicationFeature.TRANSLATION, Lists.newArrayList(uc.getLab3()));
