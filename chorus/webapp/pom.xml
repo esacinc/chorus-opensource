@@ -21,7 +21,9 @@
         <deployment.path>/</deployment.path>
         <docker.deployment.path>../../docker/webapp/ROOT.war</docker.deployment.path>
 
-
+        <amazon.active.bucket>amazon.active.bucket</amazon.active.bucket>
+        <amazon.secret>amazon.secret</amazon.secret>
+        <amazon.key>amazon.key</amazon.key>
     </properties>
 
     <dependencies>
