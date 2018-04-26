@@ -98,7 +98,7 @@
     <session-config>
         <session-timeout>-1</session-timeout>
         <cookie-config>
-            <max-age>120</max-age>
+            <max-age>1200</max-age>
         </cookie-config>
     </session-config>
 
