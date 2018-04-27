@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 /**
  * @author Herman Zamula
  */
-//TODO: change s3client service
+//TODO: now we don't use this functionality
 public class S3GlacierMovingFilesIntegrationTest {
 
 //    private static final String KEY = "";

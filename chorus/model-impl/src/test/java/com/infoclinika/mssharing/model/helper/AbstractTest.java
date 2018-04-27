@@ -27,6 +27,7 @@ import com.infoclinika.mssharing.model.internal.entity.User;
 import com.infoclinika.mssharing.model.internal.entity.mailing.FailedMailNotificationReceiver;
 import com.infoclinika.mssharing.model.internal.entity.restorable.ActiveFileMetaData;
 import com.infoclinika.mssharing.model.internal.read.Transformers;
+import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.internal.write.ExperimentLabelManagement;
 import com.infoclinika.mssharing.model.internal.write.ExperimentLabelManagement.ExperimentTypeInfo;
 import com.infoclinika.mssharing.model.read.*;
@@ -802,6 +803,8 @@ public class AbstractTest extends AbstractTestNGSpringContextTests {
         repos.failedEmailsNotifierRepository.save(of(new FailedMailNotificationReceiver("example@email.com"), new FailedMailNotificationReceiver("example2@email.com")));
     }
 
+    @Inject
+    protected AwsS3ClientConfigurationService awsS3ClientConfigurationService;
     @Inject
     protected InstrumentReader instrumentReader;
     @Inject

@@ -15,20 +15,20 @@ import java.util.List;
 import static com.google.common.collect.FluentIterable.from;
 import static com.infoclinika.mssharing.test.BillingTest.GB_IN_BYTES;
 import static java.lang.Math.abs;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 /**
  * @author Herman Zamula
  */
-//TODO: check tests, is working not correctly
+//TODO: billing service does not work on chorus-opensource(maybe in future)
 public class MonthlyTotalSummaryTest extends AbstractBillingTest {
 
-    @Inject
-    private MonthlySummaryRepository monthlySummaryRepository;
-    @Inject
-    private MonthlySummaryUsageLogger monthlySummaryUsageLogger;
-
+//    @Inject
+//    private MonthlySummaryRepository monthlySummaryRepository;
+//    @Inject
+//    private MonthlySummaryUsageLogger monthlySummaryUsageLogger;
+//
 //    @Test
 //    public void testMonthlySummary() {
 //

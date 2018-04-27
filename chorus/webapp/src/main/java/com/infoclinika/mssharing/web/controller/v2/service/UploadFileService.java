@@ -3,6 +3,7 @@ package com.infoclinika.mssharing.web.controller.v2.service;
 import com.infoclinika.analysis.storage.cloud.CloudStorageFactory;
 import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
 import com.infoclinika.analysis.storage.cloud.CloudStorageService;
+import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ProcessingRunReader;
 import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
@@ -33,7 +34,7 @@ public class UploadFileService {
     @Inject
     private ProcessingFileManagement processingFileManagement;
     @Inject
-    private AwsConfigService awsConfigService;
+    private AwsS3ClientConfigurationService awsConfigService;
     @Inject
     private RestAuthClientService restAuthClientService;
     @Inject

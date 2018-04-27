@@ -9,6 +9,7 @@ import com.infoclinika.analysis.storage.cloud.CloudStorageFactory;
 import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
 import com.infoclinika.analysis.storage.cloud.CloudStorageService;
 import com.infoclinika.mssharing.model.helper.ExperimentCreationHelper;
+import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.read.DashboardReader;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ExtendedShortExperimentFileItem;
@@ -36,7 +37,7 @@ public class ExperimentService {
     private static final Logger LOGGER = Logger.getLogger(ExperimentService.class);
 
     @Inject
-    private AwsConfigService awsConfigService;
+    private AwsS3ClientConfigurationService awsConfigService;
     @Inject
     private DetailsReader detailsReader;
     @Inject
@@ -46,15 +47,16 @@ public class ExperimentService {
     @Inject
     private ExperimentCreationHelper experimentCreationHelper;
 
-    private static final CloudStorageService CLOUD_STORAGE_SERVICE = CloudStorageFactory.service();
+
 
 
     public ResponseEntity<ExperimentInfoDTO> returnExperimentInfo(long userId, long experimentId){
         boolean isUserAnLab = restAuthClientService.isUserLabMembership(userId, experimentId);
         if(isUserAnLab){
             return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
+        }else {
+            return new ResponseEntity("User does not have access to lab !", HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity("User does not have access to lab !", HttpStatus.UNAUTHORIZED);
     }
 
     private ResponseEntity<ExperimentInfoDTO> experimentDetailsToInfoDTO(ExperimentDetails experimentDetails, ExperimentInfoDTO destination){
@@ -104,7 +106,7 @@ public class ExperimentService {
 
                 final NodePath nodePath = awsConfigService.returnExperimentStorageTargetFolder(user, instrumentId, file.name);
 
-                fileToSamplesDTO.setFilePath(generateTemporaryLinkToS3(nodePath.getPath()));
+                fileToSamplesDTO.setFilePath(awsConfigService.generateTemporaryLinkToS3(nodePath.getPath()));
                 list.add(fileToSamplesDTO);
                 map.put(file.name, list);
             }
@@ -117,47 +119,4 @@ public class ExperimentService {
         return experimentDetailsToInfoDTO(experimentItemSource, new ExperimentInfoDTO());
     }
 
-
-
-    private String generateTemporaryLinkToS3(String key){
-
-        String bucket = awsConfigService.getActiveBucket();
-        CloudStorageItemReference cloudStorageItemReference = awsConfigService.storageItemReference(key);
-
-        try {
-
-            if(CLOUD_STORAGE_SERVICE.existsAtCloud(cloudStorageItemReference)){
-
-                Date expiration = new Date();
-                long milliSeconds = expiration.getTime();
-                milliSeconds += 1000 * 60 * 60;
-                expiration.setTime(milliSeconds);
-
-                GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, key);
-                generatePresignedUrlRequest.setMethod(HttpMethod.GET);
-                generatePresignedUrlRequest.setExpiration(expiration);
-
-                URL url = awsConfigService.s3Client().generatePresignedUrl(generatePresignedUrlRequest);
-
-                LOGGER.info("Link on the S3 bucket was successfully created !");
-                return url.toString();
-            }
-
-        } catch (AmazonServiceException exception) {
-            LOGGER.warn("Caught an AmazonServiceException, " + "which means your request made it " + "to Amazon S3, but was rejected with an error response " + "for some reason.");
-            LOGGER.warn("Error Message: " + exception.getMessage());
-            LOGGER.warn("HTTP  Code: "    + exception.getStatusCode());
-            LOGGER.warn("AWS Error Code:" + exception.getErrorCode());
-            LOGGER.warn("Error Type:    " + exception.getErrorType());
-            LOGGER.warn("Request ID:    " + exception.getRequestId());
-        } catch (AmazonClientException ace) {
-            LOGGER.warn("Caught an AmazonClientException, " + "which means the client encountered " + "an internal error while trying to communicate" + " with S3, " +
-                    "such as not being able to access the network.");
-            LOGGER.warn("Error Message: " + ace.getMessage());
-        }
-
-        LOGGER.warn("File path does not exists");
-
-        return "File path does not exists";
-    }
 }
