@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
@@ -30,7 +31,13 @@ public class ProcessedFilesController {
 
     }
 
-    @RequestMapping(value ="", method = RequestMethod.POST)
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<Object> handleMultipartError(Exception ex, MultipartException e){
+        return new ResponseEntity<>(e.getLocalizedMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
+    @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
     public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") MultipartFile[] multipartFile) throws IOException {
         if(multipartFile.length == 0){
             return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
