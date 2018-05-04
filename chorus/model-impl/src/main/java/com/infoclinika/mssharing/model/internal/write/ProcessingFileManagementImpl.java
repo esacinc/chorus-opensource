@@ -80,7 +80,7 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
 
         for(Map.Entry<String, Collection<String>> entry : map.entrySet()){
 
-            processingFile = processingFileRepository.findByName(entry.getKey());
+            processingFile = processingFileRepository.findByName(entry.getKey(), experimentId);
 
             if(processingFile != null){
 

@@ -17,6 +17,6 @@ public interface ProcessingFileRepository extends JpaRepository<ProcessingFile, 
     @Query(BOOLEAN_SELECT_STATEMENT + "where pf.experimentTemplate.id=:experimentId and pf.name=:fileName")
     boolean isProcessingFileAlreadyUploadedToExperiment(@Param("experimentId") long experimentId, @Param("fileName") String fileName);
 
-    @Query("select pf from  #{#entityName} pf where pf.name=:name")
-    ProcessingFile findByName(@Param("name") String processingFileName);
+    @Query("select pf from  #{#entityName} pf where pf.name=:name and pf.experimentTemplate.id=:experimentId")
+    ProcessingFile findByName(@Param("name") String processingFileName, @Param("experimentId") long experimentId);
 }
