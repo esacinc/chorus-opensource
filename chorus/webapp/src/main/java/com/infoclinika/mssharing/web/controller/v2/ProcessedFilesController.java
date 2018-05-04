@@ -43,18 +43,26 @@ public class ProcessedFilesController {
     }
 
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
-    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) CommonsMultipartFile[] multipartFile) throws IOException {
+    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) CommonsMultipartFile[] multipartFile) {
         LOGGER.info("uploadFile start");
         LOGGER.info(multipartFile.length);
 
+        try{
+            for(MultipartFile multipartFile1: multipartFile){
+                LOGGER.info(multipartFile1.getOriginalFilename() + " " + multipartFile1 + " " + multipartFile1.getContentType());
+            }
 
-        for(MultipartFile multipartFile1: multipartFile){
-            LOGGER.info(multipartFile1.getOriginalFilename() + " " + multipartFile1 + " " + multipartFile1.getContentType());
+            if(multipartFile.length == 0){
+                return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
+            }
+
+            return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
+
+        }catch (IOException e){
+            LOGGER.trace(e.getLocalizedMessage());
+            e.printStackTrace();
         }
 
-        if(multipartFile.length == 0){
-            return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
-        }
-        return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
+        return new ResponseEntity("Please select the file to upload S3", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
