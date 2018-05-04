@@ -77,7 +77,7 @@ public class AbstractExperiment extends ExperimentTemplate<User, Lab, AbstractPr
     @Embedded
     private NgsRelatedData ngsRelatedData;
 
-    @OneToMany(mappedBy = "experimentTemplate", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "experimentTemplate", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Set<ProcessingFile> processingFile = newHashSet();
 
@@ -103,7 +103,6 @@ public class AbstractExperiment extends ExperimentTemplate<User, Lab, AbstractPr
                               double minReporterFraction,
                               ExperimentCategory experimentCategory,
                               NgsRelatedData ngsRelatedData
-//                              Set<ProcessingRun> processingRuns
     ) {
         setName(name);
         setLab(lab);
@@ -128,7 +127,6 @@ public class AbstractExperiment extends ExperimentTemplate<User, Lab, AbstractPr
         this.minReporterFraction = minReporterFraction;
         this.experimentCategory = experimentCategory;
         this.ngsRelatedData = ngsRelatedData;
-//        this.processingRuns = processingRuns;
     }
 
     public void setLockMasses(List<LockMz> lockMasses) {
@@ -266,14 +264,6 @@ public class AbstractExperiment extends ExperimentTemplate<User, Lab, AbstractPr
         this.ngsRelatedData = ngsRelatedData;
     }
 
-//
-//    public Set<ProcessingRun> getProcessingRuns() {
-//        return processingRuns;
-//    }
-//
-//    public void setProcessingRuns(Set<ProcessingRun> processingRuns) {
-//        this.processingRuns = processingRuns;
-//    }
 
     @Override
     public String toString() {
@@ -293,7 +283,6 @@ public class AbstractExperiment extends ExperimentTemplate<User, Lab, AbstractPr
                 ", annotationAttachment=" + annotationAttachment +
                 ", experimentCategory=" + experimentCategory +
                 ", ngsRelatedData=" + ngsRelatedData +
-//                ", processingRuns=" + processingRuns+
                 "} " + super.toString();
     }
 }

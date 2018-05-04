@@ -2,6 +2,7 @@ package com.infoclinika.mssharing.web.controller.v2.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.common.base.Optional;
 import com.infoclinika.mssharing.web.controller.v2.service.ExperimentService;
 import lombok.Data;
 

@@ -3,6 +3,7 @@ package com.infoclinika.mssharing.web.controller.v2;
 
 
 import com.infoclinika.mssharing.platform.web.security.RichUser;
+import com.infoclinika.mssharing.web.controller.v2.dto.ExperimentInfoDTO;
 import com.infoclinika.mssharing.web.controller.v2.service.ExperimentService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class ExperimentsRestController {
 
 
     @RequestMapping(value = "/{experimentId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getExperimentInfoCertainFields(@PathVariable long experimentId, Principal principal) {
+    public ResponseEntity<ExperimentInfoDTO> getExperimentInfoCertainFields(@PathVariable long experimentId, Principal principal) {
         return experimentService.returnExperimentInfo(RichUser.get(principal).getId(), experimentId);
     }
 }

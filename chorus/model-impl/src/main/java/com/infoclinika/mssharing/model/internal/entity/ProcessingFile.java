@@ -26,13 +26,13 @@ public class ProcessingFile extends AbstractPersistable<Long> {
     @Column(name = "upload_date")
     private Date uploadDate = new Date();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ProcessingRun processingRun;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private AbstractExperiment experimentTemplate;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "processing_file_meta_data", joinColumns = @JoinColumn(name = "id_process_file", referencedColumnName = "id", nullable = false, updatable = false),
     inverseJoinColumns = @JoinColumn(name = "id_file_meta_data", referencedColumnName = "id", nullable = false, updatable = false))
     private List<FileMetaDataTemplate> fileMetaDataTemplates = new ArrayList<>();
@@ -101,5 +101,17 @@ public class ProcessingFile extends AbstractPersistable<Long> {
 
     public void setExperimentTemplate(AbstractExperiment experimentTemplate) {
         this.experimentTemplate = experimentTemplate;
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessingFile{" +
+                "name='" + name + '\'' +
+                ", contentId='" + contentId + '\'' +
+                ", uploadDate=" + uploadDate +
+                ", processingRun=" + processingRun +
+                ", experimentTemplate=" + experimentTemplate +
+                ", fileMetaDataTemplates=" + fileMetaDataTemplates +
+                '}';
     }
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface ProcessingFileManagement {
 
-    void createProcessingFile(long experimentId, ProcessingFileInfo processingFileInfo);
+    long createProcessingFile(long experimentId, ProcessingFileShortInfo processingFileShortInfo);
 
     boolean isProcessingFileAlreadyUploadedToExperiment(long experiment, String fileName);
 
@@ -18,12 +18,12 @@ public interface ProcessingFileManagement {
 
 
 
-    class ProcessingFileInfo{
+    class ProcessingFileShortInfo {
 
         public final String name;
         public final String content;
 
-        public ProcessingFileInfo(String name, String content) {
+        public ProcessingFileShortInfo(String name, String content) {
             this.name = name;
             this.content = content;
         }

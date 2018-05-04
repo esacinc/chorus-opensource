@@ -1,13 +1,7 @@
 package com.infoclinika.mssharing.web.controller.v2.service;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.google.common.base.*;
 import com.google.common.collect.ImmutableList;
-import com.infoclinika.analysis.storage.cloud.CloudStorageFactory;
-import com.infoclinika.analysis.storage.cloud.CloudStorageItemReference;
-import com.infoclinika.analysis.storage.cloud.CloudStorageService;
 import com.infoclinika.mssharing.model.helper.ExperimentCreationHelper;
 import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.read.DashboardReader;
@@ -22,12 +16,11 @@ import com.infoclinika.mssharing.web.controller.v2.dto.ExperimentDetails;
 import com.infoclinika.mssharing.web.controller.v2.dto.ExperimentInfoDTO;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.inject.Inject;
-import java.net.URL;
 import java.util.*;
 
 @Service
@@ -82,8 +75,8 @@ public class ExperimentService {
 
         destination.setFilesToSamples(computeExperimentFileSamples(shortInfo.files, experimentItemSource.labHead, experimentItemSource.instrument.get()));
 
-
-        return new ResponseEntity(destination, HttpStatus.OK);
+        LOGGER.info(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(destination));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(destination);
     }
 
     private Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> computeExperimentFileSamples(List<? extends DetailsReaderTemplate.ShortExperimentFileItem> files, long user, long instrumentId){

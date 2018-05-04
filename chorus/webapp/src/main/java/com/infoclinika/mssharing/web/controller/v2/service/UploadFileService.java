@@ -107,8 +107,8 @@ public class UploadFileService {
         if(!processingFileAlreadyExist && !CLOUD_STORAGE_SERVICE.existsAtCloud(itemReference)){
 
             CLOUD_STORAGE_SERVICE.uploadToCloud(file, itemReference.getBucket(), itemReference.getKey());
-            final ProcessingFileManagement.ProcessingFileInfo processingFileInfo = new ProcessingFileManagement.ProcessingFileInfo(file.getName(), itemReference.getKey());
-            processingFileManagement.createProcessingFile(experiment, processingFileInfo);
+            final ProcessingFileManagement.ProcessingFileShortInfo processingFileShortInfo = new ProcessingFileManagement.ProcessingFileShortInfo(file.getName(), itemReference.getKey());
+            processingFileManagement.createProcessingFile(experiment, processingFileShortInfo);
 
             uploadDone.add(file.getName());
             map.put("uploadComplete", uploadDone);

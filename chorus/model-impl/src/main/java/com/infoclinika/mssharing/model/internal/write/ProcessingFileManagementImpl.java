@@ -49,18 +49,19 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
     private UserLabMembershipRepositoryTemplate userLabMembershipRepository;
 
     @Override
-    public void createProcessingFile(long experimentId, ProcessingFileInfo processingFileInfo) {
+    public long createProcessingFile(long experimentId, ProcessingFileShortInfo processingFileShortInfo) {
 
-        checkNotNull(processingFileInfo);
-        checkNotNull(processingFileInfo.name);
+        checkNotNull(processingFileShortInfo);
+        checkNotNull(processingFileShortInfo.name);
 
         final ActiveExperiment activeExperiment = experimentRepository.findOne(experimentId);
         final ProcessingFile processingFile = new ProcessingFile();
-        processingFile.setContentId(processingFileInfo.content);
-        processingFile.setName(processingFileInfo.name);
+        processingFile.setContentId(processingFileShortInfo.content);
+        processingFile.setName(processingFileShortInfo.name);
         processingFile.setExperimentTemplate(activeExperiment);
 
         processingFileRepository.save(processingFile);
+        return processingFile.getId();
     }
 
     @Override

@@ -20,7 +20,7 @@ public class ProcessingRun extends AbstractPersistable<Long>{
     @Column(name = "processed_date")
     private Date processedDate = new Date();
 
-    @OneToMany(mappedBy = "processingRun", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "processingRun", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<ProcessingFile> processingFiles = new ArrayList<>();
 
 
@@ -68,5 +68,15 @@ public class ProcessingRun extends AbstractPersistable<Long>{
 
     public void setExperimentTemplate(AbstractExperiment experimentTemplate) {
         this.experimentTemplate = experimentTemplate;
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessingRun{" +
+                "name='" + name + '\'' +
+                ", processedDate=" + processedDate +
+                ", processingFiles=" + processingFiles +
+                ", experimentTemplate=" + experimentTemplate +
+                '}';
     }
 }
