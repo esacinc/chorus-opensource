@@ -45,6 +45,9 @@ public class ProcessedFilesController {
     public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") MultipartFile[] multipartFile) throws IOException {
         LOGGER.info("uploadFile start");
         LOGGER.info(multipartFile.length);
+        for(MultipartFile multipartFile1: multipartFile){
+            LOGGER.info(multipartFile1.getOriginalFilename() + " " + multipartFile1 + " " + multipartFile1.getContentType());
+        }
         if(multipartFile.length == 0){
             return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
         }
