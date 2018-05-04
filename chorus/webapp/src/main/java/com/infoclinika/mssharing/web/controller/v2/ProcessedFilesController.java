@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,7 +43,7 @@ public class ProcessedFilesController {
     }
 
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
-    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") MultipartFile[] multipartFile) throws IOException {
+    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") CommonsMultipartFile[] multipartFile) throws IOException {
         LOGGER.info("uploadFile start");
         LOGGER.info(multipartFile.length);
         for(MultipartFile multipartFile1: multipartFile){

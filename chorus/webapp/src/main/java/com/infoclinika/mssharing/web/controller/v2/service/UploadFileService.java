@@ -44,14 +44,14 @@ public class UploadFileService {
 
 
     public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException{
-
+        LOGGER.info("uploadFileToStorage get files");
         Map<String, Collection<String>> resultsProcessingFiles = new HashMap();
         List<String> uploadComplete = new ArrayList();
         List<String> uploadErrors = new ArrayList();
-
+        LOGGER.info("isUserLabMembership check user");
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experimentId);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
-
+        LOGGER.info(experimentShortInfo.files.size());
         if(isUserLabMembership && experimentShortInfo.files.size() > 0){
 
             if(multipartFiles.length > 0){
