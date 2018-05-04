@@ -43,12 +43,15 @@ public class ProcessedFilesController {
     }
 
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
-    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") CommonsMultipartFile[] multipartFile) throws IOException {
+    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) CommonsMultipartFile[] multipartFile) throws IOException {
         LOGGER.info("uploadFile start");
         LOGGER.info(multipartFile.length);
+
+
         for(MultipartFile multipartFile1: multipartFile){
             LOGGER.info(multipartFile1.getOriginalFilename() + " " + multipartFile1 + " " + multipartFile1.getContentType());
         }
+
         if(multipartFile.length == 0){
             return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
         }
