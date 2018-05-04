@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/v2/experiment/{experimentId}/processed-files")
@@ -43,6 +44,7 @@ public class ProcessedFilesController {
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
     public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam("process-file") MultipartFile[] multipartFile) throws IOException {
         LOGGER.info("uploadFile start");
+        LOGGER.info(multipartFile.length);
         if(multipartFile.length == 0){
             return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
         }
