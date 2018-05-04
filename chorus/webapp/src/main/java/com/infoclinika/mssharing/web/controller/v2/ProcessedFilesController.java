@@ -35,6 +35,7 @@ public class ProcessedFilesController {
 
     @ExceptionHandler(MultipartException.class)
     public ResponseEntity<Object> handleMultipartError(Exception ex, MultipartException e){
+        LOGGER.trace(e.getLocalizedMessage());
         return new ResponseEntity<>(e.getLocalizedMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
