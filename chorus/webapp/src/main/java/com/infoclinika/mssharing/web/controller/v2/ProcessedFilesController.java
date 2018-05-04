@@ -35,8 +35,8 @@ public class ProcessedFilesController {
 
     }
 
-    @ExceptionHandler(MultipartException.class)
-    public ResponseEntity<Object> handleMultipartError(Exception ex, MultipartException e){
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Object> handleMultipartError(Exception ex, IOException e){
         LOGGER.trace(e.getLocalizedMessage());
         return new ResponseEntity<>(e.getLocalizedMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -44,12 +44,10 @@ public class ProcessedFilesController {
 
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
     public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) CommonsMultipartFile[] multipartFile) {
-        LOGGER.info("uploadFile start");
-        LOGGER.info(multipartFile.length);
-
+        LOGGER.info("Start uplod file !!!!");
         try{
             for(MultipartFile multipartFile1: multipartFile){
-                LOGGER.info(multipartFile1.getOriginalFilename() + " " + multipartFile1 + " " + multipartFile1.getContentType());
+                LOGGER.info(multipartFile1.getOriginalFilename());
             }
 
             if(multipartFile.length == 0){

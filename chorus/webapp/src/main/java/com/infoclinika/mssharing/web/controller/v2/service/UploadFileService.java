@@ -45,30 +45,26 @@ public class UploadFileService {
 
 
     public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException{
-        LOGGER.info("uploadFileToStorage get files");
         Map<String, Collection<String>> resultsProcessingFiles = new HashMap();
         List<String> uploadComplete = new ArrayList();
         List<String> uploadErrors = new ArrayList();
 
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experimentId);
-        LOGGER.info("isUserLabMembership check user" + isUserLabMembership);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
-        LOGGER.info(experimentShortInfo.files.size());
         if(isUserLabMembership && experimentShortInfo.files.size() > 0){
 
             if(multipartFiles.length > 0){
                 for (MultipartFile multipartFile: multipartFiles) {
 
                     File file = convertMultipartToFile(multipartFile);
-                    LOGGER.info(file.getAbsolutePath() + "convertMultipartToFile");
 
                     startUploadFilesToStorage(experimentId, file, resultsProcessingFiles,uploadComplete, uploadErrors);
 
                     LOGGER.info(file.getAbsolutePath() + "startUploadFilesToStorage");
                 }
 
-//                return new ResponseEntity(resultsProcessingFiles.toString(), HttpStatus.OK);
-                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(resultsProcessingFiles.toString());
+                return new ResponseEntity(resultsProcessingFiles.toString(), HttpStatus.OK);
+//                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(resultsProcessingFiles.toString());
             }
         }
         return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
@@ -78,7 +74,7 @@ public class UploadFileService {
 
 
     private File convertMultipartToFile(MultipartFile multipartFile) throws IOException{
-        File result = new File(multipartFile.getOriginalFilename());
+        File result = new File("/home/admin-infoclinika/" + multipartFile.getOriginalFilename());
         FileOutputStream fileOutputStream = new FileOutputStream(result);
         fileOutputStream.write(multipartFile.getBytes());
         fileOutputStream.close();
