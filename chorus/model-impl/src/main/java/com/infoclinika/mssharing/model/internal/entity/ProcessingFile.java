@@ -3,6 +3,8 @@ package com.infoclinika.mssharing.model.internal.entity;
 
 import com.infoclinika.mssharing.model.internal.entity.restorable.AbstractExperiment;
 import com.infoclinika.mssharing.platform.entity.restorable.FileMetaDataTemplate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
