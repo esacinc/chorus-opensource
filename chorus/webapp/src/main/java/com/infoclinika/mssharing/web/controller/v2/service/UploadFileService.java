@@ -12,6 +12,7 @@ import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
 import com.infoclinika.mssharing.web.controller.v2.dto.ProcessingRunsDTO;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,8 +49,9 @@ public class UploadFileService {
         Map<String, Collection<String>> resultsProcessingFiles = new HashMap();
         List<String> uploadComplete = new ArrayList();
         List<String> uploadErrors = new ArrayList();
-        LOGGER.info("isUserLabMembership check user");
+
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experimentId);
+        LOGGER.info("isUserLabMembership check user" + isUserLabMembership);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
         LOGGER.info(experimentShortInfo.files.size());
         if(isUserLabMembership && experimentShortInfo.files.size() > 0){
@@ -58,11 +60,15 @@ public class UploadFileService {
                 for (MultipartFile multipartFile: multipartFiles) {
 
                     File file = convertMultipartToFile(multipartFile);
+                    LOGGER.info(file.getAbsolutePath() + "convertMultipartToFile");
 
                     startUploadFilesToStorage(experimentId, file, resultsProcessingFiles,uploadComplete, uploadErrors);
+
+                    LOGGER.info(file.getAbsolutePath() + "startUploadFilesToStorage");
                 }
 
-                return new ResponseEntity(resultsProcessingFiles.toString(), HttpStatus.OK);
+//                return new ResponseEntity(resultsProcessingFiles.toString(), HttpStatus.OK);
+                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(resultsProcessingFiles.toString());
             }
         }
         return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
