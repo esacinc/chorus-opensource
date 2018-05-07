@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -44,7 +45,10 @@ public class UploadFileService {
     private ProcessingRunReader processingRunReader;
 
 
-    public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException{
+    public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles){
+
+        LOGGER.info("#### Start upload file to storage ####");
+
         Map<String, Collection<String>> resultsProcessingFiles = new HashMap();
         List<String> uploadComplete = new ArrayList();
         List<String> uploadErrors = new ArrayList();
@@ -60,24 +64,34 @@ public class UploadFileService {
 
                     startUploadFilesToStorage(experimentId, file, resultsProcessingFiles,uploadComplete, uploadErrors);
 
-                    LOGGER.info(file.getAbsolutePath() + "startUploadFilesToStorage");
+                    LOGGER.info(file.getAbsolutePath() + "start upload files to storage");
                 }
 
+                LOGGER.info(resultsProcessingFiles.toString() + " #### Upload results processing files ####");
+
                 return new ResponseEntity(resultsProcessingFiles.toString(), HttpStatus.OK);
-//                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(resultsProcessingFiles.toString());
             }
         }
+        LOGGER.warn(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
     }
 
 
 
 
-    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException{
-        File result = new File("/home/admin-infoclinika/" + multipartFile.getOriginalFilename());
-        FileOutputStream fileOutputStream = new FileOutputStream(result);
-        fileOutputStream.write(multipartFile.getBytes());
-        fileOutputStream.close();
+    private File convertMultipartToFile(MultipartFile multipartFile){
+        File result = new File(multipartFile.getOriginalFilename());
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(result);
+            fileOutputStream.write(multipartFile.getBytes());
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            LOGGER.trace(e.getLocalizedMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.trace(e.getLocalizedMessage());
+            e.printStackTrace();
+        }
         return result;
     }
 
@@ -115,7 +129,7 @@ public class UploadFileService {
             uploadDone.add(file.getName());
             map.put("uploadComplete", uploadDone);
 
-            LOGGER.info("Processing file  was uploaded to storage: " + nodePath.getPath());
+            LOGGER.info("Processing file  have been upload to storage: " + nodePath.getPath());
 
         }else {
             uploadExists.add(file.getName());

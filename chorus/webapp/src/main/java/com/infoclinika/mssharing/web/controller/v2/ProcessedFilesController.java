@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,24 +41,10 @@ public class ProcessedFilesController {
     }
 
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
-    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) CommonsMultipartFile[] multipartFile) {
-        LOGGER.info("Start uplod file !!!!");
-        try{
-            for(MultipartFile multipartFile1: multipartFile){
-                LOGGER.info(multipartFile1.getOriginalFilename());
-            }
-
-            if(multipartFile.length == 0){
+    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) MultipartFile[] multipartFile) throws IOException {
+        if(multipartFile.length == 0){
                 return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
-            }
-
-            return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
-
-        }catch (IOException e){
-            LOGGER.trace(e.getLocalizedMessage());
-            e.printStackTrace();
         }
-
-        return new ResponseEntity("Please select the file to upload S3", HttpStatus.INTERNAL_SERVER_ERROR);
+        return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
     }
 }
