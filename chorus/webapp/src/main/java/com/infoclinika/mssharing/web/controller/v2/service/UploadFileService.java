@@ -11,6 +11,7 @@ import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
 import com.infoclinika.mssharing.web.controller.v2.dto.ProcessingRunsDTO;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,9 @@ public class UploadFileService {
     private static final Logger LOGGER = Logger.getLogger(UploadFileService.class);
 
     private static final CloudStorageService CLOUD_STORAGE_SERVICE = CloudStorageFactory.service();
+
+    @Value("${multipart.location}")
+    private String path;
 
     @Inject
     private ProcessingFileManagement processingFileManagement;
@@ -60,6 +64,7 @@ public class UploadFileService {
                     File file = convertMultipartToFile(multipartFile);
 
                     startUploadFilesToStorage(experimentId, file, resultsProcessingFiles,uploadComplete, uploadErrors);
+                    file.delete();
 
                     LOGGER.info(file.getAbsolutePath() + "start upload files to storage");
                 }
@@ -75,28 +80,15 @@ public class UploadFileService {
 
 
 
-//
-//    private File convertMultipartToFile(MultipartFile multipartFile){
-//        File result = new File(multipartFile.getOriginalFilename());
-//        try {
+
+
+    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
+            File result = new File(path, multipartFile.getOriginalFilename());
+
+            multipartFile.transferTo(result);
 //            FileOutputStream fileOutputStream = new FileOutputStream(result);
 //            fileOutputStream.write(multipartFile.getBytes());
 //            fileOutputStream.close();
-//        } catch (FileNotFoundException e) {
-//            LOGGER.trace(e.getLocalizedMessage());
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            LOGGER.trace(e.getLocalizedMessage());
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-
-    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
-            File result = new File(multipartFile.getOriginalFilename());
-            FileOutputStream fileOutputStream = new FileOutputStream(result);
-            fileOutputStream.write(multipartFile.getBytes());
-            fileOutputStream.close();
             return result;
     }
 

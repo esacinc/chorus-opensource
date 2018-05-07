@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/v2/experiment/{experimentId}/processed-files")
@@ -39,7 +39,6 @@ public class ProcessedFilesController {
         return new ResponseEntity<>(e.getLocalizedMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
-
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
     public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) MultipartFile[] multipartFile){
         try{
