@@ -41,10 +41,22 @@ public class ProcessedFilesController {
     }
 
     @RequestMapping(value ="", method = RequestMethod.POST, consumes = {"multipart/mixed", "multipart/form-data"})
-    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) MultipartFile[] multipartFile) throws IOException {
-        if(multipartFile.length == 0){
+    public ResponseEntity<?> uploadFile(Principal principal, @PathVariable("experimentId") long experimentId, @RequestParam(value = "process-file", required = false) MultipartFile[] multipartFile){
+        try{
+
+            if(multipartFile.length == 0){
                 return new ResponseEntity("Please select the file to upload S3", HttpStatus.OK);
+            }
+
+            return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
+
+        }catch (IOException e){
+            LOGGER.trace(e.getLocalizedMessage());
+            e.printStackTrace();
         }
-        return uploadFileService.uploadFileToStorage(RichUser.get(principal).getId(), experimentId, multipartFile);
+
+        return new ResponseEntity("Please select the file to upload S3", HttpStatus.INTERNAL_SERVER_ERROR);
+
+
     }
 }

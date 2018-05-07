@@ -45,7 +45,7 @@ public class UploadFileService {
     private ProcessingRunReader processingRunReader;
 
 
-    public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles){
+    public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException {
 
         LOGGER.info("#### Start upload file to storage ####");
 
@@ -78,21 +78,29 @@ public class UploadFileService {
 
 
 
+//
+//    private File convertMultipartToFile(MultipartFile multipartFile){
+//        File result = new File(multipartFile.getOriginalFilename());
+//        try {
+//            FileOutputStream fileOutputStream = new FileOutputStream(result);
+//            fileOutputStream.write(multipartFile.getBytes());
+//            fileOutputStream.close();
+//        } catch (FileNotFoundException e) {
+//            LOGGER.trace(e.getLocalizedMessage());
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            LOGGER.trace(e.getLocalizedMessage());
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
 
-    private File convertMultipartToFile(MultipartFile multipartFile){
-        File result = new File(multipartFile.getOriginalFilename());
-        try {
+    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
+            File result = new File(multipartFile.getOriginalFilename());
             FileOutputStream fileOutputStream = new FileOutputStream(result);
             fileOutputStream.write(multipartFile.getBytes());
             fileOutputStream.close();
-        } catch (FileNotFoundException e) {
-            LOGGER.trace(e.getLocalizedMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            LOGGER.trace(e.getLocalizedMessage());
-            e.printStackTrace();
-        }
-        return result;
+            return result;
     }
 
 
