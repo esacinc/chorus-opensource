@@ -62,11 +62,8 @@ public class UploadFileService {
                 for (MultipartFile multipartFile: multipartFiles) {
 
                     File file = convertMultipartToFile(multipartFile);
-
                     startUploadFilesToStorage(experimentId, file, resultsProcessingFiles,uploadComplete, uploadErrors);
                     file.delete();
-
-                    LOGGER.info(file.getAbsolutePath() + "start upload files to storage");
                 }
 
                 LOGGER.info(resultsProcessingFiles.toString() + " #### Upload results processing files ####");
@@ -79,16 +76,9 @@ public class UploadFileService {
     }
 
 
-
-
-
     private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
             File result = new File(path, multipartFile.getOriginalFilename());
-
             multipartFile.transferTo(result);
-//            FileOutputStream fileOutputStream = new FileOutputStream(result);
-//            fileOutputStream.write(multipartFile.getBytes());
-//            fileOutputStream.close();
             return result;
     }
 
@@ -101,11 +91,16 @@ public class UploadFileService {
         if(!isProcessingRunAlreadyExist){
             if(isUserLabMembership){
                 processingFileManagement.associateProcessingFileWithRawFile(dto.getFileToFileMap(), experiment, user, dto.getName());
+
+                LOGGER.warn("#### Processing Run with name: " + dto.getName() + " successfully created ####");
                 return new ResponseEntity("Processing Run with name: " + dto.getName() + " successfully created", HttpStatus.OK);
             }else {
+
+                LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
                 return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
             }
         }else {
+            LOGGER.warn("#### Processing Run with name: "+ dto.getName() +" already exists ####");
             return new ResponseEntity("Processing Run with name: "+ dto.getName() +" already exists", HttpStatus.BAD_REQUEST);
         }
     }
