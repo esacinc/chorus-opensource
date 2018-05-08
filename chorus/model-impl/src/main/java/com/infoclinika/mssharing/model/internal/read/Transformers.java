@@ -33,7 +33,6 @@ import com.infoclinika.mssharing.model.internal.entity.payment.FeatureLog;
 import com.infoclinika.mssharing.model.internal.entity.payment.LabPaymentAccount;
 import com.infoclinika.mssharing.model.internal.entity.payment.PayPalLogEntry;
 import com.infoclinika.mssharing.model.internal.entity.payment.StoreLogEntry;
-import com.infoclinika.mssharing.model.internal.entity.restorable.AbstractExperiment;
 import com.infoclinika.mssharing.model.internal.entity.restorable.AbstractFileMetaData;
 import com.infoclinika.mssharing.model.internal.entity.restorable.ActiveExperiment;
 import com.infoclinika.mssharing.model.internal.entity.restorable.ActiveFileMetaData;
@@ -53,7 +52,6 @@ import com.infoclinika.mssharing.model.read.FileLine;
 import com.infoclinika.mssharing.model.read.PaymentHistoryReader;
 import com.infoclinika.mssharing.model.read.ProjectLine;
 import com.infoclinika.mssharing.model.read.ProteinDatabaseReader.ProteinDBItem;
-import com.infoclinika.mssharing.model.write.ExperimentCategory;
 import com.infoclinika.mssharing.model.write.UploadAppManagement;
 import com.infoclinika.mssharing.platform.entity.EntityUtil;
 import com.infoclinika.mssharing.platform.entity.ExperimentFileTemplate;
@@ -162,8 +160,8 @@ public class Transformers extends DefaultTransformers {
     @Value("${base.url}")
     private String baseUrl;
 
-    @Value("${base.url.tomcat}")
-    private String baseUrlTomcat;
+    @Value("${base.url.nginx}")
+    private String baseUrlNginx;
     @Inject
     private ProjectReaderHelper<ActiveProject, ProjectLine> projectReaderHelper;
     @Inject
@@ -843,15 +841,15 @@ public class Transformers extends DefaultTransformers {
     }
 
     public final String getPublicDownloadLink(ActiveExperiment experiment) {
-        return getDownloadLink(experiment, baseUrlTomcat, true);
+        return getDownloadLink(experiment, baseUrlNginx, true);
     }
 
     public final String getPrivateDownloadLink(ActiveExperiment experiment) {
-        return getDownloadLink(experiment, baseUrlTomcat, false);
+        return getDownloadLink(experiment, baseUrlNginx, false);
     }
 
     public final String getDownloadLink(String experimentDownloadToken) {
-        return getPublicDownloadLink(experimentDownloadToken, baseUrlTomcat);
+        return getPublicDownloadLink(experimentDownloadToken, baseUrlNginx);
     }
 
     private Set<Long> getExperimentsByFile(ActiveFileMetaData input) {
