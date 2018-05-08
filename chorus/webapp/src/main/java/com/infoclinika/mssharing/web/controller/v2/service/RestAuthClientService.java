@@ -29,8 +29,6 @@ public class RestAuthClientService {
 
     @Value("${base.url}")
     private String baseUrl;
-    @Value("${base.url.tomcat}")
-    private String baseTomcat;
 
     @Inject
     private DetailsReader detailsReader;
@@ -62,7 +60,7 @@ public class RestAuthClientService {
         map.add("j_username", user);
         map.add("j_password", password);
 
-        String authURL = baseTomcat + ""+ "/j_spring_security_check";
+        String authURL = baseUrl + "/j_spring_security_check";
         LOGGER.info(authURL + " #### Base url for Tomcat ####");
         RestTemplate restTemplate = new RestTemplate();
 
