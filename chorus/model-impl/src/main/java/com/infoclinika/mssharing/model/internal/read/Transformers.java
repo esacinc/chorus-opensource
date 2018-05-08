@@ -161,6 +161,9 @@ public class Transformers extends DefaultTransformers {
     private RuleValidator ruleValidator;
     @Value("${base.url}")
     private String baseUrl;
+
+    @Value("${base.url.tomcat}")
+    private String baseUrlTomcat;
     @Inject
     private ProjectReaderHelper<ActiveProject, ProjectLine> projectReaderHelper;
     @Inject
@@ -685,22 +688,22 @@ public class Transformers extends DefaultTransformers {
         return msChartsLinkBuilder.toString();
     }
 
-    public static String getDownloadLink(ActiveExperiment experiment, String baseUrl, boolean bPublic) {
+    public static String getDownloadLink(ActiveExperiment experiment, String baseUrlTomcat, boolean bPublic) {
         if (!bPublic) {
-            return baseUrl + "/download/bulk?experiment=" + experiment.getId();
+            return baseUrlTomcat + "/download/bulk?experiment=" + experiment.getId();
         }
         final String downloadToken = experiment.getDownloadToken();
         if (downloadToken == null) {
             return null;
         }
-        return baseUrl + "/anonymous/download/experiment/" + downloadToken;
+        return baseUrlTomcat + "/anonymous/download/experiment/" + downloadToken;
     }
 
-    public static String getPublicDownloadLink(String experimentDownloadToken, String baseUrl) {
+    public static String getPublicDownloadLink(String experimentDownloadToken, String baseUrlTomcat) {
         if (experimentDownloadToken == null) {
             return null;
         }
-        return baseUrl + "/anonymous/download/experiment/" + experimentDownloadToken;
+        return baseUrlTomcat + "/anonymous/download/experiment/" + experimentDownloadToken;
     }
 
     public static AccessLevel fromSharingType(Sharing.Type type) {
