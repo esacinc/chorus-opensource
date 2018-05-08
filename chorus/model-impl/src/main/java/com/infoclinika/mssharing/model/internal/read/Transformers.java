@@ -843,15 +843,15 @@ public class Transformers extends DefaultTransformers {
     }
 
     public final String getPublicDownloadLink(ActiveExperiment experiment) {
-        return getDownloadLink(experiment, baseUrl, true);
+        return getDownloadLink(experiment, baseUrlTomcat, true);
     }
 
     public final String getPrivateDownloadLink(ActiveExperiment experiment) {
-        return getDownloadLink(experiment, baseUrl, false);
+        return getDownloadLink(experiment, baseUrlTomcat, false);
     }
 
     public final String getDownloadLink(String experimentDownloadToken) {
-        return getPublicDownloadLink(experimentDownloadToken, baseUrl);
+        return getPublicDownloadLink(experimentDownloadToken, baseUrlTomcat);
     }
 
     private Set<Long> getExperimentsByFile(ActiveFileMetaData input) {
