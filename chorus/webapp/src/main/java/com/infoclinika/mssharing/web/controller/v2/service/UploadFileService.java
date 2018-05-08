@@ -72,7 +72,7 @@ public class UploadFileService {
             }
         }
         LOGGER.warn(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity("User with ID: " + user + " does not have access to lab", HttpStatus.UNAUTHORIZED);
     }
 
 
