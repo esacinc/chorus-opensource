@@ -158,4 +158,31 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
         return false;
     }
 
+    @Override
+    public Map<String, Collection<String>> validateAssociateFiles(Map<String, Collection<String>> map,long experimentId){
+
+        Map<String, Collection<String>> collectionMap = new HashMap();
+        Collection<String> collection = new ArrayList();
+
+
+        for(Map.Entry<String, Collection<String>> entry : map.entrySet()){
+
+            Collection<String> strings = entry.getValue();
+
+                for(String string : strings) {
+
+                    ActiveFileMetaData activeFileMetaData = fileMetaDataRepository.findByName(string);
+
+                    if(activeFileMetaData == null){
+                        collection.add(string);
+                        collectionMap.put("not exist files", collection);
+
+                    }
+                }
+
+        }
+
+        return collectionMap;
+    }
+
 }

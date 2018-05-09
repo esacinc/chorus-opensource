@@ -96,6 +96,12 @@ public class UploadFileService {
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
+        Map<String, Collection<String>> map = processingFileManagement.validateAssociateFiles(dto.getFileToFileMap(), experiment);
+
+        if(!map.isEmpty()){
+            return new ResponseEntity("Files in experiment does not exists !" + map.toString(), HttpStatus.BAD_REQUEST);
+        }
+
         Map<String, Collection<String>> resultsMap = new HashMap();
         List<String> errorsData = new ArrayList();
 
