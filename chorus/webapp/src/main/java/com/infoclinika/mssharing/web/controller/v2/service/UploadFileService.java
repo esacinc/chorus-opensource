@@ -7,6 +7,7 @@ import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfiguratio
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ProcessingRunReader;
 import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
+import com.infoclinika.mssharing.model.write.ProcessingRunManagement;
 import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
 import com.infoclinika.mssharing.web.controller.v2.dto.ProcessingRunsDTO;
@@ -45,6 +46,8 @@ public class UploadFileService {
     private DetailsReader detailsReader;
     @Inject
     private ProcessingRunReader processingRunReader;
+    @Inject
+    private ProcessingRunManagement processingRunManagement;
 
 
     public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException {
@@ -95,6 +98,11 @@ public class UploadFileService {
 
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
+
+        if(dto.getFileToFileMap().isEmpty()){
+            processingRunManagement.create(experiment, dto.getName());
+            return new ResponseEntity("Processing Run with name: " + dto.getName() + " successfully created", HttpStatus.OK);
+        }
 
         Map<String, Collection<String>> resultsMap = new HashMap();
         List<String> errorsData = new ArrayList();
