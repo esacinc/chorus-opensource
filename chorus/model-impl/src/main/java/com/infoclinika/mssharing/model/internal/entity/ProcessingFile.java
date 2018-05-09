@@ -104,16 +104,4 @@ public class ProcessingFile extends AbstractPersistable<Long> {
     public void setExperimentTemplate(AbstractExperiment experimentTemplate) {
         this.experimentTemplate = experimentTemplate;
     }
-
-    @Override
-    public String toString() {
-        return "ProcessingFile{" +
-                "name='" + name + '\'' +
-                ", contentId='" + contentId + '\'' +
-                ", uploadDate=" + uploadDate +
-                ", processingRun=" + processingRun +
-                ", experimentTemplate=" + experimentTemplate +
-                ", fileMetaDataTemplates=" + fileMetaDataTemplates +
-                '}';
-    }
 }

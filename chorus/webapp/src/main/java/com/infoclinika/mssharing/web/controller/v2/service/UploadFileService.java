@@ -33,7 +33,7 @@ public class UploadFileService {
     private static final CloudStorageService CLOUD_STORAGE_SERVICE = CloudStorageFactory.service();
 
     @Value("${multipart.location}")
-    private String path;
+    private String tmpDir;
 
     @Inject
     private ProcessingFileManagement processingFileManagement;
@@ -50,6 +50,7 @@ public class UploadFileService {
     public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException {
 
         LOGGER.info("#### Start upload file to storage ####");
+        long start  = System.currentTimeMillis();
 
         Map<String, Collection<String>> resultsProcessingFiles = new HashMap();
         List<String> uploadComplete = new ArrayList();
@@ -57,23 +58,22 @@ public class UploadFileService {
 
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experimentId);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
-        if(isUserLabMembership && experimentShortInfo.files.size() > 0){
 
-            long start  = System.currentTimeMillis();
+        if(isUserLabMembership && experimentShortInfo.files.size() > 0){
 
             if(multipartFiles.length > 0){
                 for (MultipartFile multipartFile: multipartFiles) {
 
                     File file = convertMultipartToFile(multipartFile);
-                    startUploadFilesToStorage(experimentId, file, resultsProcessingFiles,uploadComplete, uploadErrors);
+                    startUploadFilesToStorage(experimentId, file, resultsProcessingFiles, uploadComplete, uploadErrors);
                     file.delete();
                 }
 
                 long end  = System.currentTimeMillis();
-                long value = end  - start;
+                long value = end - start;
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(value);
 
-                LOGGER.info(minutes + " #### minutes need to upload file ####");
+                LOGGER.info(minutes + " minutes need to upload file ####");
                 LOGGER.info(resultsProcessingFiles.toString() + " #### Upload results processing files ####");
 
                 return new ResponseEntity(resultsProcessingFiles.toString(), HttpStatus.OK);
@@ -85,7 +85,7 @@ public class UploadFileService {
 
 
     private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
-            File result = new File(path, multipartFile.getOriginalFilename());
+            File result = new File(tmpDir, multipartFile.getOriginalFilename());
             multipartFile.transferTo(result);
             return result;
     }
@@ -97,35 +97,11 @@ public class UploadFileService {
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
         Map<String, Collection<String>> resultsMap = new HashMap();
-        List<String> validData = new ArrayList();
         List<String> errorsData = new ArrayList();
 
-        boolean isValidData = checkNoValidFilesToFileMap(dto, experiment, resultsMap, validData, errorsData);
-
-        if(!isValidData){
-            if(!isProcessingRunAlreadyExist){
-                if(isUserLabMembership){
-
-                    processingFileManagement.associateProcessingFileWithRawFile(dto.getFileToFileMap(), experiment, user, dto.getName());
-                    LOGGER.warn("#### Processing Run with name: " + dto.getName() + " successfully created ####");
-                    return new ResponseEntity("Processing Run with name: " + dto.getName() + " successfully created", HttpStatus.OK);
-
-                }else {
-
-                    LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
-                    return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
-                }
-            }else {
-
-                LOGGER.warn("#### Processing Run with name: "+ dto.getName() +" already exists ####");
-                return new ResponseEntity("Processing Run with name: "+ dto.getName() +" already exists", HttpStatus.BAD_REQUEST);
-            }
-
-        }else {
-            return new ResponseEntity("You can't create processing runs with not valid data !  " + resultsMap.toString(), HttpStatus.BAD_REQUEST);
-        }
-
-
+        return  checkNoValidFilesToFileMap(dto, experiment, resultsMap, errorsData) ?
+                new ResponseEntity("You can't create processing runs with not valid data, please check processing file name and experiment file name !  " + resultsMap.toString(), HttpStatus.BAD_REQUEST):
+                createProcessingRunAndAssociateProcessingFiles(dto, user, experiment, isProcessingRunAlreadyExist, isUserLabMembership);
     }
 
 
@@ -143,19 +119,22 @@ public class UploadFileService {
 
             uploadDone.add(file.getName());
             map.put("uploadComplete", uploadDone);
-
             LOGGER.info("Processing file  have been upload to storage: " + nodePath.getPath());
 
         }else {
+
             uploadExists.add(file.getName());
             map.put("alreadyExists", uploadExists);
-
             LOGGER.info("Processing file with name key: " + nodePath.getPath() + " already exists");
         }
     }
 
 
-    private boolean checkNoValidFilesToFileMap(ProcessingRunsDTO dto, long experiment, Map<String, Collection<String>> resultsMap, List<String> validData, List<String> errorsData){
+
+
+
+
+    private boolean checkNoValidFilesToFileMap(ProcessingRunsDTO dto, long experiment, Map<String, Collection<String>> resultsMap, List<String> errorsData){
 
         for(Map.Entry<String, Collection<String>> entry : dto.getFileToFileMap().entrySet()){
             boolean exist = processingFileManagement.isProcessingFileAlreadyUploadedToExperiment(experiment, entry.getKey());
@@ -163,12 +142,29 @@ public class UploadFileService {
             if(!exist){
                 errorsData.add(entry.getKey());
                 resultsMap.put("not valid data", errorsData);
-            }else {
-                validData.add(entry.getKey());
-                resultsMap.put("valid data", validData);
             }
         }
-        return !resultsMap.isEmpty() ? true : false;
+        return !resultsMap.isEmpty();
     }
 
+
+
+    private ResponseEntity<Object> createProcessingRunAndAssociateProcessingFiles(ProcessingRunsDTO dto, long user, long experiment, boolean processingRunExist, boolean isUserLabMembership){
+        if(!processingRunExist){
+            if(isUserLabMembership){
+                return processingFileManagement.associateProcessingFileWithRawFile(dto.getFileToFileMap(), experiment, user, dto.getName()) ?
+                        new ResponseEntity("Processing Run with name: " + dto.getName() + " successfully created", HttpStatus.OK) :
+                        new ResponseEntity("Processing files already has processing run", HttpStatus.BAD_REQUEST);
+
+            }else {
+
+                LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
+                return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
+            }
+        }else {
+
+            LOGGER.warn("#### Processing Run with name: "+ dto.getName() +" already exists ####");
+            return new ResponseEntity("Processing Run with name: "+ dto.getName() +" already exists", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

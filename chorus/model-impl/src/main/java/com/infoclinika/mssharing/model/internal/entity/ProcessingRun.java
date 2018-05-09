@@ -69,14 +69,4 @@ public class ProcessingRun extends AbstractPersistable<Long>{
     public void setExperimentTemplate(AbstractExperiment experimentTemplate) {
         this.experimentTemplate = experimentTemplate;
     }
-
-    @Override
-    public String toString() {
-        return "ProcessingRun{" +
-                "name='" + name + '\'' +
-                ", processedDate=" + processedDate +
-                ", processingFiles=" + processingFiles +
-                ", experimentTemplate=" + experimentTemplate +
-                '}';
-    }
 }

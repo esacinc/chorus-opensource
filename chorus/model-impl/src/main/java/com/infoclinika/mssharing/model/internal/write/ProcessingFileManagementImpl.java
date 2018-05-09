@@ -2,6 +2,8 @@ package com.infoclinika.mssharing.model.internal.write;
 
 
 import static com.google.common.base.Preconditions.*;
+
+import com.google.common.collect.Iterables;
 import com.infoclinika.mssharing.model.internal.entity.ProcessingFile;
 import com.infoclinika.mssharing.model.internal.entity.ProcessingRun;
 import com.infoclinika.mssharing.model.internal.entity.restorable.ActiveExperiment;
@@ -68,17 +70,15 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
     }
 
     @Override
-    public void associateProcessingFileWithRawFile(Map<String, Collection<String>> map, long experimentId, long userId, String processingRunName) {
+    public boolean associateProcessingFileWithRawFile(Map<String, Collection<String>> map, long experimentId, long userId, String processingRunName) {
 
         LOGGER.info("#### Associating processes file start ####");
 
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(userId, experimentId);
 
-        ProcessingFile processingFile = null;
-
         for(Map.Entry<String, Collection<String>> entry : map.entrySet()){
 
-            processingFile = processingFileRepository.findByName(entry.getKey(), experimentId);
+            ProcessingFile processingFile = processingFileRepository.findByName(entry.getKey(), experimentId);
 
             if(processingFile != null){
 
@@ -87,16 +87,18 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
                 if(isAlreadyUpload){
                     if(experimentShortInfo.files.size() > 0){
 
-                        for(DetailsReaderTemplate.ShortExperimentFileItem file : experimentShortInfo.files){
+                        experimentShortInfo.files.stream().forEach(file ->{
+                            entry.getValue().stream().forEach(value -> {
+                                if(file.name.equals(value)){
 
-                            String fileName = entry.getValue().stream().filter(value -> value.equals(file.name)).findAny().orElse("");
-                            ActiveFileMetaData fileMetaDataTemplate = !fileName.isEmpty() ? fileMetaDataRepository.findOne(file.id) : null;
+                                    ActiveFileMetaData fileMetaDataTemplate = fileMetaDataRepository.findOne(file.id);
 
-                            if(fileMetaDataTemplate != null){
-                                processingFile.getFileMetaDataTemplates().add(fileMetaDataTemplate);
-                            }
-                        }
-
+                                    if(fileMetaDataTemplate != null){
+                                            processingFile.getFileMetaDataTemplates().add(fileMetaDataTemplate);
+                                    }
+                                }
+                            });
+                        });
                     }else{
                         LOGGER.warn("#### Experiment does not have files");
                     }
@@ -106,21 +108,21 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
             }
 
             if(processingFile != null){
-                create(processingFile, experimentId, processingRunName);
+                return create(processingFile, experimentId, processingRunName);
             }
         }
 
+        return false;
 
     }
 
     @Override
     public boolean isUserLabMembership(long user, long lab) {
         UserLabMembership userLabMembership = userLabMembershipRepository.findByLabAndUser(lab, user);
-        boolean result = userLabMembership == null ? false: true;
-        return result;
+        return userLabMembership == null ? false: true;
     }
 
-    private void create(ProcessingFile processingFile, long experiment, String processingRunName){
+    private boolean create(ProcessingFile processingFile, long experiment, String processingRunName){
 
         ProcessingRun processingRun = processingFile.getProcessingRun();
         final ActiveExperiment activeExperiment = experimentRepository.findOne(experiment);
@@ -138,9 +140,6 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
                     processingFile.setProcessingRun(processingRun);
                     processingFileRepository.save(processingFile);
 
-                    LOGGER.info("#### Associating processes file successfully complete ####");
-                    LOGGER.info("#### Processing run successfully created ####");
-
                 }else {
                     LOGGER.info("Experiment with Id: " + experiment + "does not exist !");
                 }
@@ -148,10 +147,15 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
                 processingRun = processingRunRepository.findByNameAndExperiment(processingRunName, experiment);
                 processingFile.setProcessingRun(processingRun);
                 processingFileRepository.save(processingFile);
-
-                LOGGER.info("#### Processing run successfully created ####");
             }
+
+            LOGGER.info("#### Associating processes file successfully complete ####");
+            LOGGER.info("#### Processing run successfully created ####");
+
+            return true;
         }
+
+        return false;
     }
 
 }
