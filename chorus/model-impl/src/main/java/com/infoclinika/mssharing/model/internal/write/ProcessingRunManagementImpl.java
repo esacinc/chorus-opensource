@@ -27,6 +27,7 @@ public class ProcessingRunManagementImpl implements ProcessingRunManagement {
         ProcessingRun processingRun = processingRunRepository.findByNameAndExperiment(name, experiment);
         if(processingRun == null){
             final ActiveExperiment activeExperiment = experimentRepository.findOne(experiment);
+            processingRun = new ProcessingRun();
             processingRun.setName(name);
             processingRun.setExperimentTemplate(activeExperiment);
             processingRunRepository.save(processingRun);

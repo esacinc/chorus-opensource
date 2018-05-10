@@ -99,9 +99,9 @@ public class UploadFileService {
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
-        if(dto.getFileToFileMap().isEmpty()){
+        if(dto.getFileToFileMap() == null || dto.getFileToFileMap().isEmpty()){
             processingRunManagement.create(experiment, dto.getName());
-            return new ResponseEntity("Processing Run with name: " + dto.getName() + " successfully created", HttpStatus.OK);
+            return new ResponseEntity("Processing Run: " + dto.getName() + " without files successfully created", HttpStatus.OK);
         }
 
         Map<String, Collection<String>> resultsMap = new HashMap();
