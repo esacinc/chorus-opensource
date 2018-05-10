@@ -283,6 +283,6 @@ public interface FileMetaDataRepository extends FileRepositoryTemplate<ActiveFil
     Page<ActiveFileMetaData> findAllWithFilter(@Param("query") String s, Pageable pageable);
 
 
-    @Query("select f from ActiveFileMetaData f where f.name =:name")
-    ActiveFileMetaData findByName(@Param("name")String name);
+    @Query("select case when count(r.fileMetaData.id)>0 then true else false end from ActiveExperiment e join e.rawFiles.data r where e.id = :experiment and r.fileMetaData.id = (select f.id from ActiveFileMetaData f where f.name =:name)")
+    boolean findNameByExperiment(@Param("experiment") Long experimentId, @Param("name") String fileName);
 }

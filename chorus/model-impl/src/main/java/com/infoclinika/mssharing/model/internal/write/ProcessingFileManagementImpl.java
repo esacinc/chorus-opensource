@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -159,27 +160,24 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
     }
 
     @Override
-    public Map<String, Collection<String>> validateAssociateFiles(Map<String, Collection<String>> map,long experimentId){
+    public Map<String, Collection<String>> validateAssociateFiles(Map<String, Collection<String>> map,long experimentId, long user){
 
         Map<String, Collection<String>> collectionMap = new HashMap();
         Collection<String> collection = new ArrayList();
 
-
         for(Map.Entry<String, Collection<String>> entry : map.entrySet()){
 
-            Collection<String> strings = entry.getValue();
+            Collection<String> experimentFiles = entry.getValue();
 
-                for(String string : strings) {
+                for(String fileName : experimentFiles) {
 
-                    ActiveFileMetaData activeFileMetaData = fileMetaDataRepository.findByName(string);
+                    boolean activeFileMetaData = fileMetaDataRepository.findNameByExperiment(experimentId, fileName);
 
-                    if(activeFileMetaData == null){
-                        collection.add(string);
-                        collectionMap.put("not exist files", collection);
-
+                    if(!activeFileMetaData){
+                        collection.add(fileName);
+                        collectionMap.put("error_files", collection);
                     }
                 }
-
         }
 
         return collectionMap;

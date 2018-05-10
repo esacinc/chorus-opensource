@@ -84,11 +84,6 @@ public class UploadFileService {
     }
 
 
-    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
-            File result = new File(tmpDir, multipartFile.getOriginalFilename());
-            multipartFile.transferTo(result);
-            return result;
-    }
 
 
     public ResponseEntity<Object> createProcessingRun(ProcessingRunsDTO dto, long user, long experiment){
@@ -96,7 +91,7 @@ public class UploadFileService {
         boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
-        Map<String, Collection<String>> map = processingFileManagement.validateAssociateFiles(dto.getFileToFileMap(), experiment);
+        Map<String, Collection<String>> map = processingFileManagement.validateAssociateFiles(dto.getFileToFileMap(), experiment, user);
 
         if(!map.isEmpty()){
             return new ResponseEntity("Files in experiment does not exists !" + map.toString(), HttpStatus.BAD_REQUEST);
@@ -173,4 +168,11 @@ public class UploadFileService {
             return new ResponseEntity("Processing Run with name: "+ dto.getName() +" already exists", HttpStatus.BAD_REQUEST);
         }
     }
+
+    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
+        File result = new File(tmpDir, multipartFile.getOriginalFilename());
+        multipartFile.transferTo(result);
+        return result;
+    }
+
 }
