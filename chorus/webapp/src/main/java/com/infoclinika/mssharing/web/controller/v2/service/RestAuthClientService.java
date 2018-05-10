@@ -76,6 +76,8 @@ public class RestAuthClientService {
 
         if (respHeaders.getFirst("Location").contains("login_error")) {
             LOGGER.info("Wrong credentials", new RuntimeException());
+            return new ResponseEntity("Wrong credentials", HttpStatus.UNAUTHORIZED);
+
         }
 
         String authcookie = respHeaders.get("Set-Cookie").stream()

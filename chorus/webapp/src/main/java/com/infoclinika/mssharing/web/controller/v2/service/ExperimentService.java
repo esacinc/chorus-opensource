@@ -3,6 +3,7 @@ package com.infoclinika.mssharing.web.controller.v2.service;
 import com.google.common.base.*;
 import com.google.common.collect.ImmutableList;
 import com.infoclinika.mssharing.model.helper.ExperimentCreationHelper;
+import com.infoclinika.mssharing.model.internal.RuleValidator;
 import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.read.DashboardReader;
 import com.infoclinika.mssharing.model.read.DetailsReader;
@@ -40,11 +41,21 @@ public class ExperimentService {
     @Inject
     private ExperimentCreationHelper experimentCreationHelper;
 
+    @Inject
+    private RuleValidator ruleValidator;
+
 
 
 
     public ResponseEntity<ExperimentInfoDTO> returnExperimentInfo(long userId, long experimentId){
+
+
+        if(!ruleValidator.isExperimentExist(experimentId)){
+            return new ResponseEntity("Experiment with id: " + experimentId + " does not exist !", HttpStatus.BAD_REQUEST);
+        }
+
         boolean isUserAnLab = restAuthClientService.isUserLabMembership(userId, experimentId);
+
         if(isUserAnLab){
             return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
         }else {
