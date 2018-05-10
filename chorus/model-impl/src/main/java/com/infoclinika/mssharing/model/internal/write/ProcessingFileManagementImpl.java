@@ -3,7 +3,6 @@ package com.infoclinika.mssharing.model.internal.write;
 
 import static com.google.common.base.Preconditions.*;
 
-import com.google.common.collect.Iterables;
 import com.infoclinika.mssharing.model.internal.entity.ProcessingFile;
 import com.infoclinika.mssharing.model.internal.entity.ProcessingRun;
 import com.infoclinika.mssharing.model.internal.entity.restorable.ActiveExperiment;
@@ -14,6 +13,7 @@ import com.infoclinika.mssharing.model.internal.repository.ProcessingFileReposit
 import com.infoclinika.mssharing.model.internal.repository.ProcessingRunRepository;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ProcessingRunReader;
+import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
 import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
 import com.infoclinika.mssharing.platform.entity.UserLabMembership;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -164,14 +163,14 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
 
         Map<String, Collection<String>> collectionMap = new HashMap();
         Collection<String> collection = new ArrayList();
+        ExperimentItem experimentItem = detailsReader.readExperiment(user, experimentId);
 
         for(Map.Entry<String, Collection<String>> entry : map.entrySet()){
 
             Collection<String> experimentFiles = entry.getValue();
 
                 for(String fileName : experimentFiles) {
-
-                    boolean activeFileMetaData = fileMetaDataRepository.findNameByExperiment(experimentId, fileName);
+                    boolean activeFileMetaData = fileMetaDataRepository.findNameByInstrument(experimentItem.instrument.get(), fileName);
 
                     if(!activeFileMetaData){
                         collection.add(fileName);
