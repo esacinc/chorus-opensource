@@ -44,8 +44,8 @@ public class ExperimentService {
 
 
     public ResponseEntity<ExperimentInfoDTO> returnExperimentInfo(long userId, long experimentId){
-        boolean isUserAnLab = restAuthClientService.isUserLabMembership(userId, experimentId);
-        if(isUserAnLab){
+        boolean isUserHasAccessToExperiment = restAuthClientService.isUserHasAccessToExperiment(userId, experimentId);
+        if(isUserHasAccessToExperiment){
             return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
         }else {
             return new ResponseEntity("User does not have access to lab !", HttpStatus.UNAUTHORIZED);

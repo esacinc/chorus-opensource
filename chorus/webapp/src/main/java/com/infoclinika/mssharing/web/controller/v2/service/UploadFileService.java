@@ -59,7 +59,7 @@ public class UploadFileService {
         List<String> uploadComplete = new ArrayList();
         List<String> uploadErrors = new ArrayList();
 
-        boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experimentId);
+        boolean isUserLabMembership = restAuthClientService.isUserHasAccessToExperiment(user, experimentId);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
 
         if(isUserLabMembership && experimentShortInfo.files.size() > 0){
@@ -68,7 +68,7 @@ public class UploadFileService {
                 for (MultipartFile multipartFile: multipartFiles) {
 
                     File file = convertMultipartToFile(multipartFile);
-                    startUploadFilesToStorage(experimentId, file, resultsProcessingFiles, uploadComplete, uploadErrors);
+                    startUploadProcessingFilesToStorage(experimentId, file, resultsProcessingFiles, uploadComplete, uploadErrors);
                     file.delete();
                 }
 
@@ -96,7 +96,7 @@ public class UploadFileService {
 
     public ResponseEntity<Object> createProcessingRun(ProcessingRunsDTO dto, long user, long experiment){
 
-        boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experiment);
+        boolean isUserLabMembership = restAuthClientService.isUserHasAccessToExperiment(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
         if(dto.getFileToFileMap() == null || dto.getFileToFileMap().isEmpty()){
@@ -113,7 +113,13 @@ public class UploadFileService {
     }
 
 
-    private void startUploadFilesToStorage(long experiment, File file, Map<String, Collection<String>> map,List<String> uploadDone, List<String> uploadExists){
+//    public ResponseEntity<Object> updateProcessingRun(){
+//
+//    }
+
+
+
+    private void startUploadProcessingFilesToStorage(long experiment, File file, Map<String, Collection<String>> map,List<String> uploadDone, List<String> uploadExists){
 
         boolean processingFileAlreadyExist = processingFileManagement.isProcessingFileAlreadyUploadedToExperiment(experiment, file.getName());
         final NodePath nodePath = awsConfigService.returnProcessingStorageTargetFolder(experiment, file.getName());
@@ -136,11 +142,6 @@ public class UploadFileService {
             LOGGER.info("Processing file with name key: " + nodePath.getPath() + " already exists");
         }
     }
-
-
-
-
-
 
     private boolean checkNoValidFilesToFileMap(ProcessingRunsDTO dto, long experiment, Map<String, Collection<String>> resultsMap, List<String> errorsData){
 
