@@ -1,6 +1,7 @@
 package com.infoclinika.mssharing.web.controller.v2.service;
 
 
+import com.infoclinika.mssharing.model.internal.RuleValidator;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
 import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
@@ -34,6 +35,9 @@ public class RestAuthClientService {
     private DetailsReader detailsReader;
     @Inject
     private ProcessingFileManagement processingFileManagement;
+
+    @Inject
+    private RuleValidator ruleValidator;
 
     @Data
     public static class CredentialsDTO {
@@ -94,9 +98,14 @@ public class RestAuthClientService {
 
     }
 
-    public boolean isUserLabMembership(long user, long experiment){
-        final ExperimentItem experimentItem = detailsReader.readExperiment(user, experiment);
-        return processingFileManagement.isUserLabMembership(user, experimentItem.lab);
+    public boolean isUserHasAcessToExperiment(long user, long experiment){
+        boolean isUserCanReadExperiment = ruleValidator.isUserCanReadExperiment(user, experiment);
+
+        if(isUserCanReadExperiment){
+            final ExperimentItem experimentItem = detailsReader.readExperiment(user, experiment);
+            return processingFileManagement.isUserLabMembership(user, experimentItem.lab);
+        }
+        return false;
     }
 
 }

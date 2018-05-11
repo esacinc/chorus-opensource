@@ -56,7 +56,7 @@ public class UploadFileService {
         List<String> uploadComplete = new ArrayList();
         List<String> uploadErrors = new ArrayList();
 
-        boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experimentId);
+        boolean isUserLabMembership = restAuthClientService.isUserHasAcessToExperiment(user, experimentId);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
 
         if(isUserLabMembership && experimentShortInfo.files.size() > 0){
@@ -88,7 +88,7 @@ public class UploadFileService {
 
     public ResponseEntity<Object> createProcessingRun(ProcessingRunsDTO dto, long user, long experiment){
 
-        boolean isUserLabMembership = restAuthClientService.isUserLabMembership(user, experiment);
+        boolean isUserHasAcessToExperiment = restAuthClientService.isUserHasAcessToExperiment(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
         Map<String, Collection<String>> map = processingFileManagement.validateAssociateFiles(dto.getFileToFileMap(), experiment, user);
@@ -102,7 +102,7 @@ public class UploadFileService {
 
         return  checkNoValidFilesToFileMap(dto, experiment, resultsMap, errorsData) ?
                 new ResponseEntity("You can't create processing runs with not valid data, please check processing file name and experiment file name !  " + resultsMap.toString(), HttpStatus.BAD_REQUEST):
-                createProcessingRunAndAssociateProcessingFiles(dto, user, experiment, isProcessingRunAlreadyExist, isUserLabMembership);
+                createProcessingRunAndAssociateProcessingFiles(dto, user, experiment, isProcessingRunAlreadyExist, isUserHasAcessToExperiment);
     }
 
 

@@ -41,7 +41,6 @@ public class ExperimentService {
     private RestAuthClientService restAuthClientService;
     @Inject
     private ExperimentCreationHelper experimentCreationHelper;
-
     @Inject
     private RuleValidator ruleValidator;
 
@@ -52,21 +51,19 @@ public class ExperimentService {
 
 
         if(!ruleValidator.isExperimentExist(experimentId)){
-
             LOGGER.warn("#### Experiment with id:"  + experimentId + " does not exist !");
-
             return new ResponseEntity("Experiment with id: " + experimentId + " does not exist !", HttpStatus.BAD_REQUEST);
         }
 
-        boolean isUserAnLab = restAuthClientService.isUserLabMembership(userId, experimentId);
+        boolean isUserHasAcessToExperiment = restAuthClientService.isUserHasAcessToExperiment(userId, experimentId);
 
-        if(isUserAnLab){
+        if(isUserHasAcessToExperiment){
             return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
         }else {
 
             LOGGER.warn("User does not have access to lab !");
 
-            return new ResponseEntity("User does not have access to lab !", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity("User does not have access to lab!", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -82,7 +79,6 @@ public class ExperimentService {
         destination.setLabName(shortInfo.labName);
         destination.setLaboratory(experimentItemSource.lab);
         destination.setDescription(experimentItemSource.description);
-//        destination.setInstrument(experimentItemSource.instrumentName);
         destination.setInstrumentModel(instrumentModel.name);
         destination.setVendor(experimentItemSource.instrumentVendor);
         destination.setLabName(experimentItemSource.labName);
@@ -137,31 +133,6 @@ public class ExperimentService {
             }
 
         }
-
-
-
-
-//        for(DetailsReaderTemplate.ShortExperimentFileItem file : files){
-
-//            ExtendedShortExperimentFileItem fileItem = (ExtendedShortExperimentFileItem) file;
-
-
-//            if(!map.containsKey(fileItem.name)){
-
-//                ImmutableList<ExtendedShortExperimentFileItem.ExperimentShortSampleItem> immutableList = fileItem.;
-//                ExperimentInfoDTO.FileToSamplesDTO fileToSamplesDTO = new ExperimentInfoDTO.FileToSamplesDTO();
-
-//                for (ExtendedShortExperimentFileItem.ExperimentShortSampleItem sampleItem : immutableList){
-//                    fileToSamplesDTO.setSampleName(sampleItem.condition.name);
-//                }
-
-//                final NodePath nodePath = awsConfigService.returnExperimentStorageTargetFolder(user, file.name);
-
-//                fileToSamplesDTO.setFilePath(awsConfigService.generateTemporaryLinkToS3(nodePath.getPath()));
-//                list.add(fileToSamplesDTO);
-//                map.put(file.name, list);
-//            }
-//        }
 
         return map;
     }
