@@ -80,6 +80,8 @@ public class RestAuthClientService {
 
         if (respHeaders.getFirst("Location").contains("login_error")) {
             LOGGER.info("Wrong credentials", new RuntimeException());
+            return new ResponseEntity("Wrong credentials", HttpStatus.UNAUTHORIZED);
+
         }
 
         String authcookie = respHeaders.get("Set-Cookie").stream()
@@ -96,7 +98,7 @@ public class RestAuthClientService {
 
     }
 
-    public boolean isUserHasAccessToExperiment(long user, long experiment){
+    public boolean isUserHasAcessToExperiment(long user, long experiment){
         boolean isUserCanReadExperiment = ruleValidator.isUserCanReadExperiment(user, experiment);
 
         if(isUserCanReadExperiment){

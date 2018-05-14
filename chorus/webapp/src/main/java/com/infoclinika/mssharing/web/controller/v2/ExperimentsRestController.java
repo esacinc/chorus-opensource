@@ -10,9 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-
 import javax.inject.Inject;
 import java.security.Principal;
+
 
 @RestController
 @RequestMapping(value = "/v2/experiments")
@@ -32,8 +32,7 @@ public class ExperimentsRestController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> anyUnknownException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(
-                ex.getLocalizedMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getLocalizedMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

@@ -23,7 +23,6 @@ public class ExperimentInfoDTO {
     private String description;
     private String species;
     private String instrumentModel;
-    private String instrument;
     private Long experimentType;
     private Map<String, Collection<FileToSamplesDTO>> filesToSamples;
 
@@ -32,6 +31,7 @@ public class ExperimentInfoDTO {
     public static class FileToSamplesDTO{
         private String filePath;
         private String sampleName;
+        private String instrumentName;
     }
 }
 
