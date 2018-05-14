@@ -13,7 +13,7 @@ public interface ProcessingFileReader {
 
     ProcessingFileInfo readProcessingFileInfo(long processingFile);
 
-    List<ProcessingFileInfo> findAllByExperiment(long experiment);
+    List<ProcessingFile> readAllByExperiment(long experiment);
 
 
     class ProcessingFileInfo{

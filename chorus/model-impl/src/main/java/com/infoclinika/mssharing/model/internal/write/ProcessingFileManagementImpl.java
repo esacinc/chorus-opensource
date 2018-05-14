@@ -156,29 +156,4 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
         }
         return false;
     }
-
-    @Override
-    public Map<String, Collection<String>> validateAssociateFiles(Map<String, Collection<String>> map,long experimentId, long user){
-
-        Map<String, Collection<String>> collectionMap = new HashMap();
-        Collection<String> collection = new ArrayList();
-        ExperimentItem experimentItem = detailsReader.readExperiment(user, experimentId);
-
-        for(Map.Entry<String, Collection<String>> entry : map.entrySet()){
-
-            Collection<String> experimentFiles = entry.getValue();
-
-                for(String fileName : experimentFiles) {
-                    boolean activeFileMetaData = fileMetaDataRepository.findNameByInstrument(experimentItem.instrument.get(), fileName);
-
-                    if(!activeFileMetaData){
-                        collection.add(fileName);
-                        collectionMap.put("error_files", collection);
-                    }
-                }
-        }
-
-        return collectionMap;
-    }
-
 }

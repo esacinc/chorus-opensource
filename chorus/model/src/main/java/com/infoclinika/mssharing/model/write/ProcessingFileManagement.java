@@ -14,8 +14,6 @@ public interface ProcessingFileManagement {
 
     boolean isUserLabMembership(long user, long lab);
 
-    Map<String, Collection<String>> validateAssociateFiles(Map<String, Collection<String>> map, long experimentId, long user);
-
 
 
 

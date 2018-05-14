@@ -11,6 +11,7 @@ import com.infoclinika.mssharing.model.write.ProcessingRunManagement;
 import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
 import com.infoclinika.mssharing.web.controller.v2.dto.ProcessingRunsDTO;
+import com.infoclinika.mssharing.web.controller.v2.util.ProcessFileValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,8 @@ public class ProcessingService {
     private ProcessingRunReader processingRunReader;
     @Inject
     private ProcessingRunManagement processingRunManagement;
+    @Inject
+    private ProcessFileValidator processFileValidator;
 
 
     public ResponseEntity<Object> uploadFileToStorage(long user, long experimentId, MultipartFile[] multipartFiles) throws IOException {
@@ -98,7 +101,7 @@ public class ProcessingService {
         boolean isUserHasAccessToExperiment = restAuthClientService.isUserHasAccessToExperiment(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
-        Map<String, Collection<String>> map = processingFileManagement.validateAssociateFiles(dto.getFileToFileMap(), experiment, user);
+        Map<String, Collection<String>> map = processFileValidator.validateAssociateFiles(dto.getFileToFileMap(), experiment, user);
 
         if(!map.isEmpty()){
             return new ResponseEntity("Files in experiment does not exists !" + map.toString(), HttpStatus.BAD_REQUEST);

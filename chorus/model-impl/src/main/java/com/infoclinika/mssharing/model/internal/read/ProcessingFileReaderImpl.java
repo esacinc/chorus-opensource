@@ -4,7 +4,6 @@ package com.infoclinika.mssharing.model.internal.read;
 import com.infoclinika.mssharing.model.internal.entity.ProcessingFile;
 import com.infoclinika.mssharing.model.internal.repository.ProcessingFileRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,9 +27,8 @@ public class ProcessingFileReaderImpl implements ProcessingFileReader{
     }
 
     @Override
-    public List<ProcessingFileInfo> findAllByExperiment(long experiment) {
-        processingFileRepository.findAllByExperiment(experiment);
-        return null;
+    public List<ProcessingFile> readAllByExperiment(long experiment) {
+        return processingFileRepository.findAllByExperiment(experiment);
     }
 
 
