@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class ProcessingFileReaderImpl implements ProcessingFileReader{
@@ -24,6 +25,12 @@ public class ProcessingFileReaderImpl implements ProcessingFileReader{
                                         processingFile1.getContentId(),
                                         processingFile1.getFileMetaDataTemplates(),
                                         processingFile1.getProcessingRun(), processingFile1.getExperimentTemplate());
+    }
+
+    @Override
+    public List<ProcessingFileInfo> findAllByExperiment(long experiment) {
+        processingFileRepository.findAllByExperiment(experiment);
+        return null;
     }
 
 

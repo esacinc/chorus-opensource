@@ -98,6 +98,12 @@ public class ProcessingService {
         boolean isUserHasAccessToExperiment = restAuthClientService.isUserHasAccessToExperiment(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
+        Map<String, Collection<String>> map = processingFileManagement.validateAssociateFiles(dto.getFileToFileMap(), experiment, user);
+
+        if(!map.isEmpty()){
+            return new ResponseEntity("Files in experiment does not exists !" + map.toString(), HttpStatus.BAD_REQUEST);
+        }
+
         if(dto.getFileToFileMap() == null || dto.getFileToFileMap().isEmpty()){
             return createProcessingRunWithoutAssociate(dto.getName(), user, experiment, isUserHasAccessToExperiment, isProcessingRunAlreadyExist);
         }
