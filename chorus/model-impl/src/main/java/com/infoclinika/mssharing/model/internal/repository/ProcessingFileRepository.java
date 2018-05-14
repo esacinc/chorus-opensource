@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface ProcessingFileRepository extends JpaRepository<ProcessingFile, Long>{
@@ -19,4 +21,7 @@ public interface ProcessingFileRepository extends JpaRepository<ProcessingFile, 
 
     @Query("select pf from  #{#entityName} pf where pf.name=:name and pf.experimentTemplate.id=:experimentId")
     ProcessingFile findByName(@Param("name") String processingFileName, @Param("experimentId") long experimentId);
+
+    @Query("SELECT pf FROM #{#entityName} pf WHERE pf.experimentTemplate_id =:experiment and pf.processingRun_id is NULL")
+    List<ProcessingFile> findAllByExperiment(@Param("experiment") long experiment);
 }

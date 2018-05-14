@@ -14,7 +14,6 @@ import com.infoclinika.mssharing.web.controller.v2.dto.ProcessingRunsDTO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +26,9 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
-public class UploadFileService {
+public class ProcessingService {
 
-    private static final Logger LOGGER = Logger.getLogger(UploadFileService.class);
+    private static final Logger LOGGER = Logger.getLogger(ProcessingService.class);
 
     private static final CloudStorageService CLOUD_STORAGE_SERVICE = CloudStorageFactory.service();
 
@@ -59,10 +58,10 @@ public class UploadFileService {
         List<String> uploadComplete = new ArrayList();
         List<String> uploadErrors = new ArrayList();
 
-        boolean isUserLabMembership = restAuthClientService.isUserHasAccessToExperiment(user, experimentId);
+        boolean isUserHasAccessToExperiment = restAuthClientService.isUserHasAccessToExperiment(user, experimentId);
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(user, experimentId);
 
-        if(isUserLabMembership && experimentShortInfo.files.size() > 0){
+        if(isUserHasAccessToExperiment && experimentShortInfo.files.size() > 0){
 
             if(multipartFiles.length > 0){
                 for (MultipartFile multipartFile: multipartFiles) {
@@ -100,9 +99,7 @@ public class UploadFileService {
         boolean isProcessingRunAlreadyExist  = processingRunReader.findByProcessingRunName(dto.getName(), experiment);
 
         if(dto.getFileToFileMap() == null || dto.getFileToFileMap().isEmpty()){
-
-            processingRunManagement.create(experiment, dto.getName());
-            return new ResponseEntity("Processing Run: " + dto.getName() + " without files successfully created", HttpStatus.OK);
+            return createProcessingRunWithoutAssociate(dto.getName(), user, experiment, isUserHasAccessToExperiment, isProcessingRunAlreadyExist);
         }
 
         Map<String, Collection<String>> resultsMap = new HashMap();
@@ -114,9 +111,9 @@ public class UploadFileService {
     }
 
 
-//    public ResponseEntity<Object> updateProcessingRun(){
-//
-//    }
+    public ResponseEntity<Object> updateProcessingRun(){
+        return null;
+    }
 
 
 
@@ -176,5 +173,19 @@ public class UploadFileService {
             LOGGER.warn("#### Processing Run with name: "+ dto.getName() +" already exists ####");
             return new ResponseEntity("Processing Run with name: "+ dto.getName() +" already exists", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private ResponseEntity<Object> createProcessingRunWithoutAssociate(String name,long user, long experiment, boolean isUserHasAccessToExperiment, boolean isProcessingRunAlreadyExist){
+
+        if(!isProcessingRunAlreadyExist){
+            if(isUserHasAccessToExperiment){
+                processingRunManagement.create(experiment, name);
+                return new ResponseEntity("Processing Run: " + name + " successfully created", HttpStatus.OK);
+            }else {
+                LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
+                return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
+            }
+        }
+        return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
     }
 }
