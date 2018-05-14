@@ -3,11 +3,13 @@ package com.infoclinika.mssharing.web.controller.v2.service;
 import com.google.common.base.*;
 import com.google.common.collect.ImmutableList;
 import com.infoclinika.mssharing.model.helper.ExperimentCreationHelper;
+import com.infoclinika.mssharing.model.internal.RuleValidator;
 import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.read.DashboardReader;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ExtendedShortExperimentFileItem;
 import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
+import com.infoclinika.mssharing.model.read.dto.details.FileItem;
 import com.infoclinika.mssharing.platform.fileserver.model.NodePath;
 import com.infoclinika.mssharing.platform.model.common.items.DictionaryItem;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
@@ -39,20 +41,34 @@ public class ExperimentService {
     private RestAuthClientService restAuthClientService;
     @Inject
     private ExperimentCreationHelper experimentCreationHelper;
+    @Inject
+    private RuleValidator ruleValidator;
 
 
 
 
     public ResponseEntity<ExperimentInfoDTO> returnExperimentInfo(long userId, long experimentId){
-        boolean isUserHasAccessToExperiment = restAuthClientService.isUserHasAccessToExperiment(userId, experimentId);
-        if(isUserHasAccessToExperiment){
+
+
+        if(!ruleValidator.isExperimentExist(experimentId)){
+            LOGGER.warn("#### Experiment with id:"  + experimentId + " does not exist !");
+            return new ResponseEntity("Experiment with id: " + experimentId + " does not exist !", HttpStatus.BAD_REQUEST);
+        }
+
+        boolean isUserHasAcessToExperiment = restAuthClientService.isUserHasAccessToExperiment(userId, experimentId);
+
+        if(isUserHasAcessToExperiment){
             return toExperimentInfoDTO(new ExperimentDetails(detailsReader.readExperiment(userId, experimentId), detailsReader.readExperimentShortInfo(userId, experimentId)));
         }else {
-            return new ResponseEntity("User does not have access to lab !", HttpStatus.UNAUTHORIZED);
+
+            LOGGER.warn("User does not have access to lab !");
+
+            return new ResponseEntity("User does not have access to lab!", HttpStatus.UNAUTHORIZED);
         }
     }
 
     private ResponseEntity<ExperimentInfoDTO> experimentDetailsToInfoDTO(ExperimentDetails experimentDetails, ExperimentInfoDTO destination){
+        Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> map = new HashMap<>();
 
         ExperimentItem experimentItemSource = experimentDetails.getExperimentItem();
         DictionaryItem dictionaryItem = experimentCreationHelper.specie(experimentItemSource.specie);
@@ -63,7 +79,6 @@ public class ExperimentService {
         destination.setLabName(shortInfo.labName);
         destination.setLaboratory(experimentItemSource.lab);
         destination.setDescription(experimentItemSource.description);
-        destination.setInstrument(experimentItemSource.instrumentName);
         destination.setInstrumentModel(instrumentModel.name);
         destination.setVendor(experimentItemSource.instrumentVendor);
         destination.setLabName(experimentItemSource.labName);
@@ -73,36 +88,50 @@ public class ExperimentService {
         destination.setTechnologyType(instrumentModel.technologyType.name);
         destination.setExperimentType(experimentItemSource.experimentType);
 
-        destination.setFilesToSamples(computeExperimentFileSamples(shortInfo.files, experimentItemSource.labHead, experimentItemSource.instrument.get()));
+        if(!experimentItemSource.files.isEmpty()){
+            for(DetailsReaderTemplate.FileItemTemplate fileItem: experimentItemSource.files){
+                destination.setFilesToSamples(computeExperimentFileSamples(fileItem, experimentItemSource.labHead, fileItem.instrumentId, shortInfo, map));
+
+            }
+        }
+
 
         LOGGER.info(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(destination));
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(destination);
     }
 
-    private Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> computeExperimentFileSamples(List<? extends DetailsReaderTemplate.ShortExperimentFileItem> files, long user, long instrumentId){
+    private Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> computeExperimentFileSamples(DetailsReaderTemplate.FileItemTemplate fileItem, long user, long instrument, DetailsReaderTemplate.ExperimentShortInfo shortInfo, Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> map){
 
-        Map<String, Collection<ExperimentInfoDTO.FileToSamplesDTO>> map = new HashMap<>();
 
-        for(DetailsReaderTemplate.ShortExperimentFileItem file : files){
+        List<ExperimentInfoDTO.FileToSamplesDTO> list = new ArrayList<>();
 
-            ExtendedShortExperimentFileItem fileItem = (ExtendedShortExperimentFileItem) file;
-            List<ExperimentInfoDTO.FileToSamplesDTO> list = new ArrayList<>();
 
-            if(!map.containsKey(file.name)){
+        for (DetailsReaderTemplate.ShortExperimentFileItem file : shortInfo.files){
 
-                ImmutableList<ExtendedShortExperimentFileItem.ExperimentShortSampleItem> immutableList = fileItem.samples;
-                ExperimentInfoDTO.FileToSamplesDTO fileToSamplesDTO = new ExperimentInfoDTO.FileToSamplesDTO();
+            if(fileItem.name.equals(file.name)){
 
-                for (ExtendedShortExperimentFileItem.ExperimentShortSampleItem sampleItem : immutableList){
-                    fileToSamplesDTO.setSampleName(sampleItem.condition.name);
+                ExtendedShortExperimentFileItem fileItems = (ExtendedShortExperimentFileItem) file;
+
+                if(!map.containsKey(fileItem.name)){
+
+                    ImmutableList<ExtendedShortExperimentFileItem.ExperimentShortSampleItem> immutableList = fileItems.samples;
+                    ExperimentInfoDTO.FileToSamplesDTO fileToSamplesDTO = new ExperimentInfoDTO.FileToSamplesDTO();
+
+                    for (ExtendedShortExperimentFileItem.ExperimentShortSampleItem sampleItem : immutableList){
+                        fileToSamplesDTO.setSampleName(sampleItem.condition.name);
+                        fileToSamplesDTO.setInstrumentName(fileItem.instrumentName);
+                    }
+
+                    final NodePath nodePath = awsConfigService.returnExperimentStorageTargetFolder(user, instrument,fileItem.name);
+                    fileToSamplesDTO.setFilePath(awsConfigService.generateTemporaryLinkToS3(nodePath.getPath()));
+
+                    list.add(fileToSamplesDTO);
+                    map.put(fileItem.name, list);
+
                 }
 
-                final NodePath nodePath = awsConfigService.returnExperimentStorageTargetFolder(user, instrumentId, file.name);
-
-                fileToSamplesDTO.setFilePath(awsConfigService.generateTemporaryLinkToS3(nodePath.getPath()));
-                list.add(fileToSamplesDTO);
-                map.put(file.name, list);
             }
+
         }
 
         return map;

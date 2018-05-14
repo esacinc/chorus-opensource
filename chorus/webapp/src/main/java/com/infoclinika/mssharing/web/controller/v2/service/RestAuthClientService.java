@@ -98,7 +98,7 @@ public class RestAuthClientService {
 
     }
 
-    public boolean isUserHasAcessToExperiment(long user, long experiment){
+    public boolean isUserHasAccessToExperiment(long user, long experiment){
         boolean isUserCanReadExperiment = ruleValidator.isUserCanReadExperiment(user, experiment);
 
         if(isUserCanReadExperiment){
