@@ -9,12 +9,17 @@ import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
 import static com.infoclinika.mssharing.dto.FunctionTransformerAbstract.toListDto;
 import static com.infoclinika.mssharing.web.transform.DtoTransformer.TO_PROCESSING_FILE_DTO;
 
+import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
+import com.infoclinika.mssharing.model.write.ProcessingRunManagement;
+import com.infoclinika.mssharing.web.controller.v2.dto.ProcessingRunsDTO;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.*;
 
 @Component
+@Transactional
 public class ProcessFileValidatorImpl implements ProcessFileValidator {
 
     @Inject
@@ -22,7 +27,11 @@ public class ProcessFileValidatorImpl implements ProcessFileValidator {
     @Inject
     private FileMetaDataRepository fileMetaDataRepository;
     @Inject
-    private ProcessingFileReader processingFileReader;
+    private ProcessingFileManagement processingFileManagement;
+
+    public static final String NOT_EXISTS_PROCESSING_FILES = "NOT_EXISTS_PROCESSING_FILES";
+
+    public static final String NOT_EXISTS_EXPERIMENT_FILES = "NOT_EXISTS_EXPERIMENT_FILES";
 
 
     @Override
@@ -40,7 +49,7 @@ public class ProcessFileValidatorImpl implements ProcessFileValidator {
 
                 if(!activeFileMetaData){
                     collection.add(fileName);
-                    collectionMap.put("error_files", collection);
+                    collectionMap.put(NOT_EXISTS_EXPERIMENT_FILES, collection);
                 }
             }
         }
@@ -49,28 +58,36 @@ public class ProcessFileValidatorImpl implements ProcessFileValidator {
     }
 
     @Override
-    public Map<String, Collection<String>> validateAllProcessedFilesByExperiment(Map<String, Collection<String>> map, long experiment) {
+    public Map<String, Collection<String>> checkValidProcessingFilesToFileMap(ProcessingRunsDTO dto, long experiment, Map<String, Collection<String>> resultsMap) {
 
-        List<ProcessingFile> files = processingFileReader.readAllByExperiment(experiment);
-        List<ProcessingFileReader.ProcessingFileInfo> processingFileInfos = toListDto(files, TO_PROCESSING_FILE_DTO);
-        Set<String> strings = map.keySet();
+        List<String> errorsData = new ArrayList();
 
-        Map<String, Collection<String>> results = new HashMap<>();
-        Collection<String> collection = new ArrayList<>();
+        for(Map.Entry<String, Collection<String>> entry : dto.getFileToFileMap().entrySet()){
+            boolean isProcessingFileAlreadyUploadedToExperiment = processingFileManagement.isProcessingFileAlreadyUploadedToExperiment(experiment, entry.getKey());
 
-        for(ProcessingFileReader.ProcessingFileInfo processingFileInfo : processingFileInfos){
-
-            for(String name : strings){
-
-                if(processingFileInfo.name.equals(name)){
-                    if(!collection.contains(name)){
-                        collection.add(name);
-                        results.put("not_exist_files", collection);
-                    }
-                }
+            if(!isProcessingFileAlreadyUploadedToExperiment){
+                errorsData.add(entry.getKey());
+                resultsMap.put(NOT_EXISTS_PROCESSING_FILES, errorsData);
             }
         }
-        return results;
+        return resultsMap;
+    }
+
+    @Override
+    public Map<String, Collection<String>> checkValidProcessingFilesToFileMap(Map<String, Collection<String>> map, long experiment) {
+
+        Map<String, Collection<String>> resultsMap = new HashMap();
+        List<String> collection = new ArrayList();
+
+        for(Map.Entry<String, Collection<String>> entry : map.entrySet()){
+            boolean isProcessingFileAlreadyUploadedToExperiment = processingFileManagement.isProcessingFileAlreadyUploadedToExperiment(experiment, entry.getKey());
+
+            if(!isProcessingFileAlreadyUploadedToExperiment){
+                collection.add(entry.getKey());
+                resultsMap.put(NOT_EXISTS_PROCESSING_FILES, collection);
+            }
+        }
+        return resultsMap;
     }
 
 

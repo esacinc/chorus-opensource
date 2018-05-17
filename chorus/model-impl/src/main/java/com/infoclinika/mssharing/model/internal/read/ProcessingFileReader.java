@@ -8,12 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
 public interface ProcessingFileReader {
 
     ProcessingFileInfo readProcessingFileInfo(long processingFile);
 
-    List<ProcessingFile> readAllByExperiment(long experiment);
+    List<ProcessingFile> readProcessingFilesByExperiment(long experiment);
 
 
     class ProcessingFileInfo{

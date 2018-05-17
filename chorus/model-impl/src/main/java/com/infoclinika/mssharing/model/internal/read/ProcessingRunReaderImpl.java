@@ -17,7 +17,7 @@ public class ProcessingRunReaderImpl implements ProcessingRunReader{
 
 
     @Override
-    public boolean findByProcessingRunName(String name, long experiment) {
+    public boolean findProcessingRunByExperiment(String name, long experiment) {
         return processingRunRepository.findByNameAndExperiment(name, experiment) != null ? true : false;
     }
 

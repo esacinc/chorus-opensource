@@ -13,7 +13,6 @@ import com.infoclinika.mssharing.model.internal.repository.ProcessingFileReposit
 import com.infoclinika.mssharing.model.internal.repository.ProcessingRunRepository;
 import com.infoclinika.mssharing.model.read.DetailsReader;
 import com.infoclinika.mssharing.model.read.ProcessingRunReader;
-import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
 import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
 import com.infoclinika.mssharing.platform.entity.UserLabMembership;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;
@@ -72,6 +71,8 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
     @Override
     public boolean associateProcessingFileWithRawFile(Map<String, Collection<String>> map, long experimentId, long userId, String processingRunName) {
 
+        boolean results = false;
+
         LOGGER.info("#### Associating processes file start ####");
 
         final DetailsReaderTemplate.ExperimentShortInfo experimentShortInfo = detailsReader.readExperimentShortInfo(userId, experimentId);
@@ -108,11 +109,11 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
             }
 
             if(processingFile != null){
-                return create(processingFile, experimentId, processingRunName);
+                results = apply(processingFile, experimentId, processingRunName);
             }
         }
 
-        return false;
+        return results;
 
     }
 
@@ -122,38 +123,53 @@ public class ProcessingFileManagementImpl implements ProcessingFileManagement{
         return userLabMembership == null ? false: true;
     }
 
-    private boolean create(ProcessingFile processingFile, long experiment, String processingRunName){
+    private boolean apply(ProcessingFile processingFile, long experiment, String processingRunName){
 
-        ProcessingRun processingRun = processingFile.getProcessingRun();
         final ActiveExperiment activeExperiment = experimentRepository.findOne(experiment);
 
-        boolean isProcessingRunNameExist = processingRunReader.findByProcessingRunName(processingRunName, experiment);
+        boolean isProcessingRunNameExist = processingRunReader.findProcessingRunByExperiment(processingRunName, experiment);
 
-        if(processingRun == null){
-            if(!isProcessingRunNameExist){
-                if(activeExperiment != null){
-                    processingRun = new ProcessingRun();
-                    processingRun.setName(processingRunName);
-                    processingRun.setExperimentTemplate(activeExperiment);
-                    processingRun.getProcessingFiles().add(processingFile);
-                    processingRunRepository.save(processingRun);
-                    processingFile.setProcessingRun(processingRun);
-                    processingFileRepository.save(processingFile);
-
-                }else {
-                    LOGGER.info("Experiment with Id: " + experiment + "does not exist !");
-                }
-            }else{
-                processingRun = processingRunRepository.findByNameAndExperiment(processingRunName, experiment);
+        if(!isProcessingRunNameExist){
+            if(activeExperiment != null){
+                ProcessingRun processingRun = new ProcessingRun();
+                processingRun.setName(processingRunName);
+                processingRun.setExperimentTemplate(activeExperiment);
+                processingRun.getProcessingFiles().add(processingFile);
+                processingRunRepository.save(processingRun);
                 processingFile.setProcessingRun(processingRun);
                 processingFileRepository.save(processingFile);
+
+                LOGGER.info("#### Associating processes file successfully complete ####");
+                LOGGER.info("#### Processing run successfully created ####");
+
+                return true;
+            }else {
+                LOGGER.info("Experiment with Id: " + experiment + "does not exist !");
             }
+        }else{
+            return updateProcessingFiles(processingFile, experiment, processingRunName);
+        }
+
+        return false;
+    }
+
+
+    private boolean updateProcessingFiles(ProcessingFile processingFile, long experiment, String processingRunName){
+        ProcessingRun processingRun = processingRunRepository.findByNameAndExperiment(processingRunName, experiment);
+
+        if(processingFile.getProcessingRun() == null){
+            processingFile.setProcessingRun(processingRun);
+            processingFileRepository.save(processingFile);
+
+            processingRun.getProcessingFiles().add(processingFile);
+            processingRunRepository.save(processingRun);
 
             LOGGER.info("#### Associating processes file successfully complete ####");
-            LOGGER.info("#### Processing run successfully created ####");
+            LOGGER.info("#### Processing run successfully updated ####");
 
             return true;
         }
+
         return false;
     }
 }

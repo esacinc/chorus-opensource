@@ -22,6 +22,6 @@ public interface ProcessingFileRepository extends JpaRepository<ProcessingFile, 
     @Query("select pf from  #{#entityName} pf where pf.name=:name and pf.experimentTemplate.id=:experimentId")
     ProcessingFile findByName(@Param("name") String processingFileName, @Param("experimentId") long experimentId);
 
-    @Query("SELECT pf FROM #{#entityName} pf WHERE pf.experimentTemplate_id =:experiment and pf.processingRun_id is NULL")
-    List<ProcessingFile> findAllByExperiment(@Param("experiment") long experiment);
+    @Query("SELECT pf FROM #{#entityName} pf WHERE pf.experimentTemplate.id=:experimentId and pf.processingRun.id is null")
+    List<ProcessingFile> findProcessingFilesByExperiment(@Param("experimentId") long experiment);
 }

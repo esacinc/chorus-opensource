@@ -4,6 +4,6 @@ import org.springframework.security.access.method.P;
 
 public interface ProcessingRunReader {
 
-    boolean findByProcessingRunName(String name, long experiment);
+    boolean findProcessingRunByExperiment(String name, long experiment);
 
 }

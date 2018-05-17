@@ -41,7 +41,7 @@ public class ProcessingRunsController {
     @RequestMapping(name = "", method = RequestMethod.PATCH)
     public ResponseEntity<?> update(Principal principal, @PathVariable("experimentId") long experimentId, @RequestBody ProcessingRunsDTO processingRunsDTO){
         if(processingRunsDTO.getName() != null && !processingRunsDTO.getName().isEmpty()) {
-            return processingService.createProcessingRun(processingRunsDTO, RichUser.get(principal).getId(), experimentId);
+            return processingService.updateProcessingRun(processingRunsDTO, experimentId, RichUser.get(principal).getId());
         }
         return new ResponseEntity("Processing Run name can't be empty !", HttpStatus.BAD_REQUEST);
     }

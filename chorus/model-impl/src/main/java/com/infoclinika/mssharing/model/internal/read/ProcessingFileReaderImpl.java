@@ -27,8 +27,8 @@ public class ProcessingFileReaderImpl implements ProcessingFileReader{
     }
 
     @Override
-    public List<ProcessingFile> readAllByExperiment(long experiment) {
-        return processingFileRepository.findAllByExperiment(experiment);
+    public List<ProcessingFile> readProcessingFilesByExperiment(long experiment) {
+        return processingFileRepository.findProcessingFilesByExperiment(experiment);
     }
 
 
