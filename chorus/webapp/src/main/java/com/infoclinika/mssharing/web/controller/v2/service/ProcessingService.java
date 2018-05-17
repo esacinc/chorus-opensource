@@ -104,21 +104,24 @@ public class ProcessingService {
         boolean isUserHasAccessToExperiment = restAuthClientService.isUserHasAccessToExperiment(user, experiment);
         boolean isProcessingRunAlreadyExist  = processingRunReader.findProcessingRunByExperiment(dto.getName(), experiment);
 
-        Map<String, Collection<String>> map = processFileValidator.validateAssociateFiles(dto.getFileToFileMap(), experiment, user);
-
-        if(!map.isEmpty()){
-            return new ResponseEntity("Files in experiment does not exists !" + map.toString(), HttpStatus.BAD_REQUEST);
-        }
-
         if(dto.getFileToFileMap() == null || dto.getFileToFileMap().isEmpty()){
             return createProcessingRunWithoutAssociate(dto.getName(), user, experiment, isUserHasAccessToExperiment, isProcessingRunAlreadyExist);
+        }else {
+
+            Map<String, Collection<String>> map = processFileValidator.validateAssociateFiles(dto.getFileToFileMap(), experiment, user);
+
+            if(!map.isEmpty()){
+                return new ResponseEntity("Files in experiment does not exists !" + map.toString(), HttpStatus.BAD_REQUEST);
+            }
+
+            Map<String, Collection<String>> resultsMap = new HashMap();
+
+            return  !processFileValidator.checkValidProcessingFilesToFileMap(dto, experiment, resultsMap).isEmpty() ?
+                    new ResponseEntity("You can't create processing runs with not valid data, please check processing file name and experiment file name !  " + resultsMap.toString(), HttpStatus.BAD_REQUEST):
+                    createProcessingRunAndAssociateProcessingFiles(dto, user, experiment, isProcessingRunAlreadyExist, isUserHasAccessToExperiment);
+
+
         }
-
-        Map<String, Collection<String>> resultsMap = new HashMap();
-
-        return  !processFileValidator.checkValidProcessingFilesToFileMap(dto, experiment, resultsMap).isEmpty() ?
-                new ResponseEntity("You can't create processing runs with not valid data, please check processing file name and experiment file name !  " + resultsMap.toString(), HttpStatus.BAD_REQUEST):
-                createProcessingRunAndAssociateProcessingFiles(dto, user, experiment, isProcessingRunAlreadyExist, isUserHasAccessToExperiment);
     }
 
 
