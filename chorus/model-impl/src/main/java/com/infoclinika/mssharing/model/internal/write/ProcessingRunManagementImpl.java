@@ -23,7 +23,7 @@ public class ProcessingRunManagementImpl implements ProcessingRunManagement {
 
 
     @Override
-    public void create(long experiment, String name) {
+    public long create(long experiment, String name) {
         ProcessingRun processingRun = processingRunRepository.findByNameAndExperiment(name, experiment);
         if(processingRun == null){
             final ActiveExperiment activeExperiment = experimentRepository.findOne(experiment);
@@ -32,5 +32,7 @@ public class ProcessingRunManagementImpl implements ProcessingRunManagement {
             processingRun.setExperimentTemplate(activeExperiment);
             processingRunRepository.save(processingRun);
         }
+
+        return processingRun.getId();
     }
 }

@@ -12,7 +12,7 @@ import com.infoclinika.mssharing.model.internal.repository.FileMetaDataRepositor
 import com.infoclinika.mssharing.model.internal.repository.ProcessingFileRepository;
 import com.infoclinika.mssharing.model.internal.repository.ProcessingRunRepository;
 import com.infoclinika.mssharing.model.read.DetailsReader;
-import com.infoclinika.mssharing.model.read.ProcessingRunReader;
+import com.infoclinika.mssharing.model.internal.read.ProcessingRunReader;
 import com.infoclinika.mssharing.model.write.ProcessingFileManagement;
 import com.infoclinika.mssharing.platform.entity.UserLabMembership;
 import com.infoclinika.mssharing.platform.model.read.DetailsReaderTemplate;

@@ -28,6 +28,7 @@ import com.infoclinika.mssharing.model.internal.entity.User;
 import com.infoclinika.mssharing.model.internal.entity.mailing.FailedMailNotificationReceiver;
 import com.infoclinika.mssharing.model.internal.entity.restorable.ActiveFileMetaData;
 import com.infoclinika.mssharing.model.internal.read.ProcessingFileReader;
+import com.infoclinika.mssharing.model.internal.read.ProcessingRunReader;
 import com.infoclinika.mssharing.model.internal.read.Transformers;
 import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.internal.write.ExperimentLabelManagement;
@@ -800,6 +801,10 @@ public class AbstractTest extends AbstractTestNGSpringContextTests {
         return processingFileManagement.createProcessingFile(experiment, processingFileShortInfo);
     }
 
+    protected long createProcessingRun(long experiment, String name){
+        return processingRunManagement.create(experiment, name);
+    }
+
     protected Map<String, Collection<String>> createFileToFileMap(FileItem fileItem, long processingFileId){
         ProcessingFileReader.ProcessingFileInfo processingFileInfo = processingFileReader.readProcessingFileInfo(processingFileId);
 
@@ -845,8 +850,8 @@ public class AbstractTest extends AbstractTestNGSpringContextTests {
 
         List<Long> list = new ArrayList<>();
         for(int i = 0; i < experimentItem.files.size(); i++){
-            ProcessingFileManagement.ProcessingFileShortInfo processingFileShortInfo = new ProcessingFileManagement.ProcessingFileShortInfo("file-test"+i+".RAW",
-                                                                                                                                            "processed-file" + experimentItem.id + "/file-test"+i+".RAW");
+            String file = "file-test"+UUID.randomUUID().toString()+".RAW";
+            ProcessingFileManagement.ProcessingFileShortInfo processingFileShortInfo = new ProcessingFileManagement.ProcessingFileShortInfo(file, "processed-file/" + experimentItem.id +"/"+file);
             long id = processingFileManagement.createProcessingFile(experimentItem.id, processingFileShortInfo);
             list.add(id);
         }
@@ -865,11 +870,14 @@ public class AbstractTest extends AbstractTestNGSpringContextTests {
         return map;
     }
 
-
     @Inject
     protected ProcessingFileReader processingFileReader;
     @Inject
     protected ProcessingFileManagement processingFileManagement;
+    @Inject
+    protected ProcessingRunManagement processingRunManagement;
+    @Inject
+    protected ProcessingRunReader processingRunReader;
     @Inject
     protected AwsS3ClientConfigurationService awsS3ClientConfigurationService;
     @Inject

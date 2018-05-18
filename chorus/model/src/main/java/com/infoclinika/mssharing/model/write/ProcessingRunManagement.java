@@ -1,7 +1,9 @@
 package com.infoclinika.mssharing.model.write;
 
+import java.util.Date;
+
 public interface ProcessingRunManagement {
 
 
-    void create(long experiment, String name);
+    long create(long experiment, String name);
 }
