@@ -3,13 +3,9 @@ package com.infoclinika.mssharing.model.test.processing;
 import com.google.common.collect.ImmutableSet;
 import com.infoclinika.mssharing.model.helper.AbstractTest;
 import com.infoclinika.mssharing.model.helper.ExperimentSampleItem;
-import com.infoclinika.mssharing.model.internal.read.ProcessingFileReader;
 import com.infoclinika.mssharing.model.internal.read.ProcessingRunReader;
 import com.infoclinika.mssharing.model.read.dto.details.ExperimentItem;
-import com.infoclinika.mssharing.model.read.dto.details.FileItem;
-import com.infoclinika.mssharing.model.write.ProjectInfo;
 import com.infoclinika.mssharing.platform.model.write.ExperimentManagementTemplate;
-import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
@@ -17,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableList.of;
-import static com.infoclinika.mssharing.model.helper.Data.PROJECT_TITLE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -83,8 +78,8 @@ public class ManagingProcessingRunTest extends AbstractTest{
         final long file3 = uc.saveFile(user, instrument);
         final long file4 = uc.saveFile(user, instrument);
 
-        final ExperimentSampleItem sample3 = sampleWithFactors(file3, of("1"));
-        final ExperimentSampleItem sample4 = sampleWithFactors(file4, of("2"));
+        final ExperimentSampleItem sample3 = sampleWithFactors(file3, of("3"));
+        final ExperimentSampleItem sample4 = sampleWithFactors(file4, of("4"));
 
         addFilesToExperiment(user, experiment, of(factor(experiment)), of(
                 new com.infoclinika.mssharing.model.write.FileItem(file3, false, 0, preparedSample(file3, ImmutableSet.of(sample3))),
