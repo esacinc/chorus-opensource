@@ -10,6 +10,7 @@ package com.infoclinika.mssharing.model.helper;
 
 import com.google.common.collect.ImmutableList;
 import com.infoclinika.mssharing.model.internal.entity.Lab;
+import com.infoclinika.mssharing.model.internal.entity.ProcessingRun;
 import com.infoclinika.mssharing.model.internal.entity.User;
 import com.infoclinika.mssharing.model.internal.repository.*;
 import com.infoclinika.mssharing.platform.entity.InboxMessageTemplate;
@@ -25,6 +26,9 @@ import java.util.List;
  * @author Stanislav Kurilin
  */
 class Repositories {
+
+    @Inject
+    private ProcessingRunRepository<ProcessingRun> processingRunRepository;
 
     @Inject
     protected ProcessingFileRepository processingFileRepository;
@@ -198,7 +202,7 @@ class Repositories {
                 advertisementRepository,
                 experimentLabelRepository,
                 experimentLabelTypeRepository,
-                billingPropertyRepository
+                billingPropertyRepository, processingRunRepository, processingFileRepository
         );
     }
 }

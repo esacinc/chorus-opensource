@@ -1,7 +1,9 @@
 package com.infoclinika.mssharing.model.write;
 
-import java.util.Date;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+@Transactional
 public interface ProcessingRunManagement {
 
 

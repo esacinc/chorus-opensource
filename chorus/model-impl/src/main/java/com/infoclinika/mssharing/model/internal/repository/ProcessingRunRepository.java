@@ -4,7 +4,11 @@ import com.infoclinika.mssharing.model.internal.entity.ProcessingRun;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Repository
+@Transactional
 public interface ProcessingRunRepository<P extends ProcessingRun> extends JpaRepository<P, Long>{
 
     @Query("select pr from #{#entityName} pr where pr.name =:name and pr.experimentTemplate.id =:experiment")

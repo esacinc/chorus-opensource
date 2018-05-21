@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 @Repository
+@Transactional
 public interface ProcessingFileRepository extends JpaRepository<ProcessingFile, Long>{
 
     String BOOLEAN_SELECT_STATEMENT = "select case when count(pf.id)>0 then true else false end from #{#entityName} pf ";

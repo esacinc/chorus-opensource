@@ -17,7 +17,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 
-public class ManagingProcessingRunTest extends AbstractTest{
+public class ManagingProcessingRunTest extends AbstractProcessingTest{
 
     @Test
     public void testUpdateProcessingRunAfterFirstCreation(){
@@ -58,17 +58,34 @@ public class ManagingProcessingRunTest extends AbstractTest{
     }
 
 
-    @Test(dependsOnMethods = "testUpdateProcessingRunAfterFirstCreation")
-    public void createProcessingRunWithoutAssociate(){
+    @Test
+    public void createProcessingRunWithAssociateFiles(){
+
         final long user = uc.createLab3AndBob();
         final long experiment = createExperimentWithOneRawFile(user, uc.getLab3());
 
-        createProcessingRun(experiment, "ProcessingRunWithoutFiles");
-        ProcessingRunReader.ProcessingRunInfo processingRunInfo = processingRunReader.readProcessingRunByNameAndExperiment(experiment, "ProcessingRunWithoutFiles");
+        final long instrument = instrumentFromExperimentFile(user, experiment);
+        final long file0 = uc.saveFile(user, instrument);
+        final long file1 = uc.saveFile(user, instrument);
+
+        final ExperimentSampleItem sample0 = sampleWithFactors(file0, of("1"));
+        final ExperimentSampleItem sample1 = sampleWithFactors(file1, of("2"));
+        addFilesToExperiment(user, experiment, of(factor(experiment)), of(
+                new com.infoclinika.mssharing.model.write.FileItem(file0, false, 0, preparedSample(file0, ImmutableSet.of(sample0))),
+                new com.infoclinika.mssharing.model.write.FileItem(file1, false, 0, preparedSample(file1, ImmutableSet.of(sample1)))), of("3"));
+
+        final ExperimentItem experimentItem = detailsReader.readExperiment(user, experiment);
+        List<Long> processingFilesList = createMultiProcessingFiles(experimentItem);
+        Map<String, Collection<String>> map = createFileToFileMap(experimentItem, processingFilesList);
+
+        processingFileManagement.associateProcessingFileWithRawFile(map, experiment, user, "ProcessingRun");
+        ProcessingRunReader.ProcessingRunInfo processingRunInfo = processingRunReader.readProcessingRunByNameAndExperiment(experiment, "ProcessingRun");
+
         final long processingRunExperiment = processingRunInfo.abstractExperiment.getId();
 
         assertEquals(experiment, processingRunExperiment);
-        assertEquals("ProcessingRunWithoutFiles", processingRunInfo.name);
+        assertEquals(processingFilesList.size(), processingRunInfo.processingFiles.size());
+        assertEquals("ProcessingRun", processingRunInfo.name);
     }
 
 

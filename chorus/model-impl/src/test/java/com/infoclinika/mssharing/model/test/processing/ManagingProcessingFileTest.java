@@ -16,7 +16,7 @@ import java.util.Map;
 import static com.google.common.collect.ImmutableList.of;
 import static org.testng.Assert.assertEquals;
 
-public class ManagingProcessingFileTest extends AbstractTest{
+public class ManagingProcessingFileTest extends AbstractProcessingTest{
 
     @Test
     public void checkProcessingFileIsUpload(){
