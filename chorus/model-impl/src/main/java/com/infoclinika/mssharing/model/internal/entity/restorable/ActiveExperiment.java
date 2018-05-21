@@ -52,7 +52,6 @@ public class ActiveExperiment extends AbstractExperiment {
             double minReporterFraction,
             ExperimentCategory experimentCategory,
             NgsRelatedData ngsRelatedData
-//            Set<ProcessingRun> processingRuns
     ) {
         super(
                 creator,
@@ -77,7 +76,6 @@ public class ActiveExperiment extends AbstractExperiment {
                 minReporterFraction,
                 experimentCategory,
                 ngsRelatedData
-//                processingRuns
         );
     }
 

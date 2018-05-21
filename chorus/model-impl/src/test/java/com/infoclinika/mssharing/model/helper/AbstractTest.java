@@ -30,6 +30,7 @@ import com.infoclinika.mssharing.model.internal.entity.restorable.ActiveFileMeta
 import com.infoclinika.mssharing.model.internal.read.ProcessingFileReader;
 import com.infoclinika.mssharing.model.internal.read.ProcessingRunReader;
 import com.infoclinika.mssharing.model.internal.read.Transformers;
+import com.infoclinika.mssharing.model.internal.repository.ProcessingRunRepository;
 import com.infoclinika.mssharing.model.internal.s3client.AwsS3ClientConfigurationService;
 import com.infoclinika.mssharing.model.internal.write.ExperimentLabelManagement;
 import com.infoclinika.mssharing.model.internal.write.ExperimentLabelManagement.ExperimentTypeInfo;
@@ -99,25 +100,7 @@ import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static com.infoclinika.mssharing.model.helper.Data.AB_SCIEX;
-import static com.infoclinika.mssharing.model.helper.Data.AB_SCIEX_EXTENSIONS;
-import static com.infoclinika.mssharing.model.helper.Data.AB_SCIEX_INSTRUMENT_MODEL;
-import static com.infoclinika.mssharing.model.helper.Data.BRUKER;
-import static com.infoclinika.mssharing.model.helper.Data.BRUKER_EXTENSIONS;
-import static com.infoclinika.mssharing.model.helper.Data.BRUKER_INSTRUMENT_MODEL;
-import static com.infoclinika.mssharing.model.helper.Data.NO_FACTORS;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentModel111;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentModel121;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentModel122;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentModel211;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentModel212;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentType11;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentType12;
-import static com.infoclinika.mssharing.model.helper.Data.instrumentType21;
-import static com.infoclinika.mssharing.model.helper.Data.msStudyType;
-import static com.infoclinika.mssharing.model.helper.Data.vendor1;
-import static com.infoclinika.mssharing.model.helper.Data.vendor2;
-import static com.infoclinika.mssharing.model.helper.Data.vendor3;
+import static com.infoclinika.mssharing.model.helper.Data.*;
 import static com.infoclinika.mssharing.model.helper.ExperimentSampleTypeItem.LIGHT;
 import static com.infoclinika.mssharing.model.internal.entity.Feature.FeatureState.DISABLED;
 import static com.infoclinika.mssharing.model.internal.entity.Feature.FeatureState.ENABLED;
@@ -1051,4 +1034,11 @@ public class AbstractTest extends AbstractTestNGSpringContextTests {
     protected long getExperimentLabelRAminoAcid() {
         return experimentLabelWithRAminoAcid;
     }
+
+
+    protected long createExperimentWithOneRawFile(long user, long lab) {
+        final long project = studyManagement.createProject(user, new ProjectInfo(PROJECT_TITLE, "DNA", "Some proj", lab));
+        return createInstrumentAndExperimentWithOneFile(user, lab, project);
+    }
+
 }
