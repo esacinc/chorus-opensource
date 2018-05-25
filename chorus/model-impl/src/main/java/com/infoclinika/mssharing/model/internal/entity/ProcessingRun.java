@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
+
 @Entity
 @Table(name = "processing_runs")
 public class ProcessingRun extends AbstractPersistable<Long>{
@@ -20,18 +22,17 @@ public class ProcessingRun extends AbstractPersistable<Long>{
     @Column(name = "processed_date")
     private Date processedDate = new Date();
 
-    @OneToMany(mappedBy = "processingRun", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    public List<ProcessingFile> processingFiles = new ArrayList<>();
-
+    @ManyToMany(mappedBy = "processingRuns", cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    public Set<ProcessingFile> processingFiles = newHashSet();
 
     @ManyToOne(targetEntity = AbstractExperiment.class)
-    @JoinColumns({@JoinColumn(name = "experiment_id")})
+    @JoinColumn(name = "experiment_id")
     private AbstractExperiment experimentTemplate;
 
     public ProcessingRun() {
     }
 
-    public ProcessingRun(String name, Date processedDate, List<ProcessingFile> processingFiles, AbstractExperiment experimentTemplate) {
+    public ProcessingRun(String name, Date processedDate, Set<ProcessingFile> processingFiles, AbstractExperiment experimentTemplate) {
         this.name = name;
         this.processedDate = processedDate;
         this.processingFiles = processingFiles;
@@ -50,15 +51,11 @@ public class ProcessingRun extends AbstractPersistable<Long>{
         return processedDate;
     }
 
-    public void setProcessedDate(Date processedDate) {
-        this.processedDate = processedDate;
-    }
-
-    public List<ProcessingFile> getProcessingFiles() {
+    public Set<ProcessingFile> getProcessingFiles() {
         return processingFiles;
     }
 
-    public void setProcessingFiles(List<ProcessingFile> processingFiles) {
+    public void setProcessingFiles(Set<ProcessingFile> processingFiles) {
         this.processingFiles = processingFiles;
     }
 
@@ -68,5 +65,14 @@ public class ProcessingRun extends AbstractPersistable<Long>{
 
     public void setExperimentTemplate(AbstractExperiment experimentTemplate) {
         this.experimentTemplate = experimentTemplate;
+    }
+
+
+    public void addProcessingFile(ProcessingFile processingFile){
+        if(processingFile != null){
+            if(!processingFiles.contains(processingFile)){
+                processingFiles.add(processingFile);
+            }
+        }
     }
 }
