@@ -8,9 +8,10 @@ import java.util.Map;
 
 public interface ProcessFileValidator {
 
-    Map<String, Collection<String>> validateAssociateFiles(Map<String, Collection<String>> map, long experimentId, long user);
 
-    Map<String, Collection<String>> checkValidProcessingFilesToFileMap(ProcessingRunsDTO dto, long experiment, Map<String, Collection<String>> resultsMap);
+    Map<String, Collection<String>> validateSampleFileMap(Map<String, Collection<String>> sampleFileMap, long experiment, long user,ValidationType validationType);
 
-    Map<String, Collection<String>> checkValidProcessingFilesToFileMap(Map<String, Collection<String>> map, long experiment);
+    Map<String, Collection<String>> validateAssociationFiles(Map<String, Collection<String>> fileToFileMap, long experimentId, long user, ValidationType type);
+
+
 }
