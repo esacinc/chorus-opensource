@@ -121,13 +121,13 @@ public class ProcessingRunService {
             return new ResponseEntity("You can`t create sample file map without association file map !", HttpStatus.BAD_REQUEST);
         }
 
-        Collection<Map> notValidData = null;
+        Collection<Map> notValidData = new ArrayList<>();
 
         returnValidationFileToFileMapResults(dto, experiment, user, notValidData);
 
         returnValidationSampleFileResults(dto, notValidData, experiment, user);
 
-        if (!notValidData.isEmpty()) {
+        if (notValidData.isEmpty()) {
             return processingFileManagement.associateProcessingFileWithRawFile(dto.getFileToFileMap(), dto.getSampleFileMap(), experiment, user, dto.getName()) ?
                     new ResponseEntity("Processing Run with name: " + dto.getName() + " successfully updated", HttpStatus.OK) :
                     new ResponseEntity("Processing files already has processing run", HttpStatus.BAD_REQUEST);
@@ -137,9 +137,6 @@ public class ProcessingRunService {
     }
 
     private void returnValidationFileToFileMapResults(ProcessingRunsDTO dto, long experiment, long user, Collection<Map> maps) {
-        if (maps == null) {
-            maps = new ArrayList<>();
-        }
 
         Map experimentFilesMap = processFileValidator.validateAssociationFiles(dto.getFileToFileMap(), experiment, user, ValidationType.EXPERIMENT_FILES);
         Map processingFilesMap = processFileValidator.validateAssociationFiles(dto.getFileToFileMap(), experiment, user, ValidationType.PROCESSING_FILES);
@@ -154,9 +151,6 @@ public class ProcessingRunService {
 
     private void returnValidationSampleFileResults(ProcessingRunsDTO dto, Collection<Map> maps, long experiment, long user) {
         if (dto.getSampleFileMap() != null) {
-            if (maps == null) {
-                maps = new ArrayList<>();
-            }
             Map experimentFileSample = processFileValidator.validateSampleFileMap(dto.getSampleFileMap(), experiment, user, ValidationType.EXPERIMENT_SAMPLE);
             Map processingFileSample = processFileValidator.validateSampleFileMap(dto.getSampleFileMap(), experiment, user, ValidationType.PROCESSING_FILE_SAMPLE);
 
