@@ -88,14 +88,17 @@ public class ProcessingRunService {
 
     public ResponseEntity<List<ProcessingRunsDTO.ProcessingRunsShortDetails>> getAllProcessingRuns(long experiment, long user){
         if(processValidator.isProcessingRunExist(0, experiment)){
-            if(ruleValidator.canUserReadExperiment(user, experiment)){
+
+            if(ruleValidator.isExperimentExist(experiment)){
+
                 if(restAuthClientService.isUserHasAccessToExperiment(user, experiment)){
+
                     return processingRunDetailsToDto(experiment);
+
+                }else {
+                    LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
+                    return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
                 }
-
-                LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
-                return new ResponseEntity("User with ID: " + user + "does not have access to lab", HttpStatus.UNAUTHORIZED);
-
             }
 
             return new ResponseEntity("Experiment by id: " + experiment + " not found", HttpStatus.BAD_REQUEST);
