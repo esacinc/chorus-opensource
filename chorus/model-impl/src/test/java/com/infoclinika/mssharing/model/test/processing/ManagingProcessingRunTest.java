@@ -124,7 +124,12 @@ public class ManagingProcessingRunTest extends AbstractProcessingTest{
 
         ProcessingRunReader.ProcessingRunInfo processingRunInfo = processingRunReader.readProcessingRunByNameAndExperiment(experiment, "ProcessingRunWithSample");
 
-        validateSamplesToProcessedFiles(processingRunInfo, sampleFileMap);
+        HashMultimap<String, String> sample = extractSampleToFile(processingRunInfo);
+
+        assertEquals(sample.get("sample_Light_1").size(), 1);
+        assertEquals(sample.get("sample_Heavy_1").size(), 1);
+        assertTrue(sample.get("sample_Light_1").contains(sampleFileMap.get("sample_Light_1").iterator().next()));
+        assertTrue(sample.get("sample_Heavy_1").contains(sampleFileMap.get("sample_Heavy_1").iterator().next()));
 
     }
 
