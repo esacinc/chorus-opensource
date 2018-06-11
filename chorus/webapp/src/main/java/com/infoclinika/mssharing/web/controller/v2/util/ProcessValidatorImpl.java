@@ -51,7 +51,12 @@ public class ProcessValidatorImpl implements ProcessValidator {
 
     @Override
     public boolean isProcessingRunExist(long processingRunId, long experiment) {
-        return processingRunReader.readProcessingRun(processingRunId, experiment) != null ? true : false;
+        if(processingRunId > 0){
+            return processingRunReader.readProcessingRun(processingRunId, experiment) != null ? true : false;
+        }else {
+            return processingRunReader.readAllProcessingRunsByExperiment(experiment).size() > 0 ? true : false;
+        }
+
     }
 
 
