@@ -42,9 +42,6 @@ public class AbstractProcessingTest extends AbstractTest{
         return processingFileManagement.createProcessingFile(experiment, processingFileShortInfo);
     }
 
-    protected long createProcessingRun(long experiment, String name){
-        return processingRunManagement.create(experiment, name);
-    }
 
     protected Map<String, Collection<String>> createFileToFileMap(FileItem fileItem, long processingFileId){
         ProcessingFileReader.ProcessingFileInfo processingFileInfo = processingFileReader.readProcessingFileInfo(processingFileId);
@@ -111,34 +108,32 @@ public class AbstractProcessingTest extends AbstractTest{
     }
 
     public Map<String, Collection<String>> createSamplesToFileMap(ExperimentShortInfo shortInfo, Map<String, Collection<String>> fileToFileMap){
-        int index = 0;
 
         Map<String, Collection<String>> sampleFilesMap = new HashMap();
 
         for(Map.Entry<String, Collection<String>> entry : fileToFileMap.entrySet()){
-            String key = entry.getKey();
-            Collection<String> values = entry.getValue();
-            Collection<String> collection = new ArrayList<>();
+            String key = entry.getKey(); // processed file
+            Collection<String> values = entry.getValue(); // experiment files
+            Collection<String> processedFiles = new ArrayList<>();
 
             for(String experimentFiles: values){
 
                 ImmutableList<ExtendedShortExperimentFileItem> files = (ImmutableList<ExtendedShortExperimentFileItem>) shortInfo.files;
+
                 for(ExtendedShortExperimentFileItem fileItem : files){
                     if(fileItem.name == experimentFiles){
 
                         ImmutableList<ExtendedShortExperimentFileItem.ExperimentShortSampleItem> sampleItems = fileItem.samples;
-                        ExtendedShortExperimentFileItem.ExperimentShortSampleItem sampleItem = sampleItems.get(index);
+                        ExtendedShortExperimentFileItem.ExperimentShortSampleItem sampleItem = sampleItems.get(0);
 
                         if(!sampleFilesMap.containsKey(sampleItem.name)){
 
-                            if(!collection.contains(key)){
-                                collection.add(key);
-                                sampleFilesMap.put(sampleItem.name, collection);
-                                index++;
+                            if(!processedFiles.contains(key)){
+                                processedFiles.add(key);
+                                sampleFilesMap.put(sampleItem.name, processedFiles);
                             }
                         }
                     }
-                    break;
                 }
             }
         }

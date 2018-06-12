@@ -108,38 +108,28 @@ public class ManagingProcessingRunTest extends AbstractProcessingTest{
 
         final long bob = uc.createLab3AndBob();
         final long project = uc.createProject(bob);
-        final long file1 = uc.saveFile(bob);
-        final long file2 = uc.saveFile(bob);
 
-        final long experiment = createExperimentWithAllSampleTypesAndFactors(bob, project, file1, file2);
+        long experiment = createExperiment(bob, project);
+        final long instrument = instrumentFromExperimentFile(bob, experiment);
+        generateFilesToExperiment(bob, instrument, experiment);
+
         final ExperimentItem experimentItem = detailsReader.readExperiment(bob, experiment);
+        final DetailsReaderTemplate.ExperimentShortInfo shortInfo = detailsReader.readExperimentShortInfo(bob, experiment);
 
-        DetailsReaderTemplate.ExperimentShortInfo shortInfo = detailsReader.readExperimentShortInfo(bob, experiment);
         List<Long> processingFilesList = createMultiProcessingFiles(experimentItem);
         Map<String, Collection<String>> fileToFileMap = createFileToFileMap(experimentItem, processingFilesList);
-
         Map<String, Collection<String>> sampleFileMap = createSamplesToFileMap(shortInfo, fileToFileMap);
 
         processingFileManagement.associateProcessingFileWithRawFile(fileToFileMap, sampleFileMap ,experiment, bob, "ProcessingRunWithSample");
-
         ProcessingRunReader.ProcessingRunInfo processingRunInfo = processingRunReader.readProcessingRunByNameAndExperiment(experiment, "ProcessingRunWithSample");
-
         HashMultimap<String, String> sample = extractSampleToFile(processingRunInfo);
 
-        assertEquals(sample.get("sample_Light_1").size(), 1);
-        assertEquals(sample.get("sample_Heavy_1").size(), 1);
-        assertTrue(sample.get("sample_Light_1").contains(sampleFileMap.get("sample_Light_1").iterator().next()));
-        assertTrue(sample.get("sample_Heavy_1").contains(sampleFileMap.get("sample_Heavy_1").iterator().next()));
+        assertEquals(sample.size(), 3);
+        assertEquals(sample.get("sample_light_1").size(), 1);
+        assertEquals(sample.get("sample_light_2").size(), 1);
+        assertTrue(sample.get("sample_light_2").contains(sampleFileMap.get("sample_light_2").iterator().next()));
+        assertTrue(sample.get("sample_light_1").contains(sampleFileMap.get("sample_light_1").iterator().next()));
 
-    }
-
-    private void validateSamplesToProcessedFiles(ProcessingRunReader.ProcessingRunInfo processingRunInfo, Map<String, Collection<String>> sampleToFile){
-        HashMultimap<String, String> sample = extractSampleToFile(processingRunInfo);
-
-        assertEquals(sample.get("sample_Medium_1").size(), 1);
-        assertEquals(sample.get("sample_Heavy_1").size(), 1);
-        assertTrue(sample.get("sample_Medium_1").contains(sampleToFile.get("sample_Medium_1").iterator().next()));
-        assertTrue(sample.get("sample_Heavy_1").contains(sampleToFile.get("sample_Heavy_1").iterator().next()));
     }
 
 
@@ -161,8 +151,8 @@ public class ManagingProcessingRunTest extends AbstractProcessingTest{
         final long file3 = uc.saveFile(user, instrument);
         final long file4 = uc.saveFile(user, instrument);
 
-        final ExperimentSampleItem sample3 = sampleWithFactors(file3, of("sample_one"));
-        final ExperimentSampleItem sample4 = sampleWithFactors(file4, of("sample_two"));
+        final ExperimentSampleItem sample3 = new ExperimentSampleItem("sample_light_1", LIGHT, of("sample_one"));
+        final ExperimentSampleItem sample4 = new ExperimentSampleItem("sample_light_2", LIGHT, of("sample_two"));
 
         addFilesToExperiment(user, experiment, of(factor(experiment)), of(
                 new com.infoclinika.mssharing.model.write.FileItem(file3, false, 0, preparedSample(file3, ImmutableSet.of(sample3))),
@@ -174,38 +164,4 @@ public class ManagingProcessingRunTest extends AbstractProcessingTest{
         return new ExperimentManagementTemplate.MetaFactorTemplate(generateString(), "", false, experimentId);
     }
 
-
-
-
-    private long createExperimentWithAllSampleTypesAndFactors(long bob, long project, long file1, long file2) {
-        final ExperimentSampleItem sampleLight1 = new ExperimentSampleItem("sample_Light_1", LIGHT, ImmutableList.of("sick", "5"));
-        final ExperimentSampleItem sampleLight2 = new ExperimentSampleItem("sample_Light_2", LIGHT, ImmutableList.of("sick", "90"));
-
-        final ExperimentSampleItem sampleMedium1 = new ExperimentSampleItem("sample_Medium_1", MEDIUM, ImmutableList.of("healthy", "5"));
-        final ExperimentSampleItem sampleHeavy1 = new ExperimentSampleItem("sample_Heavy_1", HEAVY, ImmutableList.of("healthy", "10"));
-        final ExperimentSampleItem sampleHeavy2 = new ExperimentSampleItem("sample_Heavy_2", HEAVY, ImmutableList.of("healthy", "5"));
-        final ImmutableSet<ExperimentSampleItem> file1Samples = ImmutableSet.of(sampleLight1, sampleMedium1, sampleHeavy1);
-        final ImmutableSet<ExperimentSampleItem> file2Samples = ImmutableSet.of(sampleLight2, sampleMedium1, sampleHeavy2);
-
-        final List<ExperimentManagementTemplate.MetaFactorTemplate> factors = newArrayList(
-                new ExperimentManagementTemplate.MetaFactorTemplate("treatment group", null, false, 0),
-                new ExperimentManagementTemplate.MetaFactorTemplate("temperature", "C", true, 0));
-        final ImmutableList<com.infoclinika.mssharing.model.write.FileItem> files = of(
-                new com.infoclinika.mssharing.model.write.FileItem(file1, false, 0, preparedSample(file1, file1Samples)),
-                new com.infoclinika.mssharing.model.write.FileItem(file2, false, 0, preparedSample(file2, file2Samples))
-        );
-
-        final ExperimentInfo.Builder builder = experiment(bob, project).factors(factors)
-                .experimentType(experimentTypeLabeled())
-                .files(files)
-                .experimentLabels(new ExperimentLabelsInfo(ImmutableList.of(getExperimentLabelKAminoAcid()), ImmutableList.of(), ImmutableList.of(getExperimentLabelRAminoAcid())))
-                .sampleTypesCount(3);
-        return studyManagement.createExperiment(bob, builder.build());
-    }
-
-    private ExperimentInfo.Builder experiment(long bob, long project) {
-        return experimentInfo()
-                .project(project).lab(uc.getLab3()).billLab(uc.getLab3()).is2dLc(false)
-                .restriction(restriction(bob)).bounds(new AnalysisBounds()).lockMasses(NO_LOCK_MASSES);
-    }
 }
