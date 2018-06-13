@@ -23,6 +23,7 @@ public class ProcessingRunsDTO{
 
 
     @Data
+    @AllArgsConstructor
     public static class ProcessingRunsShortDetails{
         private long id;
         private String name;

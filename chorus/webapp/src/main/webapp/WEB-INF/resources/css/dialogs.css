@@ -3161,7 +3161,7 @@ table.file-list th input[type="checkbox"]{
 .modal-body .laboratory-details .control-group .dialog-text-input,
 .modal-body .laboratory-details .control-group .item,
 .experiment-viewer-status .modal-body .control-group .item,
-#file-translation-status .modal-body .control-group .item,
+#file-translation-status .modal-body .control-group .item
 {
     float: left;
     width: 445px;

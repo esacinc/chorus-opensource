@@ -38,4 +38,15 @@ public class ProcessingRunItem {
     public Date getDate() {
         return date;
     }
+
+
+    @Override
+    public String toString() {
+        return "ProcessingRunItem{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", processingFileItems=" + processingFileItems +
+                '}';
+    }
 }

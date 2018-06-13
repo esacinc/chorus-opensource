@@ -1,6 +1,7 @@
 package com.infoclinika.mssharing.web.controller.v2.service;
 
 
+import com.google.common.base.Function;
 import com.infoclinika.mssharing.model.helper.ProcessingFileItem;
 import com.infoclinika.mssharing.model.internal.RuleValidator;
 import com.infoclinika.mssharing.model.internal.read.ProcessingRunReader;
@@ -20,8 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
+
+import static com.infoclinika.mssharing.dto.FunctionTransformerAbstract.toListDto;
+import static com.infoclinika.mssharing.web.transform.DtoTransformer.TO_SHORT_DETAILS;
 
 @Service
 @Transactional
@@ -45,6 +50,29 @@ public class ProcessingRunService {
 
     @Inject
     private AwsS3ClientConfigurationService awsConfigService;
+
+    public Function<ProcessingRunItem, ProcessingRunDetails> TO_PROCESSING_RUN_DETAILS = new Function<ProcessingRunItem, ProcessingRunDetails>() {
+        @Nullable
+        @Override
+        public ProcessingRunDetails apply(@Nullable ProcessingRunItem processingRunItem) {
+            List<ProcessingFileDTO> processingFiles = new ArrayList<>();
+
+            for(ProcessingFileItem processingFileItem : processingRunItem.getProcessingFileItems()){
+                processingFiles.add(new ProcessingFileDTO(processingFileItem.getId(), processingFileItem.getName(),
+                        awsConfigService.generateTemporaryLinkToS3(processingFileItem.getFilePath()),
+                        processingFileItem.getExperimentFiles(),
+                        processingFileItem.getExperimentSampleItems()));
+            }
+
+            return new ProcessingRunDetails(
+                    processingRunItem.getId(),
+                    processingRunItem.getName(),
+                    processingRunItem.getDate().toString(),
+                    processingFiles);
+        }
+
+    };
+
 
 
     public ResponseEntity<Object> createProcessingRun(ProcessingRunsDTO dto, long user, long experiment) {
@@ -93,7 +121,8 @@ public class ProcessingRunService {
 
                 if(restAuthClientService.isUserHasAccessToExperiment(user, experiment)){
 
-                    return processingRunDetailsToDto(experiment);
+                    List<ProcessingRunReader.ProcessingRunInfo> processingRuns =  processingRunReader.readAllProcessingRunsByExperiment(experiment);
+                    return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(toListDto(processingRuns, TO_SHORT_DETAILS));
 
                 }else {
                     LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
@@ -115,7 +144,11 @@ public class ProcessingRunService {
         if(processValidator.isProcessingRunExist(processingRunId, experiment)){
             if(ruleValidator.canUserReadExperiment(user, experiment)){
                 if(restAuthClientService.isUserHasAccessToExperiment(user, experiment)){
-                    return processingRunItemToDTO(processingRunId,experiment);
+                    ProcessingRunItem processingRunItem = processingRunReader.readProcessingRun(processingRunId, experiment);
+                    return  ResponseEntity.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(TO_PROCESSING_RUN_DETAILS.apply(processingRunItem));
+
                 }
 
                 LOGGER.warn("#### User with ID: " + user + "does not have access to lab ####");
@@ -129,50 +162,6 @@ public class ProcessingRunService {
     }
 
 
-
-    private ResponseEntity<ProcessingRunDetails> processingRunItemToDTO(long processingRunId,long experiment){
-
-        ProcessingRunItem processingRunItem = processingRunReader.readProcessingRun(processingRunId, experiment);
-        ProcessingRunDetails processingRunsDTO = new ProcessingRunDetails();
-        processingRunsDTO.setName(processingRunItem.getName());
-        processingRunsDTO.setId(processingRunItem.getId());
-        processingRunsDTO.setProcessedDate(processingRunItem.getDate().toString());
-
-        List<ProcessingFileDTO> processingFiles = new ArrayList<>();
-
-        for(ProcessingFileItem processingFileItem : processingRunItem.getProcessingFileItems()){
-
-            ProcessingFileDTO processedFile = new ProcessingFileDTO(processingFileItem.getId(), processingFileItem.getName(),
-                    awsConfigService.generateTemporaryLinkToS3(processingFileItem.getFilePath()), processingFileItem.getExperimentFiles(),
-                    processingFileItem.getExperimentSampleItems());
-            processingFiles.add(processedFile);
-        }
-        processingRunsDTO.setProcessedFiles(processingFiles);
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(processingRunsDTO);
-    }
-
-
-
-
-
-
-    private ResponseEntity<List<ProcessingRunsDTO.ProcessingRunsShortDetails>> processingRunDetailsToDto(long experiment){
-        List<ProcessingRunReader.ProcessingRunInfo> processingRuns =  processingRunReader.readAllProcessingRunsByExperiment(experiment);
-
-        List<ProcessingRunsDTO.ProcessingRunsShortDetails> dtoList = new ArrayList<>();
-
-        for(ProcessingRunReader.ProcessingRunInfo processingRunInfo : processingRuns){
-
-            ProcessingRunsDTO.ProcessingRunsShortDetails shortDetails = new ProcessingRunsDTO.ProcessingRunsShortDetails();
-            shortDetails.setId(processingRunInfo.id);
-            shortDetails.setName(processingRunInfo.name);
-            shortDetails.setProcessedDate(processingRunInfo.date.toString());
-
-            dtoList.add(shortDetails);
-        }
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(dtoList);
-    }
 
 
 

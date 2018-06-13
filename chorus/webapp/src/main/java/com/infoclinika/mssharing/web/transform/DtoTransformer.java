@@ -4,17 +4,16 @@ import com.google.common.base.Function;
 import com.infoclinika.mssharing.dto.FunctionTransformerAbstract;
 import com.infoclinika.mssharing.dto.request.UploadFilesDTORequest;
 import com.infoclinika.mssharing.dto.response.*;
+import com.infoclinika.mssharing.model.internal.read.ProcessingRunReader;
 import com.infoclinika.mssharing.model.read.DashboardReader;
 import com.infoclinika.mssharing.model.read.FileLine;
 import com.infoclinika.mssharing.model.read.InstrumentLine;
 import com.infoclinika.mssharing.model.write.InstrumentManagement;
 import com.infoclinika.mssharing.platform.model.common.items.*;
+import com.infoclinika.mssharing.web.controller.v2.dto.ProcessingRunsDTO;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * author: Ruslan Duboveckij
@@ -112,6 +111,21 @@ public class DtoTransformer extends FunctionTransformerAbstract {
             );
         }
     };
+
+
+
+    public static final Function<ProcessingRunReader.ProcessingRunInfo, ProcessingRunsDTO.ProcessingRunsShortDetails> TO_SHORT_DETAILS =
+            new Function<ProcessingRunReader.ProcessingRunInfo, ProcessingRunsDTO.ProcessingRunsShortDetails>() {
+                @Nullable
+                @Override
+                public ProcessingRunsDTO.ProcessingRunsShortDetails apply(@Nullable ProcessingRunReader.ProcessingRunInfo processingRunInfo) {
+                    return new ProcessingRunsDTO.ProcessingRunsShortDetails(
+                            processingRunInfo.id,
+                            processingRunInfo.name,
+                            processingRunInfo.date.toString()
+                    );
+                }
+            };
 
     private DtoTransformer() {
     }
