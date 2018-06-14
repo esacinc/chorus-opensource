@@ -824,20 +824,15 @@ public class AbstractTest extends AbstractTestNGSpringContextTests {
         assertTrue(processingFileInfo.fileMetaDataTemplateList.size() == 1);
     }
 
-    protected void assertMultipartProcessingFilesIsAssociateExperimentFile(long processingFileId, long fileId, ExperimentItem experimentItem){
+    protected void assertMultipartProcessingFilesIsAssociateExperimentFile(long processingFileId, ExperimentItem experimentItem){
 
         ProcessingFileReader.ProcessingFileInfo processingFileInfo = processingFileReader.readProcessingFileInfo(processingFileId);
-        assertTrue(Iterables.any(processingFileInfo.fileMetaDataTemplateList, new Predicate<FileMetaDataTemplate>() {
-            @Override
-            public boolean apply(FileMetaDataTemplate input) {
-                return input.getId() == fileId;
-            }
-        }));
         long experimentTemplateId = processingFileInfo.processingRun.getExperimentTemplate().getId();
 
         assertNotNull(processingFileInfo.processingRun);
         assertEquals(experimentTemplateId, experimentItem.id);
-        assertTrue(processingFileInfo.processingRun.processingFiles.size() == 3);
+        assertEquals(processingFileInfo.processingRun.processingFiles.size(), 1);
+        assertEquals(processingFileInfo.fileMetaDataTemplateList.size(), 3);
     }
 
 

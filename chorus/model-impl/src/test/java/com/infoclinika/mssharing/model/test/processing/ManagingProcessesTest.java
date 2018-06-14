@@ -77,9 +77,7 @@ public class ManagingProcessesTest extends AbstractTest{
 
         processingFileManagement.associateProcessingFileWithRawFile(map, experiment, user, "ProcessingRunTests");
 
-        for(int i = 0; i < processingFilesList.size(); i++){
-            assertMultipartProcessingFilesIsAssociateExperimentFile(processingFilesList.get(i), experimentItem.files.get(i).id, experimentItem);
-        }
+        assertMultipartProcessingFilesIsAssociateExperimentFile(processingFilesList.get(0), experimentItem);
     }
 
 

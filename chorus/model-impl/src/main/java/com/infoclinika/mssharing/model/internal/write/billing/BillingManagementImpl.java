@@ -42,7 +42,7 @@ public class BillingManagementImpl implements BillingManagement {
     private LabPaymentAccountRepository labPaymentAccountRepository;
     @Inject
     private ChargeableItemRepository chargeableItemRepository;
-    @Qualifier("billingRestService")
+    @Resource( name = "billingRestService")
     private BillingService billingService;
     @Inject
     private BillingPropertiesProvider propertiesProvider;
