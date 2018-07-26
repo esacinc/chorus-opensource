@@ -646,9 +646,9 @@ angular.module("user-profile-front", ["security-front", "security-back", "featur
         }
     })
     .directive("laboratorySelector", laboratorySelection({
-        "emptyTableMessage": "There are no laboratories",
-        "addActionText": "Add laboratories",
-        "addPlaceHolderText": "Enter laboratory's title"
+        "emptyTableMessage": "There are no programs",
+        "addActionText": "Add programs",
+        "addPlaceHolderText": "Enter program's title"
     }))
     .directive("selectLabWithAutoComplete", function () {
         return selectLabWithAutoCompleteFn();
@@ -860,9 +860,9 @@ angular.module("login", ["security-front", "security-back", "features-back", "va
         };
     })
     .directive("laboratorySelector", laboratorySelection({
-        "emptyTableMessage": "There are no laboratories",
-        "addActionText": "Add laboratories",
-        "addPlaceHolderText": "Enter laboratory's title"
+        "emptyTableMessage": "There are no programs",
+        "addActionText": "Add programs",
+        "addPlaceHolderText": "Enter program's title"
     })
 )
     .directive("selectLabWithAutoComplete", function ($timeout) {

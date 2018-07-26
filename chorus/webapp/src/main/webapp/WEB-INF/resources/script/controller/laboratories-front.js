@@ -2,7 +2,7 @@ angular.module("laboratoriesControllers", ["laboratories", "validators", "front-
     controller("laboratories",function ($scope, $rootScope, $location, $routeParams, Laboratories, contentRequestParameters, laboratoriesExpandMenu) {
         if($scope.pathError) return;
         CommonLogger.setTags(["LABORATORIES", "LABORATORIES-CONTROLLER"]);
-        $scope.page.title = "Laboratories";
+        $scope.page.title = "programs";
         $scope.page.showFilter = true;
         var isTableEmpty = false;
 
@@ -30,7 +30,7 @@ angular.module("laboratoriesControllers", ["laboratories", "validators", "front-
         };
 
         $scope.getEmptyTableMessage = function () {
-            return "There are no laboratories";
+            return "There are no programs";
         };
     }).
     controller("newLaboratory",function ($scope, $location, Laboratories) {
@@ -51,7 +51,7 @@ angular.module("laboratoriesControllers", ["laboratories", "validators", "front-
     controller("laboratoryDetails", function ($scope, $location, $routeParams, Laboratories, LaboratoryDetails) {
         if($scope.pathError) return;
         CommonLogger.setTags(["LABORATORIES", "LABORATORY-DETAILS-CONTROLLER"]);
-        $scope.page.title = "Laboratory Details";
+        $scope.page.title = "Program Details";
         Laboratories.get({filter:"details", id:$routeParams.id}, function (laboratory) {
             $scope.details = laboratory;
         });
@@ -75,7 +75,7 @@ angular.module("laboratoriesControllers", ["laboratories", "validators", "front-
             });
         };
     })
-    .directive("laboratoryDetails", detailsLink({"title":"Show Laboratory Details", "dataTarget":"#laboratoryDetails"}))
+    .directive("laboratoryDetails", detailsLink({"title":"Show Program Details", "dataTarget":"#laboratoryDetails"}))
     .factory("laboratoriesExpandMenu", function(Laboratories){
         return initExpandMenu(function(laboratory){
             Laboratories.get({filter:"details", id:laboratory.id}, function (details) {

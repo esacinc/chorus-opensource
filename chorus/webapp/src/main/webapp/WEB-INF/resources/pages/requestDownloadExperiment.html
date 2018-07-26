@@ -2,7 +2,7 @@
 <html ng-app="request-download-experiment-front">
 <head>
     <meta charset="utf-8"/>
-    <title>Chorus - Request Access To Experiment</title>
+    <title>PDC Workspace - Request Access To Study</title>
     <!-- FavIcon -->
     <link rel="icon" href="../img/favicon.ico" type="image/x-icon"/>
 
@@ -59,10 +59,10 @@
             <div class="section clearfix">
                 <div class="text request-an-access">
                     <div class="position">
-                        <h4><i class="icon warning-dialog-header"></i>You don't have required permissions to download this experiment.</h4>
+                        <h4><i class="icon warning-dialog-header"></i>You don't have required permissions to download this study.</h4>
                     </div>
                     <div ng-show="downloadExperimentLinks.length == 0">
-                        <p>You can request an access to download this experiment.</p>
+                        <p>You can request an access to download this study.</p>
 
                         <div style="float: left;" class="inline-footer">
                             <button class="btn btn-primary main-action" ng-click="requestAccess()">
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div ng-show="downloadExperimentLinks.length != 0">
-                        <p>You have already requested an access to be able to download this experiment.<br/>
+                        <p>You have already requested an access to be able to download this study.<br/>
                             The decision has not been made yet. You will be notified once the project owner comes up with one.
                         </p>
                     </div>

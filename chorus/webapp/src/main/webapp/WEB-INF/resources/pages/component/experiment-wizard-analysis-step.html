@@ -100,7 +100,7 @@
 
         <div class="row-fluid ">
             <div class="control-group span6" data-ng-class="{error: form.experimentType.$error.uiSelect2Validator}">
-                <label class="control-label" for="experimentType">Experiment Type <span
+                <label class="control-label" for="experimentType">Study Type <span
                         class="error-message">is required</span></label>
                 <select check-ui-selection ui-select2 ng-model="vm.selected.experimentType"
                         ng-change="vm.changedExperimentType()"
@@ -296,7 +296,7 @@
     <div ng-show="vm.isNGS()">
         <div class="row-fluid ">
             <div class="control-group span6" data-ng-class="{error: form.ngsExperimentType.$error.uiSelect2Validator}">
-                <label class="control-label" for="ngs-experiment-type">Experiment Type <span
+                <label class="control-label" for="ngs-experiment-type">Study Type <span
                         class="error-message">is required</span></label>
                 <select check-ui-selection ui-select2 ng-model="vm.selected.ngsRelatedInfo.experimentType"
                         ng-change="vm.changedExperimentType()"

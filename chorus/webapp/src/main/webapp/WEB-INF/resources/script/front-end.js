@@ -665,6 +665,8 @@ angular.module('front-end', ['error-catcher', 'enums'])
                 $.each(columns, function (i, val) {
                     //CommonLogger.log(val);
                     val.title = val.name;
+                    val.title = val.title.replace("laboratory", "program");
+                    val.title = val.title.replace("experiment", "study");
                 });
                 checkUnits(columns);
                 $scope.displayedColumnNames = columns;

@@ -204,7 +204,7 @@ angular.module("filesControllers", ["files-back", "instruments-back", "formatter
                 {prop: "id", title: "ID", type: "number"},
                 {prop: "name", title: "Name", type: "string"},
                 {prop: "instrument", title: "Instrument", type: "string"},
-                {prop: "laboratory", title: "Laboratory", type: "string"},
+                {prop: "laboratory", title: "Program", type: "string"},
                 {prop: "uploadDate", title: "Upload Date", type: "date"},
                 {prop: "labels", title: "Labels", type: "string"},
                 {prop: "annotationInstrument", title: "Annotation Instrument", type: "string"},
@@ -855,7 +855,7 @@ angular.module("filesControllers", ["files-back", "instruments-back", "formatter
                         }
 
                         var switchExperimentButton = function (selectedFiles) {
-                            var button = new DashboardButton(4, "E", "Run new experiment with selected files", "add-to-experiment");
+                            var button = new DashboardButton(4, "E", "Run new study with selected files", "add-to-experiment");
                             button.display = selectedFiles.length > 0;
                             var haveSameInstrument = true;
                             button.disabledHandler = function () {
@@ -878,7 +878,7 @@ angular.module("filesControllers", ["files-back", "instruments-back", "formatter
                                 }
                             };
                             button.disabledPopupOptions = {
-                                title: "Create Experiment Operation Is Not Available",
+                                title: "Create Study Operation Is Not Available",
                                 bodyMessageUrl: "../pages/component/operations/unsupported-run-experiment.html"
                             };
 

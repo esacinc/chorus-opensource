@@ -2,9 +2,9 @@
 
     <span class="ellipsize breadcrumbs-ellipsize">
         <span ng-show="page.res.accessLevel">
-            <i ng-show="page.res.accessLevel == 'PUBLIC'" class="icon public" title="Public Experiment"></i>
-            <i ng-show="page.res.accessLevel == 'PRIVATE'" class="icon private" title="Private Experiment"></i>
-            <i ng-show="page.res.accessLevel == 'SHARED'" class="icon shared" title="Shared Experiment"></i>
+            <i ng-show="page.res.accessLevel == 'PUBLIC'" class="icon public" title="Public Study"></i>
+            <i ng-show="page.res.accessLevel == 'PRIVATE'" class="icon private" title="Private Study"></i>
+            <i ng-show="page.res.accessLevel == 'SHARED'" class="icon shared" title="Shared Study"></i>
         </span>
         <span ng-bind="page.subtitle + ' ' + page.title" title="{{page.subtitle + ' ' + page.title}}"></span>
         <span ng-show="page.listItemsCount" ng-bind="'('+page.listItemsCount +')'"></span>

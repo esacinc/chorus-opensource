@@ -2416,7 +2416,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
                 {prop: "id", title: "ID", type: "number"},
                 {prop: "name", title: "Name", type: "string"},
                 {prop: "owner", title: "Owner", type: "string"},
-                {prop: "laboratory", title: "Laboratory", type: "string"},
+                {prop: "laboratory", title: "Program", type: "string"},
                 {prop: "project", title: "Project", type: "string"},
                 {prop: "filesCount", title: "Files Count", type: "number"},
                 {prop: "modified", title: "Modified", type: "date"},
@@ -2429,10 +2429,10 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
             return [
                 {prop: "id", title: "ID", type: "number"},
                 {prop: "name", title: "Name", type: "string"},
-                {prop: "experiment.id", title: "Experiment ID", type: "number"},
-                {prop: "experiment.name", title: "Experiment name", type: "string"},
+                {prop: "experiment.id", title: "Study ID", type: "number"},
+                {prop: "experiment.name", title: "Study name", type: "string"},
                 {prop: "owner", title: "Owner", type: "string"},
-                {prop: "experiment.lab", title: "Laboratory", type: "string"},
+                {prop: "experiment.lab", title: "Program", type: "string"},
                 {prop: "status", title: "Status", type: "string"},
                 {prop: "lastExecuted", title: "Last Executed", type: "date"}
             ];
@@ -2606,7 +2606,7 @@ ExperimentDownloadLinkPopup.prototype.emailLink = function () {
 function showExperimentDownloadConfirm(message, onOk) {
     var confirmOptions = {
         id: "experimentDownloadConfirm",
-        title: "Experiment Download",
+        title: "Study Download",
         message: message,
         dialogClass: "message-dialog warning",
         onOk: onOk

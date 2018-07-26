@@ -126,7 +126,7 @@ angular.module("projects-front", ["projects", "users", "groups", "breadcrumbs", 
         $scope.getLabName = function (labId) {
             if (typeof labId == "undefined") return;
             if (labId == null) {
-                return "No Laboratory";
+                return "No Program";
             }
             var labs = $.grep($scope.labs, function (lab) {
                 return (lab.id == labId);

@@ -9,7 +9,7 @@ angular.module("lab-head-front", ["security-front", "security-back", "lab-head-b
             });
             $scope.page.title = "Users of " + lab.name;
         });
-        $scope.page.title = "Users of Laboratory";
+        $scope.page.title = "Users of Program";
         var isTableEmpty = false;
 
         $scope.isTableEmpty = function () {

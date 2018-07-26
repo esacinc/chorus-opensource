@@ -15,7 +15,7 @@
             <div class="row clearfix graf-icons row-with-icons" ng-repeat="experiment in experiments"
                  ng-mouseenter="$scope.showDetailsButton = experiment"
                  ng-mouseleave="$scope.showDetailsButton = null;"
-                 set-title="!experiment.downloadAvailable && 'Experiment files are on archive storage' || ''"
+                 set-title="!experiment.downloadAvailable && 'Study files are on archive storage' || ''"
                  right-click-context-menu
                  data-ng-class="{
                      'active': opened == experiment, 'row-with-details-button': $scope.showDetailsButton,
@@ -60,7 +60,7 @@
                                     <li class="menu-option"
                                         ng-class="{'disabled': !canArchiveFiles(experiment)}"
                                         ng-click="showArchiveExperimentConfirmation(experiment)">
-                                        <a title="Archive Experiment" class=" "
+                                        <a title="Archive Study" class=" "
                                            non-clickable="!canArchiveFiles(experiment)">
                                             <i class="icon archive"></i>
                                             Archive
@@ -86,14 +86,14 @@
                         </div>
                         <div class="name ellipsize">
                             <i ng-show="experiment.accessLevel == 'PUBLIC'" class="icon public"
-                               title="Public Experiment"></i>
+                               title="Public Study"></i>
                             <i ng-show="experiment.accessLevel == 'PRIVATE'" class="icon private"
                                title="Private Experiment"></i>
                             <i ng-show="experiment.accessLevel == 'SHARED'" class="icon shared"
-                               title="Shared Experiment"></i>
+                               title="Shared Study"></i>
                             <span ng-switch="experiment.accessLevel == 'PUBLIC' || isBillingFeatureAvailable(BillingFeatures.DOWNLOAD)">
                                 <i ng-switch-when="false" class="icon slowDownload"
-                                   title="Experiment download is not available"></i>
+                                   title="Study download is not available"></i>
                                 <i ng-switch-default="" class="icon {{iconDetails.getIconStyleClass(experiment)}}"
                                    set-title="iconDetails.getDownloadTitle(experiment)" ng-click="downloadExperiment(experiment)"></i>
                             </span>
@@ -173,11 +173,11 @@
     <div class="modal-holder">
         <div class="modal-frame">
             <div class="modal-header">
-                <h3>Remove Experiment?</h3>
+                <h3>Remove Study?</h3>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to remove "{{confirmation.getName()}}" Experiment?</p>
-                <p>Selected experiment will be moved to Trash or you can remove it permanently.</p>
+                <p>Are you sure you want to remove "{{confirmation.getName()}}" Study?</p>
+                <p>Selected study will be moved to Trash or you can remove it permanently.</p>
 
                 <div class="control-group clearfix">
                     <label for="remove-permanently" style="float: left; width: 140px">Remove permanently</label>
@@ -210,7 +210,7 @@
             <div class="modal-header">
                 <a class="close" data-dismiss="modal" ng-click="experimentViewer.hidePopup()" href="">&nbsp;</a>
 
-                <h3>Experiment Translation</h3>
+                <h3>Study Translation</h3>
             </div>
             <div class="modal-body">
                 <div class="dialog-container">
@@ -270,7 +270,7 @@
 
                 <button class="btn secondary-action" ng-click="experimentViewer.remove()"
                         ng-disabled="experimentViewer.usedInSearches"
-                        title="{{experimentViewer.usedInSearches && 'Experiment used in searches' || ''}}"
+                        title="{{experimentViewer.usedInSearches && 'Study used in searches' || ''}}"
                         ng-show="experimentViewer.deleteAvailable">
                     Delete
                 </button>
@@ -295,11 +295,11 @@
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix" ng-click="permanentLinkPopup.selectCurrentInput()">
-                    <label>Experiment Link</label>
+                    <label>Study Link</label>
 
                     <div class="item">
                         This link is private and it can be accessed in case user has a Chorus account and this
-                        experiment has been shared to him
+                        study has been shared to him
                     </div>
                     <div class="item">
                         <input readonly="true" class="static-value" type="text"
@@ -358,7 +358,7 @@
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix" ng-click="permanentLinkPopup.selectCurrentInput()">
-                    <label>Experiment Link</label>
+                    <label>Study Link</label>
 
                     <div class="item">
                         This link is public and it can be accessed by everyone without having a Chorus account
@@ -424,15 +424,15 @@
             <div class="modal-header">
                 <a class='close' data-dismiss='modal'>&nbsp;</a>
 
-                <h3>Archive Experiment Files</h3>
+                <h3>Archive Study Files</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix">
                     <div class="dialog-container">
-                        Archive "{{archivePopup.item.name}}" experiment files?
+                        Archive "{{archivePopup.item.name}}" study files?
                         <p>
                             <strong>NOTE:</strong> After that no new Protein ID searches or charts can be run for these
-                            files and experiments.
+                            files and studies.
                         </p>
                     </div>
                 </div>
@@ -451,14 +451,14 @@
             <div class="modal-header">
                 <a class='close' data-dismiss='modal'>&nbsp;</a>
 
-                <h3>Cannot Archive Experiment Files</h3>
+                <h3>Cannot Archive Study Files</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix">
                     <div class="dialog-container">
-                        Cannot archive "{{archivePopup.item.name}}" experiment files.
+                        Cannot archive "{{archivePopup.item.name}}" study files.
                         <p>
-                            Some of the files in the selected experiment are used in other experiments.
+                            Some of the files in the selected study are used in other studies.
                         </p>
                         <div>
                             <label> Problem files: </label>
@@ -488,17 +488,17 @@
             <div class="modal-header">
                 <a class='close' data-dismiss='modal'>&nbsp;</a>
 
-                <h3>Unarchive Experiment Files</h3>
+                <h3>Unarchive Study Files</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix">
                     <div class="dialog-container">
-                        <p> The files of the "{{unarchivePopup.item.name}}" experiment will be moved to Analysable
+                        <p> The files of the "{{unarchivePopup.item.name}}" study will be moved to Analysable
                             Storage.
                         </p>
 
                         <p>After that new Protein ID searches or charts can be run for these
-                            files and experiments.</p>
+                            files and studies.</p>
                     </div>
                 </div>
             </div>
@@ -521,12 +521,12 @@
             <div class="modal-header">
                 <a class='close' data-dismiss='modal'>&nbsp;</a>
 
-                <h3>Translate Not Translated Experiment Files</h3>
+                <h3>Translate Not Translated Study Files</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix">
                     <p class="dialog-container">
-                    Not translated files files of experiment "{{translateExperimentPopup.item.name}}" will be translated.
+                    Not translated files files of study "{{translateExperimentPopup.item.name}}" will be translated.
                     </p>
                 </div>
             </div>
@@ -549,12 +549,12 @@
             <div class="modal-header">
                 <a class='close' data-dismiss='modal'>&nbsp;</a>
 
-                <h3>Re-Translate Experiment Files</h3>
+                <h3>Re-Translate Study Files</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix">
                     <div class="dialog-container">
-                    <p> All files of the experiment "{{retranslateExperimentPopup.item.name}}" will be re-translated.</p>
+                    <p> All files of the study "{{retranslateExperimentPopup.item.name}}" will be re-translated.</p>
                     </div>
                 </div>
             </div>
@@ -577,16 +577,16 @@
             <div class="modal-header">
                 <a class='close' data-dismiss='modal'>&nbsp;</a>
 
-                <h3>Delete Experiment Files Translation Data?</h3>
+                <h3>Delete Study Files Translation Data?</h3>
             </div>
             <div class="modal-body">
                 <div class="control-group clearfix" ng-switch="removeTranslatedDataConfirmation.item.countOfOwnedFilesTranslationData == removeTranslatedDataConfirmation.item.files">
                     <div class="dialog-container" ng-switch-when="true">
-                    <p> All translation data of files of the experiment "{{removeTranslatedDataConfirmation.item.name}}" will be deleted.</p>
+                    <p> All translation data of files of the study "{{removeTranslatedDataConfirmation.item.name}}" will be deleted.</p>
                     </div>
                     <div class="dialog-container" ng-switch-when="false">
-                        <p> The translation data of files of the experiment "{{removeTranslatedDataConfirmation.item.name}}" will be deleted.</p>
-                        <p>NOTE: You are not owner of the some translation data of selected experiment files.
+                        <p> The translation data of files of the study "{{removeTranslatedDataConfirmation.item.name}}" will be deleted.</p>
+                        <p>NOTE: You are not owner of the some translation data of selected study files.
                             This data will not be deleted.</p>
                     </div>
                 </div>
@@ -614,8 +614,8 @@
             <div class="modal-body">
                 <div class="control-group clearfix">
                     <div class="dialog-container">
-                        <p>Some files in the experiment are archived.
-                            To share this experiment you should request temporary unarchiving of archived experiment files.
+                        <p>Some files in the study are archived.
+                            To share this study you should request temporary unarchiving of archived study files.
                             You will receive notification when all files will be ready.</p>
                     </div>
                 </div>
@@ -642,11 +642,11 @@
             <div class="modal-body">
                 <div class="dialog-container" ng-switch="labs.length">
                     <div ng-switch-when="0">
-                        You must be a member at least one lab to download experiment files.
+                        You must be a member at least one program to download study files.
                     </div>
                     <div class="control-group clearfix" ng-switch-default="">
                         <p>
-                            Please select laboratory to send billing for download of the selected experiment files.
+                            Please select program to send billing for download of the selected study files.
                         </p>
                         <p>
                             <label class="control-group clearfix" for="labs">Select Laboratory</label>

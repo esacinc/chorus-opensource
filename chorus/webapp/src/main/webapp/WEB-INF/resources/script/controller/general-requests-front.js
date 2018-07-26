@@ -248,7 +248,7 @@ angular.module("general-requests-front", ["general-requests", "security-front", 
         CommonLogger.setTags(["GENERAL-REQUESTS", "LAB-INBOX-DETAILS-CONTROLLER"]);
         $scope.returnUrl = $rootScope.returnUrl;
         $scope.showCreateDialog = true;
-        $scope.page.title = "Laboratory Operator Request Details";
+        $scope.page.title = "Program Operator Request Details";
 
         RequestsDetails.get({type: "lab", request: $routeParams.id}, function (labRequest) {
             $scope.details = labRequest;

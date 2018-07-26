@@ -33,7 +33,7 @@
                 </div>
      			<div class="step-holder steps-count-7" ng-class="{active: step == 6}">
 	     			<div class="number">6</div>
-	     			<div class="title">Experiment Design</div>
+	     			<div class="title">Study Design</div>
      			</div>
                 <div class="step-holder steps-count-7" ng-class="{active: step == 7}">
 	     			<div class="number">7</div>
@@ -45,14 +45,14 @@
             <div ng-switch-when="1" style="position:relative;" ng-hide='viewMode'  ng-controller="exposeFormToParentScope">
                 <div class="step-description">
                     <i class="icon details"></i>
-                    <label>This wizard guides you through the steps necessary to define your experiment.</label>
+                    <label>This wizard guides you through the steps necessary to define your study.</label>
                 </div>
                 <form name="form" novalidate>
                     <!--Files drop area-->
                     <div class="attachment-drop-area" style="display:none;" ng-include="'templates/drag-and-drop-area.html'"></div>
                     <div class="row-fluid">
                         <div class="control-group" data-ng-class="{error: form.name.$error.inputValidator || isExperimentNameDuplicated()}">
-                            <label class="control-label" for="name">Experiment Name
+                            <label class="control-label" for="name">Study Name
                                 <span class="error-message" ng-show="form.name.$invalid">is required</span>
                                 <span class="error-message" ng-show="form.name.$valid">is already taken</span>
                             </label>
@@ -162,7 +162,7 @@
             <div ng-show="step==2" ng-controller="exposeFormToParentScope"  on-content-load="correctModalHeight()">
                 <div class="step-description">
                     <i class="icon details"></i>
-                    <label>Specify experiment type for data processing and analysis.</label>
+                    <label>Specify study type for data processing and analysis.</label>
                 </div>
                 <form name="form" novalidate>
                     <experiment-wizard-analysis-step configuration="analysisStepConfiguration"></experiment-wizard-analysis-step>
@@ -172,7 +172,7 @@
             <div ng-switch-when="3" class="relative"  on-content-load="correctModalHeight()">
                 <div class="step-description">
                     <i class="icon details"></i>
-                    <label>Select files that are part of the experiment. Scroll down to load more.</label>
+                    <label>Select files that are part of the study. Scroll down to load more.</label>
                 </div>
                 <div class="relative">
                     <label class="filter-label control-label">Filter</label>
@@ -337,7 +337,7 @@
                 <div class="step-description">
                     <i class="icon details"></i>
                     <ul>
-                        <li><label>Specify Experiment Design</label></li>
+                        <li><label>Specify Study Design</label></li>
                         <li><label>Add factors as a stable columns and fill factor levels as column values to assign biological samples to biological condition (treatment group).</label></li>
                     </ul>
                 </div>
@@ -351,7 +351,7 @@
                 <div class="step-description">
                     <i class="icon details"></i>
                     <label>
-                        Verify experiment design.
+                        Verify study design.
                     </label>
                 </div>
                 <table class="table read-only">
@@ -366,9 +366,9 @@
 		                <tr>
                             <td>
                                 <i ng-show="experiment.accessLevel == 'PUBLIC'" class="icon public"
-                                   title="Public Experiment"></i>
+                                   title="Public Study"></i>
                                 <i ng-show="experiment.accessLevel == 'SHARED'" class="icon shared"
-                                   title="Shared Experiment"></i>
+                                   title="Shared Study"></i>
                                 <label>Name</label>
                             </td>
                             <td>
@@ -396,7 +396,7 @@
                 </table>
 
 
-                <h4 ng-show="experiment.factors.length!=0">Experiment Design</h4>
+                <h4 ng-show="experiment.factors.length!=0">Study Design</h4>
                 <div class="limit-table limit-table-body">
                     <table class="table table-hover factor-table fixed-index column3" ng-show="selectedFilesLength!=0" >
                         <thead>

@@ -35,8 +35,8 @@
                 <input type="checkbox" ng-disabled="model.disableEditSpecies" ng-model="model.editSpecies">
                 Edit Species
             </label>
-                <span ng-show="model.disableEditSpecies">(can't be edited - all the selected files are used in experiments or you aren't operator of instruments of them)</span>
-                <span ng-show="!model.disableEditSpecies && !model.canEditAllSpecies">(can't edit all species - some of the selected files are used in experiments, or you aren't an operator of instruments of them)</span>
+                <span ng-show="model.disableEditSpecies">(can't be edited - all the selected files are used in studies or you aren't operator of instruments of them)</span>
+                <span ng-show="!model.disableEditSpecies && !model.canEditAllSpecies">(can't edit all species - some of the selected files are used in studies, or you aren't an operator of instruments of them)</span>
             </p>
         </div>
         <div class="edit-species-content">
