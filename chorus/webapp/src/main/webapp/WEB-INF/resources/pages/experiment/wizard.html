@@ -5,7 +5,7 @@
     <div class="modal-header">
         <a data-dismiss="modal" class="close">&times;</a>
         <a ng-model="expanded" class="wizard-expanded" ng-click="expanded=!expanded" data-ng-class="{'expanded': expanded}">full screen</a>
-        <h3 ng-bind="page.title">Create Experiment</h3>
+        <h3 ng-bind="page.title">Create Study</h3>
     </div>
     <div class="modal-body" ng-cloak>
         <ng-switch on='viewMode'>
@@ -85,9 +85,9 @@
                     </div>
                     <div class="row-fluid">
                         <div class="control-group" ng-switch="createMode"  data-ng-class="{error: form.lab.$error.uiSelect2Validator}">
-                            <label class="control-label" for="labs">Laboratory <span class="error-message">is required</span></label>
+                            <label class="control-label" for="labs">Program <span class="error-message">is required</span></label>
                             <div ng-switch-when='true'>
-                                <div class="all-labs"><label><input type="checkbox" ng-model="confirmSelectAllLabs" ng-change="selectAllLabs(confirmSelectAllLabs)"/>Look through all labs</label></div>
+                                <div class="all-labs"><label><input type="checkbox" ng-model="confirmSelectAllLabs" ng-change="selectAllLabs(confirmSelectAllLabs)"/>Look through all programs</label></div>
                             <select name="lab" check-ui-selection ui-select2 ui-select2-validator="" data-placeholder="-- Select One --" id="labs" class="dialog-select lab-select" ng-model="experiment.lab"
                                     ng-disabled="confirmSelectAllLabs" required>
                                 <option></option>
@@ -103,7 +103,7 @@
                         <div class="control-group" ng-switch-when="true" data-ng-class="{error: form.billLab.$error.uiSelect2Validator}">
                             <div ng-switch="labsWithEnabledBilling.length > 1">
                                 <div ng-switch-when="true">
-                                    <label class="control-label" for="billLab">Laboratory to Send Billing <span class="error-message">is required</span></label>
+                                    <label class="control-label" for="billLab">Program to Send Billing <span class="error-message">is required</span></label>
                                     <select name="billLab" check-ui-selection ui-select2 ui-select2-validator="" data-placeholder="-- Select One --" id="billLab"
                                             class="dialog-select lab-select" ng-model="experiment.billLab" required>
                                         <option></option>
@@ -380,7 +380,7 @@
                             <td><span ng-bind="findById(projects, experiment.project).name"></span></td>
                         </tr>
                         <tr>
-                            <td><label>Laboratory</label></td>
+                            <td><label>Program</label></td>
                             <td><span ng-bind="getLabName(experiment.lab)"></span></td>
                         </tr>
                         <tr>

@@ -415,7 +415,7 @@
     <div class="modal-holder">
         <div class="modal-frame">
             <div class="modal-header">
-                <h3>Select Laboratory to Send Billing for Shared Files Download</h3>
+                <h3>Select Program to Send Billing for Shared Files Download</h3>
             </div>
             <div class="modal-body">
                 <div class="dialog-container" ng-switch="labs.length">
@@ -424,10 +424,10 @@
                     </div>
                     <div class="control-group clearfix" ng-switch-default="">
                         <p>
-                            Please select laboratory to send billing for download of shared with you files.
+                            Please select program to send billing for download of shared with you files.
                         </p>
                         <p>
-                            <label class="control-group clearfix" for="labs">Select Laboratory</label>
+                            <label class="control-group clearfix" for="labs">Select Program</label>
                             <select id="labs" ui-select2="" ng-model="$parent.downloadSharedFilesPopup.selectedLab"
                                     class="dialog-select" data-placeholder="-- Select Lab --">
                                 <option value=""></option>

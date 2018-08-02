@@ -37,7 +37,7 @@
                                     <label for="name">Name</label>
                                     <input id="name" class="dialog-text-input dont-hide" name="name" ng-model="instrument.details.name" input-validator/>
                                     <span class="error-message" ng-show="form.name.$invalid">Field Name is required</span>
-                                    <span class="error-message" ng-show="form.name.$valid">In selected lab instrument with this name already exists</span>
+                                    <span class="error-message" ng-show="form.name.$valid">In selected program instrument with this name already exists</span>
                                 </div>
                                 <div class="control-group clearfix" data-ng-class="{error: form.vendor.$error.uiSelect2Validator || (generalTab && form.vendor.$invalid)}">
                                     <label for="vendor">Vendor</label>
@@ -60,7 +60,7 @@
                                     <span class="error-message">Field Model is required</span>
                                 </div>
                                 <div class="control-group clearfix" data-ng-class="{error: form.lab.$error.uiSelect2Validator || (generalTab && form.lab.$invalid)}">
-                                    <label>Laboratory</label>
+                                    <label>Program</label>
                                     <p ng-bind="instrument.labName"></p>
                                 </div>
                                 <div class="control-group clearfix" data-ng-class="{error: form.serialNumber.$error.inputValidator || isSerialNumberDuplicated() || saveInstrumentError || (generalTab && form.serialNumber.$invalid)}">

@@ -327,7 +327,7 @@ public class InstrumentManagementImpl extends DefaultInstrumentManagement<Instru
         final Long labId = lab.getId();
 
         if (!storageOn) {
-            throw new UploadUnavailable("Storage feature is off for laboratory. Lab id: " + labId + ", Lab name: " + lab.getName());
+            throw new UploadUnavailable("Storage feature is off for program. Program id: " + labId + ", program name: " + lab.getName());
         }
 
         final ActiveFileMetaData entity = load(file);
@@ -628,7 +628,7 @@ public class InstrumentManagementImpl extends DefaultInstrumentManagement<Instru
         final AccessedInstrument<Instrument> instrument = instrumentRepository.findByLabModelAndNameAccessed(actor, labId, modelId, DEFAULT_INSTRUMENT_NAME);
 
         if(instrument != null) {
-            throw new IllegalStateException("Default instrument for lab with ID: " + labId + " and model with ID: " + modelId + " already exists.");
+            throw new IllegalStateException("Default instrument for program with ID: " + labId + " and model with ID: " + modelId + " already exists.");
         }
 
         final Lab laboratory = labRepository.findOne(labId);
@@ -686,9 +686,9 @@ public class InstrumentManagementImpl extends DefaultInstrumentManagement<Instru
             super.beforeCreateInstrument(creator, labId, instrumentDetails);
         } else { // skip name verification to allow several "Default" instruments per lab
             if(!ruleValidator.canUserCreateInstrumentInLab(creator, labId)) {
-                throw new AccessDenied("Only lab head and admins can create instrument in the laboratory");
+                throw new AccessDenied("Only program head and admins can create instrument in the program");
             } else if(!ruleValidator.canUserCreateInstrument(creator)) {
-                throw new AccessDenied("User isn\'t permitted to create experiment - laboratory is not specified");
+                throw new AccessDenied("User isn\'t permitted to create study - program is not specified");
             } else if(!ruleValidator.canInstrumentBeCreated(labId, EMPTY_INSTRUMENT_NAME, instrumentDetails.serialNumber)) {
                 throw new AccessDenied("Couldn\'t create instrument");
             }

@@ -7,17 +7,17 @@
             <div class="modal-body">
                 <div class="dialog-container" ng-switch="labs.length">
                     <div ng-switch-when="0">
-                        You must be a member at least one lab to approve a copy project
+                        You must be a member at least one program to approve a copy project
                     </div>
                     <div ng-switch-when="1">
-                        All files will be charged as the files of "<span ng-init="$parent.selectedLab = labs[0]" ng-bind="labs[0].name"></span>" laboratory.
+                        All files will be charged as the files of "<span ng-init="$parent.selectedLab = labs[0]" ng-bind="labs[0].name"></span>" program.
                     </div>
                     <div class="control-group clearfix" ng-switch-default="">
                         <p>
-                            Please select laboratory to send billing for files in the copied project.
+                            Please select program to send billing for files in the copied project.
                         </p>
                         <p>
-                            <label class="control-group clearfix" for="labs">Select Laboratory</label>
+                            <label class="control-group clearfix" for="labs">Select Program</label>
                             <select id="labs" ui-select2="" ng-model="$parent.selectedLab.id" class="dialog-select" data-placeholder="-- Select Lab --">
                                 <option value=""></option>
                                 <option value="{{lab.id}}" ng-repeat="lab in labs" ng-bind="lab.name"></option>

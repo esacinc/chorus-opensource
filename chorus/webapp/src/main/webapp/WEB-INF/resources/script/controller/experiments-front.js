@@ -156,7 +156,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
 
                     $scope.loadNextFilesPage = loadNextFilesPage;
                     if (!instrument && $scope.experimentItems.length > 0) {
-                        CommonLogger.log("It's impossible to create experiment with selected files and without instrument");
+                        CommonLogger.log("It's impossible to create study with selected files and without instrument");
                         return;
                     }
                     if (((instrument && instrumentModel) || instrumentModel) && specie) {
@@ -1300,7 +1300,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
     })
     .controller("newExperiment", function ($scope, $rootScope, initWizard, Security, experimentByFiles) {
         CommonLogger.setTags(["EXPERIMENTS", "NEW-EXPERIMENT-CONTROLLER"]);
-        $scope.page.title = "Create Experiment";
+        $scope.page.title = "Create Study";
         $scope.actionCaption = "Create";
         $scope.closeWizardActionCaption = "Cancel";
 
@@ -1353,7 +1353,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
             Security.get({path: ""}, function (user) {
                 $scope.loggedInUser = user;
                 $scope.editMode = ($scope.loggedInUser.username == experiment.ownerEmail || experiment.labHead == $scope.loggedInUser.id);
-                $scope.page.title = ($scope.editMode) ? "Edit Experiment" : "Experiment Details";
+                $scope.page.title = ($scope.editMode) ? "Edit Study" : "Study Details";
                 $scope.closeWizardActionCaption = ($scope.editMode) ? "Cancel" : "Close";
                 ($scope.editMode) ? initWizard.createMode($scope, experiment, $scope.loggedInUser, false) :
                     initWizard.viewMode($scope, experiment);
@@ -1378,7 +1378,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
             $scope.lockMasses = experiment.lockMasses;
             Security.get({path: ""}, function (user) {
                 $scope.loggedInUser = user;
-                $scope.page.title = "Copy Experiment";
+                $scope.page.title = "Copy Study";
                 $scope.closeWizardActionCaption = "Cancel";
                 var copyExperiment = $.extend(true, {}, experiment);
                 copyExperiment.info.name = copyExperiment.info.name + " Copy";
@@ -1397,7 +1397,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
 
         if ($scope.pathError) return;
         CommonLogger.setTags(["EXPERIMENTS", "EXPERIMENTS-CONTROLLER"]);
-        $scope.page.title = "Experiments";
+        $scope.page.title = "Studies";
         $scope.page.filterScope = $scope;
         $scope.page.showPageableFilter = true;
         var pagedRequest = contentRequestParameters.getParameters("experiments");
@@ -1444,7 +1444,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
             return isTableEmpty;
         };
         $scope.getEmptyTableMessage = function () {
-            return "There are no experiments";
+            return "There are no studies";
         };
 
         $scope.showPermanentLink = experimentDownloadLink($scope, AnonymousDownloadEmailer, downloadFiles);
@@ -1746,7 +1746,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
         };
 
         $scope.getEmptyTableMessage = function () {
-            return "There are no experiments";
+            return "There are no studies";
         };
 
         $scope.showPermanentLink = experimentDownloadLink($scope, AnonymousDownloadEmailer, downloadFiles);
@@ -1808,12 +1808,12 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
                     var filter = matchForExperiment[1];
                     if (path.indexOf("shared") != -1) {
                         breadcrumb = {
-                            label: filter[0].toUpperCase() + filter.substring(1) + " with Me Experiments",
+                            label: filter[0].toUpperCase() + filter.substring(1) + " with My Studies",
                             url: "#" + getFilterExperimentsPath(path)
                         };
                     } else {
                         breadcrumb = {
-                            label: filter[0].toUpperCase() + filter.substring(1) + " Experiments",
+                            label: filter[0].toUpperCase() + filter.substring(1) + " Studies",
                             url: "#" + getFilterExperimentsPath(path)
                         };
                     }
@@ -1857,11 +1857,11 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
         }
     })
     .directive("experimentDetails", detailsLink({
-        "title": "Show Experiment Details",
+        "title": "Show Study Details",
         "dataTarget": "#experimentDetails"
     }))
     .directive("experimentDetailsButton", detailsDirective({
-        "title": "Show Experiment Details",
+        "title": "Show Study Details",
         "dataTarget": "#experimentDetails"
     }))
     .directive("searchDatabaseDetails", detailsLink({
@@ -2018,7 +2018,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
 
             fileOperations.archive = function (experiment, success) {
                 ExperimentFilesArchiving.archive({id: experiment.id}, function () {
-                    CommonLogger.log("*** Archive experiment request was send");
+                    CommonLogger.log("*** Archive study request was send");
                     if (success) {
                         success()
                     }
@@ -2027,7 +2027,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
 
             fileOperations.unarchive = function (experiment, success) {
                 ExperimentFilesArchiving.unarchive({id: experiment.id}, function () {
-                    CommonLogger.log("*** Unarchive experiment request was send");
+                    CommonLogger.log("*** Unarchive study request was send");
                     if (success) {
                         success()
                     }
@@ -2036,7 +2036,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
 
             fileOperations.translate = function (experiment, chargedLab, success) {
                 ExperimentTranslation.translate({id: experiment.id, chargedLab: chargedLab}, function () {
-                    CommonLogger.log("*** Experiment translation request was send");
+                    CommonLogger.log("*** Study translation request was send");
                     if (success) {
                         success()
                     }
@@ -2045,7 +2045,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
 
             fileOperations.removeTranslationData = function (experiment, success) {
                 ExperimentTranslation.deleteTranslationData({id: experiment.id}, function () {
-                    console.log("*** Experiment files translation data was removed");
+                    console.log("*** Study files translation data was removed");
                     if (success) success();
                 })
             };
@@ -2280,7 +2280,7 @@ angular.module("experiments-front", ["mixins", "experiments-back", "protein-sear
 
             } else {
 
-                showExperimentDownloadConfirm("Preparing job for downloading experiment " + experiment.name + " was started." +
+                showExperimentDownloadConfirm("Preparing job for downloading study " + experiment.name + " was started." +
                     "You will receive notification, when all files will be ready.", function () {
                     ExperimentMoveToStorage.query({id: experiment.id, actor: $scope.getUserId()});
                 });
@@ -2519,7 +2519,7 @@ ExperimentViewer.prototype.getStatus = function () {
     } else if (this.status == "IN_PROGRESS") {
         return "Translation in progress...";
     } else if (this.isOwner && !this.billLab) {
-        return "Translation is not available. Please specify <a class='specifyLabNotificationLink' href='#/experiments/all/" + this.experimentId + "'>Lab to Send Billing</a>"
+        return "Translation is not available. Please specify <a class='specifyLabNotificationLink' href='#/experiments/all/" + this.experimentId + "'>Program to Send Billing</a>"
     } else {
         return "Not translated";
     }

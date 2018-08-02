@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <a id="detailsLaboratoryClose" class='close' data-dismiss='modal'>?</a>
 
-                    <h3 id="detailsLaboratoryLabel">Laboratory Operator Request Details</h3>
+                    <h3 id="detailsLaboratoryLabel">Program Operator Request Details</h3>
                 </div>
                 <div class="modal-body">
                     <div class="tab-content">
@@ -24,14 +24,14 @@
                                     <input id="url" class="dialog-text-input dont-hide"
                                            ng-bind="details.institutionUrl"   name = "url"
                                            ng-model="details.institutionUrl" input-validator="" required/>
-                                    <span class="error-message">Field Laboratory URL is required</span>
+                                    <span class="error-message">Field Program URL is required</span>
                                 </div>
                                 <div class="control-group clearfix" data-ng-class="{error: form.name.$error.inputValidator}">
-                                    <label for="name">Laboratory Name</label>
+                                    <label for="name">Program Name</label>
                                     <input id="name" class="dialog-text-input dont-hide" name="name"
                                            ng-bind="details.name"   input-validator=""
                                            ng-model="details.name" required/>
-                                    <span class="error-message">Field Laboratory Name is required</span>
+                                    <span class="error-message">Field Program Name is required</span>
                                 </div>
                                 <div class="control-group control-dialog clearfix">
                                     <label>Sent Date</label>
@@ -40,7 +40,7 @@
                                       ng-bind="details.modified | date"></span>
                                     </div>
                                 </div>
-                                <h5 class="control-group-header">Laboratory Head</h5>
+                                <h5 class="control-group-header">Program Head</h5>
                                 <div class="control-group clearfix" data-ng-class="{error: form.fName.$error.inputValidator}">
                                     <label for="fName">First Name</label>
                                     <input id="fName" class="dialog-text-input dont-hide"

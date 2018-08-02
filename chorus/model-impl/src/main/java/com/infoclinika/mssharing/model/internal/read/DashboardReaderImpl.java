@@ -413,21 +413,21 @@ public class DashboardReaderImpl implements DashboardReader {
     @Override
     public SortedSet<ExperimentStructure> readExperimentsOnlyStructureByProject(long userId, long projectId) {
         final SortedSet<ExperimentLine> experimentLines = readExperimentsByProject(userId, projectId);
-        LOGGER.info(" + Total experiments for project ID = " + projectId + ": " + experimentLines.size());
+        LOGGER.info(" + Total studies for project ID = " + projectId + ": " + experimentLines.size());
         return ImmutableSortedSet.copyOf(toExperimentStructure(userId, experimentLines, false));
     }
 
     @Override
     public SortedSet<UploadedFile> readFilesStructureByExperiment(long userId, long experimentId) {
         final Collection<UploadedFile> fileItems = readExperimentDetailedFiles(userId, experimentId);
-        LOGGER.info(" + Total files for experiment ID = " + experimentId + ": " + fileItems.size());
+        LOGGER.info(" + Total files for study ID = " + experimentId + ": " + fileItems.size());
         return ImmutableSortedSet.copyOf(fileItems);
     }
 
     @Override
     public SortedSet<ExperimentStructure> readExperimentsOnlyStructure(long userId, Filter filter) {
         final ImmutableSortedSet<ExperimentLine> experiments = readExperimentsForFolderStructure(userId, filter);
-        LOGGER.info(" + Total experiments: " + experiments.size());
+        LOGGER.info(" + Total studies: " + experiments.size());
         return ImmutableSortedSet.copyOf(toExperimentStructure(userId, experiments, false));
     }
 
@@ -699,7 +699,7 @@ public class DashboardReaderImpl implements DashboardReader {
     private Collection<UploadedFile> readExperimentDetailedFiles(long actor, long experimentId) {
         ActiveExperiment experiment = checkPresence(experimentRepository.findOne(experimentId));
         if (!ruleValidator.isUserCanReadExperimentPredicate(actor).apply(experiment)) {
-            throw new AccessDenied("User cannot read experiment files");
+            throw new AccessDenied("User cannot read study files");
         }
         return from(experiment.getRawFiles().getData()).transform(UPLOADED_FILE_ITEM_FROM_RAW).toSet();
     }
