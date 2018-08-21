@@ -5,7 +5,7 @@
     <div class="modal-frame">
     <div class="modal-header">
         <a data-dismiss="modal" class="close">&times;</a>
-        <h3>Laboratory Details</h3>
+        <h3>Program Details</h3>
     </div>
 
     <form name="form" ng-submit="save()">
@@ -14,10 +14,10 @@
                 <div class="tab-pane fade active in" id="general">
                     <div class="table laboratory-details">
                         <div class="control-group clearfix" data-ng-class="{error: form.name.$error.inputValidator}">
-                            <label for="name">Laboratory Name</label>
+                            <label for="name">Program Name</label>
                             <input class="dialog-text-input dont-hide" id="name" name="name" input-validator
                                    maxlength="255" ng-model="details.name" required/>
-                            <span class="error-message">Field Laboratory Name is required</span>
+                            <span class="error-message">Field Program Name is required</span>
                         </div>
                         <div class="control-group clearfix" data-ng-class="{error: form.url.$error.inputValidator}">
                             <label for="url">Institution URL</label>
@@ -25,7 +25,7 @@
                                    maxlength="255" ng-model="details.institutionUrl" required/>
                             <span class="error-message">Field LInstitution URL is required</span>
                         </div>
-                        <h5 class="control-group-header">Laboratory Head</h5>
+                        <h5 class="control-group-header">Program Head</h5>
                         <div class="control-group clearfix" data-ng-class="{error: form.firstName.$error.inputValidator}">
                             <label for="firstName">First Name</label>
                             <input class="dialog-text-input dont-hide" id="firstName" name="firstName" input-validator

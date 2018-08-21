@@ -11,8 +11,8 @@
                 <div class="cell cell-id"><div class="ellipsize" set-text="user.id" set-title="user.id"></div></div>
                 <div class="cell cell-name">
                     <span>
-                        <i ng-show="user.labHead" class="icon member" title="Lab Head"/>
-                        <i ng-show="!user.labHead" class="icon member" title="User In Laboratory"/>
+                        <i ng-show="user.labHead" class="icon member" title="Program Head"/>
+                        <i ng-show="!user.labHead" class="icon member" title="User In Program"/>
                     </span>
                     <span set-text="user.firstName"></span>
                 </div>
@@ -20,7 +20,7 @@
                     <div class="ellipsize" set-text="user.lastName"></div>
                 </div>
                 <div class="cell cell-email">
-                    <i ng-show='!user.labHead && $scope.showRemoveButton == user' class='icon delete float-right' title='Remove From Lab' ng-click='displayConfirmation(user)'>&nbsp;</i>
+                    <i ng-show='!user.labHead && $scope.showRemoveButton == user' class='icon delete float-right' title='Remove From Program' ng-click='displayConfirmation(user)'>&nbsp;</i>
                     <div class="ellipsize" set-text="user.email"></div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
             <h3>Remove User?</h3>
         </div>
         <div class="modal-body" style="padding: 10px 30px">
-            <p>Are you sure you want to remove "{{confirmation.getName()}}" User from laboratory?</p>
+            <p>Are you sure you want to remove "{{confirmation.getName()}}" User from program?</p>
 
         </div>
         <div class="modal-footer">

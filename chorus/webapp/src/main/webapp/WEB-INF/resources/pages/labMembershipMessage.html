@@ -2,7 +2,7 @@
 <html ng-app="labMembership-front" class="texture page-error" xmlns="http://www.w3.org/1999/html"
       xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Chorus&nbsp;&ndash;&nbsp;Lab membership confirm</title> <!-- change text -->
+    <title>Chorus&nbsp;&ndash;&nbsp;Program membership confirm</title> <!-- change text -->
     <link rel="icon" href="../img/favicon.ico" type="img/x-icon" />
 
     <script type="text/javascript" src="../script/util/logging.js"></script>
@@ -49,13 +49,13 @@
 <div class="page-holder error-page" ng-controller="confirmLabMembershipPageCtrl">
     <div class="page-frame">
         <div class="page-content">
-            <h1 class="main-logo"><a href="../"><img alt="Chorus Logotype" src="../img/chorus-logo-big.png"/></a></h1>
+            <h1 class="main-logo"><a href="../"><img alt="Chorus Logotype" src="../img/workspace-logo_noBG.png"/></a></h1>
             <div class="description" ng-switch on="result" >
                 <!--<h2>Error</h2>-->
                 <!--<h3>Request is outdated</h3>-->
-                <div ng-switch-when="approve"><h2>Approved</h2><h3>User membership approved</h3><p>User {{message.labMemberFirstName}} {{message.labMemberSecondName}} was successfully added into the lab "{{message.labName}}".</p></div>
-                <div ng-switch-when="refuse"><h2>Rejected</h2><h3>User membership rejected</h3><p>The request from user {{message.labMemberFirstName}} {{message.labMemberSecondName}} for the lab "{{message.labName}}" was rejected.</p></div>
-                <div ng-switch-when='deprecated'><h2>Outdated</h2><h3>Request is outdated</h3><p>The request from user {{message.labMemberFirstName}} {{message.labMemberSecondName}} for the lab "{{message.labName}}" is outdated.</p><p>Please check the URL to ensure that the path is correct.</p></div>
+                <div ng-switch-when="approve"><h2>Approved</h2><h3>User membership approved</h3><p>User {{message.labMemberFirstName}} {{message.labMemberSecondName}} was successfully added into the program "{{message.labName}}".</p></div>
+                <div ng-switch-when="refuse"><h2>Rejected</h2><h3>User membership rejected</h3><p>The request from user {{message.labMemberFirstName}} {{message.labMemberSecondName}} for the program "{{message.labName}}" was rejected.</p></div>
+                <div ng-switch-when='deprecated'><h2>Outdated</h2><h3>Request is outdated</h3><p>The request from user {{message.labMemberFirstName}} {{message.labMemberSecondName}} for the program "{{message.labName}}" is outdated.</p><p>Please check the URL to ensure that the path is correct.</p></div>
                 <div ng-switch-default><p>Loading....</p></div>
                 <!--<p>Please check the URL to ensure that the path is correct.</p>-->
             </div>
