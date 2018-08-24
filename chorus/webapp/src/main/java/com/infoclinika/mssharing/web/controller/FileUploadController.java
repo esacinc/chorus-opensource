@@ -118,7 +118,7 @@ public class FileUploadController extends AbstractFileUploadController {
         long userId = user.getId();
 
         if (user.getLabs().isEmpty()) {
-            throw new AccessDenied("User isn't permitted to upload file - laboratory is not specified");
+            throw new AccessDenied("User isn't permitted to upload file - program is not specified");
         }
         //todo: verify instrument ID?
         final long instrumentId = uploadFilesRequest.instrument;
