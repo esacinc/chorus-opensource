@@ -19,9 +19,10 @@ angular.module("downloader", ["error-catcher"])
             var path = "";
 
             if(isSingleDownload){
-                path = "/download/singleFileDownloadUrl?" + $.param({file: files[0], lab: lab});
+                path = window.location.origin + subStringLastIndexOfFor(window.location.pathname, "/", 2) +
+                    "/download/singleFileDownloadUrl?" + $.param({file: files[0], lab: lab});
             } else {
-                path = subStringLastIndexOfFor(window.location.pathname, "/", 2) +
+                path = window.location.origin + subStringLastIndexOfFor(window.location.pathname, "/", 2) +
                     "/download/bulk?" + $.param({files: files, experiment: experiment, lab: lab}, true);
             }
 

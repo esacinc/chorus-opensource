@@ -7,7 +7,7 @@
     AppearanceService.$inject = ["$resource"];
 
     function AppearanceService($resource) {
-        return $resource("/appearance");
+        return $resource(subStringLastIndexOfFor(window.location.pathname, "/", 2) + "/appearance");
     }
 
 })();
