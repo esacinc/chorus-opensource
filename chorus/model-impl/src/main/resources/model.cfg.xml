@@ -44,11 +44,9 @@
 
     <context:property-placeholder ignore-resource-not-found="true"
                                   ignore-unresolvable="true"
-                                  location="file:${user.home}/application.properties,
+                                  location="classpath*:application.properties,
+                                    file:${user.home}/application.properties,
                                     file:${user.home}/messaging.properties"/>
-
-    <!-- todo[Ngoc]: take out this application.properties because it's loaded in the wrong order in EC2 -->
-    <!-- location="classpath*:application.properties, -->
 
     <!-- todo[tymchenko]: does not work now. See Translator class for manual setting of the timeout -->
     <http:conduit name="*.http-conduit">

@@ -42,9 +42,8 @@ public class ApplicationPropertiesReader {
     private static Properties loadProperties() {
         final Properties properties = new Properties();
 
-        // todo[Ngoc]-Remove loading from classpath because they are loading in the wrong order in AWS
-        //final URL classpathProperties = Resources.getResource(APPLICATION_PROPERTIES);
-        //loadProperties(properties, classpathProperties);
+        final URL classpathProperties = Resources.getResource(APPLICATION_PROPERTIES);
+        loadProperties(properties, classpathProperties);
 
         final File userHomeProperties = new File(System.getProperty(USER_HOME), APPLICATION_PROPERTIES);
         loadPropertiesFromFile(properties, userHomeProperties);
