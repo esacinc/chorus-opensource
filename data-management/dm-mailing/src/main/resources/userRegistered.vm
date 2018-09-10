@@ -1,10 +1,8 @@
-${projectTitle}: Confirm Your Email
+${projectTitle}: Confirmation
 Hello, ${user}!
 
 Thank you for registering for ${projectTitle} project!
 
-Please complete your registration by confirming your email via this link:
-
-<a href="${verificationUrl}">${verificationUrl}</a>
+You will receive an email about acceptance or rejection.
 
 Thank you!
