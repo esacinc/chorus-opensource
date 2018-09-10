@@ -1,7 +1,7 @@
-Chorus: Experiment Download Public Link
+PDC Workspace: Study Download Public Link
 Hello!
 
-${user} has sent you a direct link to download his shared experiment "${experiment}".
+${user} has sent you a direct link to download his shared study "${experiment}".
 
 To start download please follow this link:
 <a href="${downloadLink}">${downloadLink}</a>

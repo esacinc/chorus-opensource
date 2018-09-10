@@ -1,7 +1,7 @@
 ${projectTitle}: Instrument Creation Request Rejected
 Hello, ${user}!
 
-Unfortunately, your request to create ${instrument} instrument in ${laboratory} laboratory has been rejected by the lab head. #if(
+Unfortunately, your request to create ${instrument} instrument in ${laboratory} program has been rejected by the lab head. #if(
     "$!{comment}" != "")
 Here is the rejection comment:
 
@@ -9,6 +9,6 @@ Here is the rejection comment:
 #end
 
 
-Perhaps, you may try to contact the lab head directly and then repeat your request.
+Perhaps, you may try to contact the program head directly and then repeat your request.
 
 Thank you for your patience.

@@ -284,7 +284,8 @@
                                             <td valign="top" height="15" style="font-size: 0;line-height: 0;"><img
                                                     src="${imagesPrefix}/none.gif" alt="" width="1" height="15"/></td>
                                         </tr>
-                                        <td valign="top"
+                                        <!-- Ngoc - Remove footer from email -->
+                                        <!-- td valign="top"
                                             style="font:11px Arial,sans-serif;line-height:20px;color:#222222">
                                             <table width="538" border="0" cellpadding="0" cellspacing="0">
                                                 <tr>
@@ -319,7 +320,7 @@
                                                     src="${imagesPrefix}/none.gif" alt="" width="1" height="15"/></td>
                                         </tr>
                                     </table>
-                                </td>
+                                </td -->
                                 <td valign="top" width="30" bgcolor="#ffffff" style="font-size: 0;line-height: 0;"></td>
                                 <td valign="top" width="1" bgcolor="#dadada" style="font-size: 0;line-height: 0;"></td>
                                 <td valign="top" width="1" bgcolor="#f2f2f2" style="font-size: 0;line-height: 0;"></td>

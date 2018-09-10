@@ -1,7 +1,7 @@
-Chorus:  MicroArrays Import from packages ${packageNumber} has been failed
+PDC Workspace:  MicroArrays Import from packages ${packageNumber} has been failed
 Hello, ${user}!
 
-Something went wrong during importing your MicroArrays experiment from the package ${packageNumber}.
+Something went wrong during importing your MicroArrays study from the package ${packageNumber}.
 
 #if (${errorMessage})
 Error message:

@@ -1,12 +1,12 @@
-Chorus: Lab Membership Request
+PDC Workspace: Program Membership Request
 Hello, ${labHead}!
 
-Someone has just requested a membership in laboratory. Please find the details below:
+Someone has just requested a membership in program. Please find the details below:
 
-Laboratory: ${laboratory};
+Program: ${laboratory};
 Requested by: ${requesterName};
 
-Please feel free to login into your account and make your decision on lab membership permission.
+Please feel free to login into your account and make your decision on program membership permission.
 
 To save your time you may use direct links to make your decision.
 

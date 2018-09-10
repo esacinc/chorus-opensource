@@ -1,12 +1,12 @@
-Chorus:  Analysis(ID:${proteinSearchId}:"${proteinSearchName}") has been completed with errors
+PDC Workspace:  Analysis(ID:${proteinSearchId}:"${proteinSearchName}") has been completed with errors
 Hello, ${user}!
 
-During analysis execution(${proteinSearchId}:"${proteinSearchName}") of "${experimentName}" Experiment created by you the error is occured.
+During analysis execution(${proteinSearchId}:"${proteinSearchName}") of "${experimentName}" Study created by you the error is occured.
 
 Here is the details of this error:
 Workflow step: ${failedWorkflowStep}
 Error messsage:${errorMessage}
 
-Please contact Chorus Support Team to find out more.
+Please contact PDC Workspace Support Team to find out more.
 
 Thank you!

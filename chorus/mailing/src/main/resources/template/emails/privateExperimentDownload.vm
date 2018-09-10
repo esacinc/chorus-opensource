@@ -1,11 +1,11 @@
-Chorus: Experiment Download Private Link
+PDC Workspace: Study Download Private Link
 Hello!
 
-${user} has sent you a private link to download his shared experiment "${experiment}".
+${user} has sent you a private link to download his shared study "${experiment}".
 
 To start download please follow this link:
 <a href="${downloadLink}">${downloadLink}</a>
 
-Note, that you should be authenticated on Chorus.
+Note, that you should be authenticated on PDC Workspace.
 
 Thank you!

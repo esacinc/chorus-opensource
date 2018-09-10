@@ -1,4 +1,4 @@
-Chorus: ${title}
+PDC Workspace: ${title}
 Hello, ${user}!
 
 ${body}

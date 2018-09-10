@@ -503,14 +503,14 @@ angular.module("user-profile-front", ["security-front", "security-back", "featur
                 if (isRemoveLaboratory || isAddLaboratory) {
                     var message = "";
                     if (isRemoveLaboratory) {
-                        message = "<p>You have chosen to leave these labs:</p><ul>";
+                        message = "<p>You have chosen to leave these program(s):</p><ul>";
                         angular.forEach(account.removalLaboratories, function (lab) {
                             message += "<li>" + lab.name + "</li>";
                         });
                         message += "</ul>";
                     }
                     if (isAddLaboratory) {
-                        message += "<p>You have chosen to add these labs:</p><ul>";
+                        message += "<p>You have chosen to add these program(s):</p><ul>";
                         angular.forEach(account.addedLaboratories, function (lab) {
                             message += "<li>" + lab.name + "</li>";
                         });

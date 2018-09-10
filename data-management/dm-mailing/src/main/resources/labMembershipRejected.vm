@@ -1,10 +1,10 @@
 ${projectTitle}: Lab Membership Request Rejected
 Hello, ${user}!
 
-Unfortunately, your membership request for the ${lab} lab has been rejected by the lab head. Here is the rejection comment:
+Unfortunately, your membership request for the ${lab} program has been rejected by the program head. Here is the rejection comment:
 
 ${comment}
 
-Perhaps, you may try to contact the lab head directly and then repeat your request.
+Perhaps, you may try to contact the program head directly and then repeat your request.
 
 Thank you for your patience.

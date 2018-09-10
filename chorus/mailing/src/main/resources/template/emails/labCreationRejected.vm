@@ -1,7 +1,7 @@
-Chorus: Lab Creation Request Rejected
+PDC Workspace: Program Creation Request Rejected
 Hello!
 
-Unfortunately your ${lab} lab creation request has been rejected by the administrators.
+Unfortunately your ${lab} program creation request has been rejected by the administrators.
 
 #if ($!comment != "")
 Here is the rejection comment:

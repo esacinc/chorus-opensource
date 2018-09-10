@@ -158,7 +158,7 @@ public class DefaultLabManagement<LAB extends LabTemplate, LAB_INFO extends LabM
             labCreationRequestRepository.delete(request);
             UserTemplate requester = userRepository.findByEmail(request.getContactEmail());
             if (requester != null) {
-                inboxNotifier.notify(actor, requester.getId(), "Your request for creation lab " + request.getLabName() + " was rejected: " + rejectComment);
+                inboxNotifier.notify(actor, requester.getId(), "Your request for creation program " + request.getLabName() + " was rejected: " + rejectComment);
             }
         } else {
             notifier.staleOnLabRequest(actor, labCreationRequestId);

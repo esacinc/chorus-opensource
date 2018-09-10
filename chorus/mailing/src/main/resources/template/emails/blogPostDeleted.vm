@@ -1,4 +1,4 @@
-Chorus: ${post.title} - Deleted Blog Post from ${post.blog.name} Project
+PDC Workspace: ${post.title} - Deleted Blog Post from ${post.blog.name} Project
 
 We want to inform you that "${post.title}" Blog Post has been deleted from "${post.blog.name}" Project
 

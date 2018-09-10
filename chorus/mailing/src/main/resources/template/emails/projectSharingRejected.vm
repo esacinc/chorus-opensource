@@ -1,7 +1,7 @@
-Chorus: Experiment Data Access Rejected
+PDC Workspace: Study Data Access Rejected
 Hello, ${requester}!
 
-Unfortunately your request to access the experiment in the private project "${project}" has been rejected.
+Unfortunately your request to access the study in the private project "${project}" has been rejected.
 
 #if ($!comment != "")
 Here is the rejection comment:

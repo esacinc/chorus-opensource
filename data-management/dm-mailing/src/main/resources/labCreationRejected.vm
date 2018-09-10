@@ -1,7 +1,7 @@
 ${projectTitle}: Lab Creation Request Rejected
 Hello!
 
-Unfortunately your ${lab} lab creation request has been rejected by the administrators. Here is the rejection comment:
+Unfortunately your ${lab} program creation request has been rejected by the administrators. Here is the rejection comment:
 
 ${comment}
 

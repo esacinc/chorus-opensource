@@ -1,10 +1,10 @@
-Chorus: Translation Error Occured
+PDC Workspace: Translation Error Occured
 Hello,
 
-We want to inform you that during files translation at "${experimentName}" experiment the error is occured.
+We want to inform you that during files translation at "${experimentName}" study the error is occured.
 
 Here is the details of this error:
-Experiment: ${experimentName}
+Study: ${experimentName}
 Author: ${authorEmail}
 #if(${fileName})
 File:${fileName}

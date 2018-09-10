@@ -1,4 +1,4 @@
-Chorus: ${post.title} - Blog Post Edited
+PDC Workspace: ${post.title} - Blog Post Edited
 Blog post in blog you subscribed to has been edited!
 
 Project ${post.blog.name}

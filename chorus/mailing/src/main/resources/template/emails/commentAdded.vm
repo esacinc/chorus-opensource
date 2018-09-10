@@ -1,4 +1,4 @@
-Chorus: ${comment.post.title} - Comment Added
+PDC Workspace: ${comment.post.title} - Comment Added
 New comment on blog post you subscribed for!
 
 Project ${comment.post.blog.name}

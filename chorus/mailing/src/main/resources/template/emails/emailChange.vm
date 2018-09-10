@@ -1,7 +1,7 @@
-Chorus: Change Your Email
+PDC Workspace: Change Your Email
 Hello, ${user}!
 
-Someone has just requested to change email to your Chorus account. If that was you please follow this link to confirm a new email for your account:
+Someone has just requested to change email to your PDC Workspace account. If that was you please follow this link to confirm a new email for your account:
 
 <a href="${emailChangeUrl}">${emailChangeUrl}</a>
 

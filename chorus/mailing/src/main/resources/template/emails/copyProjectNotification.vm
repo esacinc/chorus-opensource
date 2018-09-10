@@ -1,4 +1,4 @@
-Chorus: Project Copy
+PDC Workspace: Project Copy
 Hello, ${user}!
 
 The user ${sender} send to you a copy of the project "${project}".

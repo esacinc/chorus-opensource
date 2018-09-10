@@ -9,6 +9,8 @@ angular.module("downloader", ["error-catcher"])
     .factory("downloadFiles", function () {
         return function (files, experiment, lab) {
 
+            fileDownloadWarningHandler("#file-download-disable-message");
+/*
             if (files && files.length > 0 && typeof files[0] === "object") {
                 files = $.map(files, function (file) {
                     return file.id;
@@ -68,8 +70,26 @@ angular.module("downloader", ["error-catcher"])
 
                 })
             };
+*/
         }
     });
+
+function fileDownloadWarningHandler(selector) {
+    $(".modal").modal("hide");
+
+    $(selector).dialog({
+        draggable: false,
+        dialogClass: "message-dialog warning",
+        modal: true,
+        resizable: false,
+        width: 450,
+        buttons: {
+            OK: function () {
+                $(this).dialog("close")
+            }
+        }
+    });
+}
 
 function fileDownloadErrorHandler(selector) {
     $(".modal").modal("hide");

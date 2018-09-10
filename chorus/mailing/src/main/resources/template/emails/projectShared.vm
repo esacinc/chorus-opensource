@@ -1,4 +1,4 @@
-Chorus: Project Shared
+PDC Workspace: Project Shared
 Hello, ${sharedToUser}!
 
 ${user} has shared ${project} project with you. You may now access the data of this project.

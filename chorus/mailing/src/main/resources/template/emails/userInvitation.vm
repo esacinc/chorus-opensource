@@ -1,8 +1,8 @@
-Chorus: Invitation
+PDC Workspace: Invitation
 Hello!
 
-You have been invited to join Chorus by ${user}.
-Chorus is a simple web application for storing, sharing, visualizing, and analyzing spectrometry files.
+You have been invited to join PDC Workspace by ${user}.
+PDC Workspace is a simple web application for storing, sharing, visualizing, and analyzing spectrometry files.
 
 You can create your account using this link:
 <a href="${projectUrl}">${projectUrl}</a>

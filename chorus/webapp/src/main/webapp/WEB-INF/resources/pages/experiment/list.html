@@ -69,16 +69,16 @@
                                     </li>
 
                                     <li ng-show="canUnarchiveFiles(experiment)">
-                                        <a title="Unarchive Experiment" class=" "
+                                        <a title="Unarchive Study" class=" "
                                            ng-click="showUnarchiveExperimentConfirmation(experiment)"><i class="icon unarchive"></i>Unarchive</a>
                                     </li>
 
                                     <li ng-show="experiment.isAvailableForCopying">
-                                        <a title="Copy experiment" class=" "
+                                        <a title="Copy Study" class=" "
                                            ng-click="copyExperiment(experiment)"><i class="icon copy"></i>Copy</a>
                                     </li>
                                     <li class="delete-item" ng-show="experiment.isOwner || loggedInUser.id == experiment.lab.labHead">
-                                        <a title="Delete experiment" class=" "
+                                        <a title="Delete Study" class=" "
                                            ng-click="displayConfirmation(experiment)"><i class="icon delete"></i>Delete</a>
                                     </li>
                                 </ul>
@@ -88,7 +88,7 @@
                             <i ng-show="experiment.accessLevel == 'PUBLIC'" class="icon public"
                                title="Public Study"></i>
                             <i ng-show="experiment.accessLevel == 'PRIVATE'" class="icon private"
-                               title="Private Experiment"></i>
+                               title="Private Study"></i>
                             <i ng-show="experiment.accessLevel == 'SHARED'" class="icon shared"
                                title="Shared Study"></i>
                             <span ng-switch="experiment.accessLevel == 'PUBLIC' || isBillingFeatureAvailable(BillingFeatures.DOWNLOAD)">

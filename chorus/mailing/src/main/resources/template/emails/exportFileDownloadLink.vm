@@ -1,4 +1,4 @@
-Chorus: DataCube Download Link for #${proteinSearchId} ${proteinSearchName}
+PDC Workspace: DataCube Download Link for #${proteinSearchId} ${proteinSearchName}
 Hello, ${user}!
 
 DateCube export is ready and could be downloaded <a href="${fileDownloadLink}" target="_blank">here</a>

@@ -1,4 +1,4 @@
-Chorus: Instrument Creation Request
+PDC Workspace: Instrument Creation Request
 Hello, ${labHead}!
 
 Someone has just requested to create a new instrument. Please find the details below:
@@ -7,6 +7,6 @@ Laboratory: ${laboratory};
 Instrument: ${instrument};
 Requested by: ${requesterEmail};
 
-Please feel free to login into your account and make your decision on lab creation approval.
+Please feel free to login into your account and make your decision on program creation approval.
 
 Thanks!

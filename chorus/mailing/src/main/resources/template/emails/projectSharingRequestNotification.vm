@@ -1,9 +1,9 @@
-Chorus: Experiment Data Access Requested
+PDC Workspace: Study Data Access Requested
 Hello, ${projectCreator}!
 
-User ${user} has attempted to download an experiment "${experiment}" and requested an access to the enclosing project "${project}".
+User ${user} has attempted to download an study "${experiment}" and requested an access to the enclosing project "${project}".
 
-You can share "${project}" project with ${user} to allow an access to the experiment.
+You can share "${project}" project with ${user} to allow an access to the study.
 
 Please feel free to login into your account and make your decision on project sharing approval.
 

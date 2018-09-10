@@ -133,7 +133,7 @@ public class DefaultUserManagement<USER extends UserTemplate<LAB>, LAB extends L
     private UserLabMembershipRequestTemplate fireLabMembershipRequest(LabTemplate lab, USER applicant) {
         //todo[tymchenko]: should we notify the lab head?
         final UserLabMembershipRequestTemplate request = new UserLabMembershipRequestTemplate<USER, LabTemplate<?>>(applicant, lab, current.get());
-        requests.addOutboxItem(applicant.getId(), lab.getHead().getFullName(), "Requested a membership in " + lab.getName() + " lab.", current.get());
+        requests.addOutboxItem(applicant.getId(), lab.getHead().getFullName(), "Requested a membership in " + lab.getName() + " program.", current.get());
         return userLabMembershipRequestRepository.save(request);
     }
 
@@ -163,7 +163,7 @@ public class DefaultUserManagement<USER extends UserTemplate<LAB>, LAB extends L
         final UserLabMembershipRequestTemplate<USER, LAB> request = checkPresence(userLabMembershipRequestRepository.findOne(requestId));
         LAB targetLab = request.getLab();
         if (!ruleValidator.canModifyLabMembershipRequests(actor, targetLab.getId())) {
-            throw new AccessDenied("Current user is not allowed to approve lab membership requests");
+            throw new AccessDenied("Current user is not allowed to approve program membership requests");
         }
         final USER applicant = request.getUser();
         applicant.addLab(targetLab);
@@ -171,7 +171,7 @@ public class DefaultUserManagement<USER extends UserTemplate<LAB>, LAB extends L
 
         request.setDecision(UserLabMembershipRequestTemplate.Decision.APPROVED);
         userLabMembershipRequestRepository.save(request);
-        inboxNotifier.notify(actor, applicant.getId(), "Your lab membership request for lab " + targetLab.getName() + " was approved");
+        inboxNotifier.notify(actor, applicant.getId(), "Your program membership request for program " + targetLab.getName() + " was approved");
         notifier.labMembershipApproved(applicant.getId(), targetLab.getId());
     }
 
@@ -180,11 +180,11 @@ public class DefaultUserManagement<USER extends UserTemplate<LAB>, LAB extends L
         final UserLabMembershipRequestTemplate<USER, LAB> request = checkPresence(userLabMembershipRequestRepository.findOne(requestId));
         final LAB targetLab = request.getLab();
         if (!ruleValidator.canModifyLabMembershipRequests(actor, targetLab.getId())) {
-            throw new AccessDenied("Current user is not allowed to approve lab membership requests");
+            throw new AccessDenied("Current user is not allowed to approve program membership requests");
         }
         request.setDecision(UserLabMembershipRequestTemplate.Decision.REJECTED);
         userLabMembershipRequestRepository.save(request);
-        inboxNotifier.notify(actor, request.getUser().getId(), "Your lab membership request for lab " + targetLab.getName() + " was rejected: " + comment);
+        inboxNotifier.notify(actor, request.getUser().getId(), "Your program membership request for program " + targetLab.getName() + " was rejected: " + comment);
         notifier.labMembershipRejected(request.getUser().getId(), targetLab.getId(), comment);
 
     }

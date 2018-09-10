@@ -1,12 +1,12 @@
-${projectTitle}: Lab Creation Request
+${projectTitle}: Program Creation Request
 Hello, ${admin}!
 
-Someone has just requested to create a new laboratory. Please find the details below:
+Someone has just requested to create a new program. Please find the details below:
 
-Laboratory: ${laboratory};
-Lab head: ${labHead} with email ${labHeadEmail};
+Program: ${laboratory};
+Program head: ${labHead} with email ${labHeadEmail};
 Requested by: ${requesterEmail};
 
-Please feel free to login into your account and make your decision on lab creation approval.
+Please feel free to login into your account and make your decision on program creation approval.
 
 Thanks!

@@ -1,4 +1,4 @@
-Chorus: Instrument Request Rejected
+PDC Workspace: Instrument Request Rejected
 Hello, ${user}!
 
 Unfortunately your request for an access to the instrument ${instrument} has been rejected by current instrument operators.
