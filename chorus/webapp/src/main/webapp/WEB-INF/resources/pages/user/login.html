@@ -16,7 +16,8 @@
         <div class="control-group" >
             <label class="control-label" for="password">Password</label>
             <input id="password"  type="password" name='j_password' class="dialog-text-input dont-hide"/>
-            <a class="link" href="authentication.html#/forgot-password">Forgot password?</a>
+            <!-- Ngoc - Remove for MVP -->
+            <!-- a class="link" href="authentication.html#/forgot-password">Forgot password?</a -->
         </div>
     </div>
 
@@ -29,8 +30,9 @@
 
     <div class="modal-footer">
         <button type="submit" class="main-action" id="sign-in">Sign in</button>
-        <span ng-switch="ssoProperties.enabled">
+        <!-- Ngoc - Remove for MVP -->
+        <!-- span ng-switch="ssoProperties.enabled">
             <span ng-switch-when="false"><span>&nbsp;&nbsp;or&nbsp;&nbsp;<a class="link" href="register.html">Create an account</a></span></span>
-        </span>
+        </span -->
     </div>
 </form>

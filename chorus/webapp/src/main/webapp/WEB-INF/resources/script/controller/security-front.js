@@ -644,10 +644,10 @@ angular.module("user-profile-front", ["security-front", "security-back", "featur
                 $scope.subscription = Subscriptions.pending();
             }
         }
-    })
+    }) // Ngoc - Change for MVP release
     .directive("laboratorySelector", laboratorySelection({
         "emptyTableMessage": "There are no programs",
-        "addActionText": "Add programs",
+        "addActionText": "Add Program -- Note: MVP users, please type MVP and select only \"MVP TEST PROGRAM\"",
         "addPlaceHolderText": "Enter program's title"
     }))
     .directive("selectLabWithAutoComplete", function () {
@@ -858,10 +858,10 @@ angular.module("login", ["security-front", "security-back", "features-back", "va
                 });
             }
         };
-    })
+    })  // Ngoc - Change for MVP release
     .directive("laboratorySelector", laboratorySelection({
         "emptyTableMessage": "There are no programs",
-        "addActionText": "Add programs",
+        "addActionText": "Add Program -- Note: MVP users, please type MVP and select any \"MVP TEST PROGRAM\"",
         "addPlaceHolderText": "Enter program's title"
     })
 )

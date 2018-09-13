@@ -14,114 +14,50 @@ angular.module("support-page", ["security-front", "error-catcher", "current-year
     .service("Questions", function(){
         return [
             {
-                title: "I am a new user who wants to upload data and create projects and experiments.  What should I do first?",
-                content: "First, you should request laboratory membership or creation if you have not already done so. Next, you can either create a project or an instrument.  These steps have no prerequisites other than belonging to a laboratory with mass spectrometers.   Registering an instrument will let you upload .raw files from that instrument.  Once you have created a project and have uploaded .raw data to the Chorus cloud, you can create experiments and organize them into your created projects.  You can't create an experiment without specifying an existing project where you want the experiment to belong.",
+                title: "I am a new user who wants to upload data and create projects and studies.  What should I do first?",
+                content: "First, you should request Program (laboratory) membership or creation if you have not already done so. Next, you can either create a project or an instrument. These steps have no prerequisites other than belonging to a Program(laboratory) with mass spectrometers. Registering an instrument will let you upload .raw files from that instrument. Once you have created a project and have uploaded .raw data to the Workspace, you can create Studies(experiments) and organize them into your created projects. You can't create an Study (experiment) without specifying an existing project where you want the study(experiment) to belong.",
                 category: "projects",
                 availableForCelgene: true,
                 isMostRelevant: true
             },
             {
-                title: "Do I need to join a laboratory to use Chorus?",
-                content: "No, but the options are somewhat limited. You will be able to visualize and download files without belonging to a lab on Chorus.  You will also be able to create and join sharing groups.   Joining a laboratory is, however, required to add instruments, which is required to upload data. Project creation requires a laboratory membership.",
+                title: "Do I need to join a Program to use PDC Workspace?",
+                content: "Yes, you need to be authorized to use the workspace. Register with a Google account or NIH eRA Commons account and select a program from the available programs listed. Once approved, you will be able to login using the method you chose to register.",
                 category: "accounts",
                 availableForCelgene: true,
                 isMostRelevant: true
             },
             {
-                title: "Can I share my data files with another person who does not have an account on Chorus?",
-                content: "Yes. You can create a permanent download link by clicking the “public link” button to the right of an experiment's name.  This link can be shared on a public website or sent via email.  The files will be downloaded as a .zip file.",
+                title: "Can I share my data files with another person who does not have an account on PDC Workspace?",
+                content: "Yes. You can create a permanent download link by clicking the “public link” button to the right of the study's name. This link can be shared on a public website or sent via email. The files will be downloaded as a .zip file. Note: Download is howevevr disabled for the MVP phase of the product",
                 category: "groups",
                 availableForCelgene: true,
                 isMostRelevant: true
             },
             {
-                title: "What kind of files can I upload to Chorus?",
-                content: "Chorus accepts files with the .raw extension.  These files come straight from the spectrometers and contain intensity and retention time data for each detected peak.",
+                title: "What kind of files can I upload to PDC Workspace?",
+                content: "PDC Workspace accepts files with the .raw extension. These files come straight from the spectrometers and contain intensity and retention time data for each detected peak.",
                 category: "upload",
                 availableForCelgene: true,
                 isMostRelevant: true
             },
             {
-                title: "I uploaded some data files to Chorus and I can't find them on the Create Experiment screens.  Am I doing something wrong?",
-                content: "Most likely, the model organism or the instrument used to generate the data were incorrectly filled on either the Create Experiment or the Upload Files pages.  These fields must match to add data files to your experiment.",
+                title: "I uploaded some data files to PDC Workspace and I can't find them on the Create Study (experiment) screens. Am I doing something wrong?",
+                content: "Most likely, the model organism or the instrument used to generate the data were incorrectly filled on either the Create Study or the Upload Files pages. These fields must match to add data files to your study.",
                 category: "experiments",
                 availableForCelgene: true,
                 isMostRelevant: true
             },
             {
-                title: "What are the fees for using CHORUS?",
-                content: "Users are charged only for the services they use beyond the $100\
-                per month lab credit.  Initially, two fee-based services will be offered, Active Storage and Archive\
-                Storage.  Active Storage provides high-speed access to data that is needed for viewers and other tools\
-                that perform real time data analysis or visualization.  Active Storage is designed for data that is being\
-                used or analyzed and needs to be available on-demand.  The cost for Active Storage is $90/TB/month.\
-                Archive Storage provides a low cost option for storing data that does not require fast on-demand access.\
-                Data stored with the Archive Storage service can take several hours to access compared to Active\
-                Storage that is near instantaneous.  Archive Storage is charged at $30/TB/month.</br>\
-                It is important to note that we offer an extremely cost effective cloud storage solution.  Most \
-                laboratories currently using CHORUS will take a long time to use up their $100 credit.  If 100% of a lab’s\
-                data is stored in the Archive Storage, they can maintain up to 200 GB of data in CHORUS for >16 months\
-                using their onetime $100 credit.",
+                title: "What are the fees for using PDC Workspace?",
+                content: "There is no fee to use PDC Workspace, however the user needs to be registred to one of the available programs. This is a minimum viable product with a set of features to satisfy early adopters. To limit operational costs the downloads are disabled and uploads are limited to 2GB per program and the data will not be stored beyond the testing perios.",
                 category: "billing",
                 availableForCelgene: false,
                 isMostRelevant: true
             },
             {
                 title: "How will my account be billed?",
-                content: 'The head of each CHORUS account will be required to establish a form\
-                of payment for their laboratory.  Initially we will use the PayPal Internet payment service that is linked\
-                to a Credit Card or Purchase Order.  Stratus Biosciences will invoice CHORUS lab head accounts on a\
-                monthly basis for the services provided to CHORUS lab.\
-                ',
-                category: "billing",
-                availableForCelgene: false,
-                isMostRelevant: true
-            },
-            {
-                title: "How can I monitor the cost of my CHORUS account?",
-                content: 'Each laboratory head can view real-time billing\
-                updates using the accounting tools in CHORUS.  The cost of services is broken down by day, type of\
-                services, and the user that uploaded the data.\
-                <div>\
-                    <div></br>\
-                        <span class="center-text bold">Lab Account List</span>\
-                        <a href="../img/billing/labs-list.png" target="_blank">\
-                        <img src="../img/billing/labs-list.png"/>\
-                    </a>\
-                </div>\
-                <div></br>\
-                    <span class="center-text bold">History List</span>\
-                    <a href="../img/billing/history-list.png" target="_blank">\
-                        <img src="../img/billing/history-list.png"/>\
-                    </a>\
-                </div>\
-                <div></br>\
-                    <span class="center-text bold">Daily History Details</span>\
-                    <a href="../img/billing/history-details.png" target="_blank">\
-                        <img src="../img/billing/history-details.png"/>\
-                    </a>\
-                 </div>\
-                </div>',
-                category: "billing",
-                availableForCelgene: false,
-                isMostRelevant: true
-            },
-            {
-                title: "Is there a free, no cost trial period?",
-                content: "Yes!  First, all labs will receive a onetime $100 credit.  We will\
-                upgrade the system shortly after December 3rd but no fees will be charged until after March 1st 2015.\
-                However, users can monitor their CHORUS use to see what the actual charges would be for their lab.\
-                After March 1st, a credit will be issued to cover all user fees incurred since December 3rd.",
-                category: "billing",
-                availableForCelgene: false,
-                isMostRelevant: true
-            },
-            {
-                title: "What if I want to cancel my CHORUS account?",
-                content: "You can cancel your CHORUS account at any time\
-                without charge or restrictions.  The process is simple, simply contact <a href='mailto:support@chorusproject.org'>support@choruproject.org</a>\
-                and indicate that you would like to cancel your account.  If you need time to restore data from CHORUS\
-                will be glad to provide time to do that at no cost to you.",
+                content:  'There is no fee to use PDC Workspace during the MVP phase.',
                 category: "billing",
                 availableForCelgene: false,
                 isMostRelevant: true
@@ -140,6 +76,11 @@ angular.module("support-page", ["security-front", "error-catcher", "current-year
             load: function (successHandler){
                 $.getJSON(url, function (data) {
                     videoLists.relevant = data.items;
+                    for (var i = 0; i < videoLists.relevant.length; i++) {
+                        if (videoLists.relevant[i].snippet.title == "Create New Experiment") {
+                            videoLists.relevant[i].snippet.title = "Create New Study (Experiment)";
+                        }
+                    }
                     successHandler(videoLists);
                 });
 

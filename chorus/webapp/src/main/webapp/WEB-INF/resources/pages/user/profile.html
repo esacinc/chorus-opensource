@@ -12,16 +12,18 @@
                     <span data-ng-class="{'tab-error': ssoProperties.enabled == false && (!account.firstName || !account.lastName)}"></span>
                 </a>
             </li>
-            <li ng-show="ssoProperties.enabled == false">
+            <!-- Ngoc - Remove for MVP -- only show for isAdmin() -->
+            <!-- li ng-show="ssoProperties.enabled == false" -->
+            <li ng-show="isAdmin()">
                 <a href="#changePassword" data-target="#changePassword" data-toggle="tab" ng-click="passwordTab = true">Change Password
                     <span data-ng-class="{'tab-error': formToChangePass.oldPassword.$error.inputValidator || changePasswordError.old || (formToChangePass.$dirty && passwordTab)}"></span>
                 </a>
             </li>
-            <li ng-show="ssoProperties.enabled == false">
+            <!-- li ng-show="ssoProperties.enabled == false">
                 <a href="#changeEmail" data-target="#changeEmail" data-toggle="tab" ng-click="emailTab = true">Change Email
                     <span data-ng-class="{'tab-error': !isNewEmailValid() && isEmailFormDirty()}"></span>
                 </a>
-            </li>
+            </li -->
         </ul>
 
         <div class="processingRunDetails control-group clearfix tab-content">
