@@ -2,7 +2,7 @@
 <html ng-app="labMembership-front" class="texture page-error" xmlns="http://www.w3.org/1999/html"
       xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Chorus&nbsp;&ndash;&nbsp;Program membership confirm</title> <!-- change text -->
+    <title>PDC Workspace&nbsp;&ndash;&nbsp;Program membership confirm</title> <!-- change text -->
     <link rel="icon" href="../img/favicon.ico" type="img/x-icon" />
 
     <script type="text/javascript" src="../script/util/logging.js"></script>
@@ -18,16 +18,14 @@
     <link rel="stylesheet" href="../css/login-register-common.css">
     <link rel="stylesheet" href="../css/register.css">
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124894982-1"></script>
     <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-        ga('create', 'UA-41329240-1', 'chorusproject.org');
-        ga('send', 'pageview');
-
-
+        gtag('config', 'UA-124894982-1');
     </script>
 
     <!-- AngularJS and Angular UI -->
@@ -49,7 +47,7 @@
 <div class="page-holder error-page" ng-controller="confirmLabMembershipPageCtrl">
     <div class="page-frame">
         <div class="page-content">
-            <h1 class="main-logo"><a href="../"><img alt="Chorus Logotype" src="../img/workspace-logo_noBG.png"/></a></h1>
+            <h1 class="main-logo"><a href="../"><img alt="PDC Workspace Logotype" src="../img/workspace-logo_noBG.png"/></a></h1>
             <div class="description" ng-switch on="result" >
                 <!--<h2>Error</h2>-->
                 <!--<h3>Request is outdated</h3>-->
