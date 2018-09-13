@@ -23,7 +23,7 @@ public class Lab extends LabTemplate<User> {
     private boolean isFake;
 
     @Basic(optional = false)
-    private float uploadLimitInGb = 200000; // -- Ngoc -- Increase to 200Tb from 20Gb;
+    private float uploadLimitInGb = 20; // -- Ngoc -- Increase to 200Tb from 20Gb; -- Decrease to 20GB for MVP release
 
 
     public Lab() {
