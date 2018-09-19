@@ -161,7 +161,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td valign="top" style="font:13px Arial,sans-serif;line-height:20px;color:#222222">
-                                                            <p style="margin:0;line-height:14px"><span style="line-height:20px">Sincerely,<br />PDC Workspace Project Team.<br /><a href="$url" style="text-decoration: underline; color: #22729a">$url</a></span></p>
+                                                            <p style="margin:0;line-height:14px"><span style="line-height:20px">Sincerely,<br /><a href="$url/../pdc" style="text-decoration: underline; color: #22729a">PDC</a></span></p>
                                                         </td>
                                                     </tr>
                                                     <tr>
